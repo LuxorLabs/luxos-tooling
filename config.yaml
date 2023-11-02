@@ -1,0 +1,54 @@
+output:
+  verbose: false # Logging verbose output
+  csv_output: healthcheck.csv # File name for the health check results
+  local_grafana_file: health_checks/local_grafana.csv # Local file where outputs will be stored to support local Grafana operation
+  report_output_type: csv # Output type (csv or db)
+
+# File containing IP addresses for scanning
+ipfile: miners.csv
+
+# IP range for scanning (leave null if using csv file for scan)
+ip_settings:
+  range_start: null # IP start range
+  range_end: null # IP end range
+
+threads:
+  max_threads: 10 # Maximum number of threads to use (watch out so we dont overload the network)
+
+luxos:
+  port: 4028 # Port for LuxOS API
+  timeout: 5 # Timeout for network scan in seconds
+
+# Time (in seconds) to wait between each execution of the health check (to start the loop again)
+sleep_between_executions: 10
+
+# Database settings (if report_output_type is db)
+database:
+  host: ""
+  port:
+  name:
+  user:
+  password:
+  table_name:
+
+# Configuration execution settings
+execution:
+  executeconfigs: "False" # Define if configs should be executed on miners after every health check
+  tempctrlset:
+    execute: "True" # Execute tempctrlset
+    param1: 50
+    param2: 66
+    param3: 76
+  atmset:
+    execute: "False" # Execute atmset
+    param1: enabled=true
+    param2: startup_minutes=1
+    param3: post_ramp_minutes=1
+    param4: temp_window=3
+  fanset:
+    execute: "True" # Execute fanset
+    param1: 100
+    param2: 3
+  immersionswitch:
+    execute: "False" # Execute immersionswitch
+    param1: off
