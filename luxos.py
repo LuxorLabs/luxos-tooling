@@ -115,6 +115,9 @@ COMMANDS = {
     "power": {
         "logon_required": False
     },
+    "profileget": {
+        "logon_required": False
+    },
     "profilenew": {
         "logon_required": True
     },
