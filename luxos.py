@@ -115,9 +115,6 @@ COMMANDS = {
     "power": {
         "logon_required": False
     },
-    "profileget": {
-        "logon_required": False
-    },
     "profilenew": {
         "logon_required": True
     },
@@ -179,6 +176,21 @@ COMMANDS = {
         "logon_required": False
     },
     "voltageset": {
+        "logon_required": True
+    },
+    "profileget": {
+        "logon_required": False
+    },
+    "logset": {
+        "logon_required": True
+    },
+    "tempsensor": {
+        "logon_required": False
+    },
+    "tempsensorset": {
+        "logon_required": True
+    },
+    "uninstallluxos": {
         "logon_required": True
     }
 }
@@ -470,6 +482,11 @@ if __name__ == "__main__":
                         default=False,
                         type=bool,
                         help="Verbose output")
+    parser.add_argument('--batch_delay',
+                    required=False,
+                    default=0,
+                    type=int,
+                    help="Delay between batches in seconds")
 
     # parse arguments
     args = parser.parse_args()
@@ -499,7 +516,7 @@ if __name__ == "__main__":
     for ip in ip_list:
         # create new thread for each IP address
         thread = threading.Thread(target=execute_command,
-                                  args=(ip, args.port, timeout_sec, args.cmd,
+                                args=(ip, args.port, timeout_sec, args.cmd,
                                         args.params, args.verbose))
 
         # start the thread
@@ -511,6 +528,14 @@ if __name__ == "__main__":
             # Wait for the threads to finish
             for thread in threads:
                 thread.join()
+
+            # Introduce the batch delay if specified
+            if args.batch_delay > 0:
+                print(f"Waiting {args.batch_delay} seconds")
+                time.sleep(args.batch_delay)
+
+            # Clear the thread list for the next batch
+            threads = []
 
     # Wait for the remaining threads to finish
     for thread in threads:
