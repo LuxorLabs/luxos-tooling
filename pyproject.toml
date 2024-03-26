@@ -1,0 +1,82 @@
+
+[build-system]
+requires = ["hatchling>=1.1.0",]
+build-backend = "hatchling.build"
+
+[project]
+name = "luxos"
+version = "0.0.0"
+description = "The scripts to operate and troubleshoot miners running LuxOS."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">= 3.8"
+
+authors = [
+  { name = "Antonio Cavallo", email = "antonio.cavallo@luxor.tech" },
+]
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+
+
+[tool.hatch.version]
+path = "luxos.py"
+
+[project.urls]
+Source = "https://github.com/LuxorLabs/luxos-tooling"
+Issues = "https://github.com/LuxorLabs/luxos-tooling/issues"
+
+
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+include = ["*.py"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+#[tool.ruff.lint.flake8-quotes]
+#inline-quotes = "single"
+#
+#[tool.ruff.lint.flake8-tidy-imports]
+#[tool.ruff.lint.isort]
+#[tool.ruff.lint.per-file-ignores]
+
+
+
+[tool.mypy]
+disallow_untyped_defs = false
+follow_imports = "normal"
+ignore_missing_imports = true
+pretty = true
+show_column_numbers = true
+show_error_codes = true
+warn_no_return = false
+warn_unused_ignores = true
+
+[tool.coverage.run]
+source_pkgs = ["hatch_ci", "tests"]
+branch = true
+parallel = true
+omit = [
+  "hatch_ci/__about__.py",
+]
+
+[tool.coverage.paths]
+hatch_ci = ["hatch_ci", "*/hatch-ci/hatch_ci"]
+tests = ["tests", "*/hatch-ci/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
