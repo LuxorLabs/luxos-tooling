@@ -50,7 +50,7 @@ jobs:
       - name: Tests & Coverage
         shell: bash
         env:
-          PYTHONPATH: src
+          PYTHONPATH: .
           OUTDIR: build/qa-${{ matrix.python-version }}-${{ matrix.os}}
         run: |
           py.test \
