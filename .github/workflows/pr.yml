@@ -30,6 +30,7 @@ jobs:
 
       - name: Lint checks (ruff)
         shell: bash
+        # TODO revert this
         continue-on-error: true
         env:
           PYTHONPATH: .
@@ -38,6 +39,7 @@ jobs:
 
       - name: Static checks (mypy)
         shell: bash
+        # TODO revert this
         continue-on-error: true
         env:
           PYTHONPATH: .
