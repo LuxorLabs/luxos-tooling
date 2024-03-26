@@ -2,4 +2,5 @@ mypy
 pytest
 pytest-cov
 pytest-html
-ruff
+ruff == 0.3.4
+mypy == 1.9.0
