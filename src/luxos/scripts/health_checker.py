@@ -11,6 +11,7 @@ import json
 import threading
 import asyncio
 from datetime import datetime
+from typing import Any
 
 from tqdm.asyncio import tqdm as async_tqdm
 import asyncpg
@@ -140,7 +141,7 @@ def get_value_with_default(dictionary, key, default=0):
 
 async def internal_send_cgminer_command(host: str, port: int, command: str,
                                         timeout_sec: int,
-                                        verbose: bool) -> dict:
+                                        verbose: bool) -> dict[str, Any]:
     writer = None
     try:
         reader, writer = await asyncio.wait_for(asyncio.open_connection(
@@ -178,7 +179,7 @@ async def internal_send_cgminer_command(host: str, port: int, command: str,
 
 
 async def send_cgminer_command(host: str, port: int, cmd: str, param: str,
-                               timeout_sec: int, verbose: bool) -> dict:
+                               timeout_sec: int, verbose: bool) -> dict[str, Any]:
     req = str(f"{{\"command\": \"{cmd}\", \"parameter\": \"{param}\"}}\n")
     if verbose:
         logging.info(
@@ -189,12 +190,11 @@ async def send_cgminer_command(host: str, port: int, cmd: str, param: str,
 
 
 async def send_cgminer_simple_command(host: str, port: int, cmd: str,
-                                      timeout: int, verbose: bool) -> str:
+                                      timeout: int, verbose: bool) -> dict[str, Any]:
     req = str(f"{{\"command\": \"{cmd}\"}}\n")
     if verbose:
         logging.info(f"Executing command: {cmd} to host: {host}")
-    # TODO fix this typing issue
-    return await internal_send_cgminer_command(host, port, req, timeout,  # type: ignore
+    return await internal_send_cgminer_command(host, port, req, timeout,
                                                verbose)
 
 
@@ -202,8 +202,7 @@ async def logon(host: str, port: int, timeout: int, verbose: bool) -> str:
     res = await send_cgminer_simple_command(host, port, "logon", timeout,
                                             verbose)
     check_res_structure(res, "SESSION", 1, 1)
-    # TODO fix this typing issue
-    session = res["SESSION"][0]  # type: ignore
+    session = res["SESSION"][0]
     s = get_str_field(session, "SessionID")
     if s == "":
         raise ValueError("error: invalid session id")

@@ -15,14 +15,14 @@ log = logging.getLogger(__name__)
 
 
 COMMANDS = json.loads(
-    (importlib.resources.files(__package__) / "api.json")
+    (importlib.resources.files("luxos") / "api.json")
     .read_text()
 )
 
 
 # internal_send_cgminer_command sends a command to the cgminer API server and returns the response.
 def internal_send_cgminer_command(host: str, port: int, command: str,
-                                  timeout_sec: int, verbose: bool) -> str:
+                                  timeout_sec: int, verbose: bool) -> dict[str, Any]:
 
     # Create a socket connection to the server
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -70,7 +70,7 @@ def internal_send_cgminer_command(host: str, port: int, command: str,
 
 # send_cgminer_command sends a command to the cgminer API server and returns the response.
 def send_cgminer_command(host: str, port: int, cmd: str, param: str,
-                         timeout: int, verbose: bool) -> str:
+                         timeout: int, verbose: bool) -> dict[str, Any]:
     req = str(f"{{\"command\": \"{cmd}\", \"parameter\": \"{param}\"}}\n")
     log.debug(f"Executing command: {cmd} with params: {param} to host: {host}")
 
@@ -79,49 +79,47 @@ def send_cgminer_command(host: str, port: int, cmd: str, param: str,
 
 # send_cgminer_simple_command sends a command with no params to the miner and returns the response.
 def send_cgminer_simple_command(host: str, port: int, cmd: str, timeout: int,
-                                verbose: bool) -> str:
+                                verbose: bool) -> dict[str, Any]:
     req = str(f"{{\"command\": \"{cmd}\"}}\n")
     log.debug(f"Executing command: {cmd} to host: {host}")
     return internal_send_cgminer_command(host, port, req, timeout, verbose)
 
 
 # check_res_structure checks that the response has the expected structure.
-def check_res_structure(res: str, structure: str, min: int, max: int) -> str:
+def check_res_structure(res: dict[str, Any], structure: str, min: int, max: int) -> dict[str, Any]:
     # Check the structure of the response.
     if structure not in res or "STATUS" not in res or "id" not in res:
         raise ValueError("error: invalid response structure")
 
-    data = json.loads(res)  # TODO did this ever work?
-
     # Should we check min and max?
     if min >= 0 and max >= 0:
         # Check the number of structure elements.
-        if not (min <= len(data[structure]) <= max):
+        if not (min <= len(res[structure]) <= max):
             raise ValueError(
-                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(data[structure])}"
+                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(res[structure])}"
             )
 
     # Should we check only min?
     if min >= 0:
         # Check the minimum number of structure elements.
-        if len(data[structure]) < min:
+        if len(res[structure]) < min:
             raise ValueError(
-                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(data[structure])}"
+                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(res[structure])}"
             )
 
     # Should we check only max?
     if max >= 0:
         # Check the maximum number of structure elements.
-        if len(data[structure]) < min:
+        if len(res[structure]) < min:
             raise ValueError(
-                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(data[structure])}"
+                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(res[structure])}"
             )
 
     return res
 
 
 # get_str_field tries to get the field as a string and returns it.
-def get_str_field(struct: str, name: str) -> str:
+def get_str_field(struct: dict[str, Any], name: str) -> str:
     try:
         s = str(struct[name])
     except Exception as e:
@@ -238,7 +236,8 @@ def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
                 )
             log.info("SessionID obtained for %s: %s", host, sid)
 
-        elif not logon_required:
+        # TODO verify this
+        elif not logon_required:  # type: ignore
             log.debug("Logon not required for executing %s", cmd)
 
         # convert the params to a string that LuxOS API accepts
@@ -345,25 +344,25 @@ def main():
 
         # start the thread
         threads.append(thread)
-        thread.run()
+        thread.start()
 
-    #     # Limit the number of concurrent threads
-    #     if len(threads) >= max_threads:
-    #         # Wait for the threads to finish
-    #         for thread in threads:
-    #             thread.join()
-    #
-    #         # Introduce the batch delay if specified
-    #         if args.batch_delay > 0:
-    #             print(f"Waiting {args.batch_delay} seconds")
-    #             time.sleep(args.batch_delay)
-    #
-    #         # Clear the thread list for the next batch
-    #         threads = []
-    #
-    # # Wait for the remaining threads to finish
-    # for thread in threads:
-    #     thread.join()
+        # Limit the number of concurrent threads
+        if len(threads) >= max_threads:
+            # Wait for the threads to finish
+            for thread in threads:
+                thread.join()
+
+            # Introduce the batch delay if specified
+            if args.batch_delay > 0:
+                print(f"Waiting {args.batch_delay} seconds")
+                time.sleep(args.batch_delay)
+
+            # Clear the thread list for the next batch
+            threads = []
+
+    # Wait for the remaining threads to finish
+    for thread in threads:
+        thread.join()
 
     # Execution completed
     end_time = time.time()
