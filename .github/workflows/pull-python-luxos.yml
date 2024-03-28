@@ -19,17 +19,20 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Set up runner 
+        run: echo noop
+
       - name: Checkout
         uses: actions/checkout@v4.1.0
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Setup Python toolchain [${{ matrix.python-version }}]
+      - name: Setup Python toolchain
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies from tests/requirements.txt
+      - name: Python dependencies
         shell: bash
         run: |
             python -m pip install --upgrade pip
@@ -51,7 +54,7 @@ jobs:
           mypy src \
             --no-incremental --xslt-html-report $OUTDIR/mypy
 
-      - name: Tests & Coverage
+      - name: Run Python checks
         shell: bash
         env:
           PYTHONPATH: src
@@ -69,11 +72,9 @@ jobs:
           GITHUB_DUMP: ${{ toJson(github) }}
         run: |
           python -m build
+          touch .keepme
 
-      - name: Create a .keepme file placeholder
-        run: touch .keepme
-
-      - name: Artifacts uploads
+      - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
           name: qa-results-${{ matrix.python-version }}-${{ matrix.os }}
