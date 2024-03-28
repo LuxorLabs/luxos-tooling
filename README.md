@@ -2,6 +2,17 @@
 
 This repository contains scripts we built to operate and troubleshoot miners running LuxOS.
 
+## Install
+
+There are few ways to install the luxos package:
+
+1. Using pip
+   ```shell
+   pip install luxos
+   (or)
+   pip install git+https://github.com/LuxorLabs/luxos-tooling.git@pr/luxos-code-refactoring
+   ```
+
 ## LuxOS API Wrapper - luxos.py
 
 This tool offers a convenient way to interact with LuxOS through a command-line interface (CLI) or as Python packages for more advanced integrations.
@@ -11,8 +22,8 @@ This tool offers a convenient way to interact with LuxOS through a command-line 
 The luxos.py script serves as a versatile LuxOS API wrapper, allowing users to interact with LuxOS features directly from the command line. Below are some basic examples:
 
 ```bash
-python3 luxos.py --ipfile miners.csv --cmd rebootdevice --timeout 2
-python3 luxos.py --range_start 192.168.1.0 --range_end 192.168.1.255 --cmd rebootdevice --verbose True
+python3 -m luxos.api --ipfile miners.csv --cmd rebootdevice --timeout 2
+python3 -m luxos.api --range_start 192.168.1.0 --range_end 192.168.1.255 --cmd rebootdevice --verbose True
 ```
 
 **Library Usage**
@@ -20,7 +31,7 @@ python3 luxos.py --range_start 192.168.1.0 --range_end 192.168.1.255 --cmd reboo
 If you prefer to integrate LuxOS functionality into your Python applications or scripts, luxos.py can also be used as a Python package. Here's a quick example:
 
 ```python
-from luxos import (execute_command)
+from _luxos.api import (execute_command)
 
 execute_command('192.168.1.1', 4028, 2, 'rebootdevice', '', False)
 ```

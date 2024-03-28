@@ -1,5 +1,7 @@
 /myenv
 /build
+/dist
+
 
 # Compiled Python files
 __pycache__/

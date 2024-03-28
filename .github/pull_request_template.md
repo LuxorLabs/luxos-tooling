@@ -8,3 +8,4 @@ Add your description here.
 - [ ] My code passes all tests, linter and formatting checks (`make check`).
 - [ ] My commits follow the [How to Write a Git Commit Message Guide](https://chris.beams.io/posts/git-commit/).
 - [ ] I have updated the `CHANGELOG` (yeah, last chance to do it).
+- [ ] Run the `python make.py onepack` and add the new luxos.pyz generated file

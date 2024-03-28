@@ -25,6 +25,13 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
 ]
 
+dependencies = [
+  "tqdm",
+  "asyncpg",
+  "pandas",
+  "pyyaml",
+  "httpx"
+]
 
 [project.urls]
 Source = "https://github.com/LuxorLabs/firmware-biz-tools"

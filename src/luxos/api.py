@@ -2,6 +2,7 @@ from __future__ import annotations
 import os
 import csv
 import json
+import sys
 import time
 import socket
 import logging
@@ -91,6 +92,8 @@ def check_res_structure(res: str, structure: str, min: int, max: int) -> str:
     # Check the structure of the response.
     if structure not in res or "STATUS" not in res or "id" not in res:
         raise ValueError("error: invalid response structure")
+
+    data = json.loads(res)  # TODO did this ever work?
 
     # Should we check min and max?
     if min >= 0 and max >= 0:
@@ -209,6 +212,9 @@ def load_ip_list_from_csv(csv_file: str) -> list[str]:
     with open(csv_file, 'r') as f:
         reader = csv.reader(f)
         for i, row in enumerate(reader):
+            # skip commented lines
+            if row and row[0].strip().startswith("#"):
+                continue
             if i == 0 and row and row[0] == "hostname":
                 continue
             if row:  # Ignore empty rows
@@ -229,27 +235,24 @@ def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
             # Add the SessionID to the parameters list at the left.
             parameters = add_session_id_parameter(sid, parameters)
 
-            if verbose:
-                logging.info(
-                    f'Command requires a SessionID, logging in for host: {host}'
+            log.debug(
+                    "Command requires a SessionID, logging in for host: %s", host
                 )
-                logging.info(f'SessionID obtained for {host}: {sid}')
+            log.info("SessionID obtained for %s: %s", host, sid)
 
-        elif not logon_required and verbose:
-            logging.info(f"Logon not required for executing {cmd}")
+        elif not logon_required:
+            log.debug("Logon not required for executing %s", cmd)
 
         # convert the params to a string that LuxOS API accepts
         param_string = parameters_to_string(parameters)
 
-        if verbose:
-            logging.info(f"{cmd} on {host} with parameters: {param_string}")
+        log.debug("%s on %s with parameters: %s", cmd, host, param_string)
 
         # Execute the API command
         res = send_cgminer_command(host, port, cmd, param_string, timeout_sec,
                                    verbose)
 
-        if verbose:
-            logging.info(res)
+        log.debug(res)
 
         # Log off to terminate the session
         if logon_req:
@@ -258,11 +261,11 @@ def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
 
         return res
 
-    except Exception as e:
-        logging.info(f"Error executing {cmd} on {host}: {e}")
+    except Exception:
+        log.exception("Error executing %s on %s", cmd, host)
 
 
-def main():
+def parse_arguments(args: list[str] | None = None) -> argparse.Namespace:
     # define arguments
     parser = argparse.ArgumentParser(description="LuxOS CLI Tool")
     parser.add_argument('--range_start', required=False, help="IP start range")
@@ -306,8 +309,15 @@ def main():
                     type=int,
                     help="Delay between batches in seconds")
 
+    options = parser.parse_args()
+    options.error = parser.error
+    return options
+
+
+def main():
+
     # parse arguments
-    args = parser.parse_args()
+    args = parse_arguments()
 
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(asctime)s [%(levelname)s] %(message)s",
@@ -322,7 +332,7 @@ def main():
     elif args.ipfile:
         ip_list = load_ip_list_from_csv(args.ipfile)
     else:
-        parser.error("No IP address or IP list found.")
+        args.error("No IP address or IP list found.")
 
     # Set max threads to use, minimum of max threads and number of IP addresses
     max_threads = min(args.max_threads, len(ip_list))
