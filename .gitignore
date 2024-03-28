@@ -1,0 +1,37 @@
+/myenv
+/build
+/dist
+
+
+# Compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Python virtual environment
+venv/
+env/
+*.env
+
+# System, editor and IDE files
+.vscode
+.work
+.ci-cargo
+.idea/
+*.swp
+*.swo
+*~
+.project
+*.pyproj
+.DS_Store
+Thumbs.db
+
+# Ignore common temporary files
+*.log
+*.csv
+tmp/
+*.tmp
+
+# Sonar artifacts
+clippy.log
