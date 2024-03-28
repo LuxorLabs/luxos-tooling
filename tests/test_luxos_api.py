@@ -1,4 +1,3 @@
-from pathlib import Path
 
 from luxos import api
 

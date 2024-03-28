@@ -2,7 +2,6 @@ from __future__ import annotations
 import os
 import csv
 import json
-import sys
 import time
 import socket
 import logging
@@ -12,12 +11,11 @@ import threading
 from typing import Any
 import importlib.resources
 
-import luxos
-
 log = logging.getLogger(__name__)
 
+
 COMMANDS = json.loads(
-    (importlib.resources.files(luxos) / "api.json")
+    (importlib.resources.files(__package__) / "api.json")
     .read_text()
 )
 
@@ -98,25 +96,25 @@ def check_res_structure(res: str, structure: str, min: int, max: int) -> str:
     # Should we check min and max?
     if min >= 0 and max >= 0:
         # Check the number of structure elements.
-        if not (min <= len(res[structure]) <= max):
+        if not (min <= len(data[structure]) <= max):
             raise ValueError(
-                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(res[structure])}"
+                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(data[structure])}"
             )
 
     # Should we check only min?
     if min >= 0:
         # Check the minimum number of structure elements.
-        if len(res[structure]) < min:
+        if len(data[structure]) < min:
             raise ValueError(
-                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(res[structure])}"
+                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(data[structure])}"
             )
 
     # Should we check only max?
     if max >= 0:
         # Check the maximum number of structure elements.
-        if len(res[structure]) < min:
+        if len(data[structure]) < min:
             raise ValueError(
-                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(res[structure])}"
+                f"error: unexpected number of {structure} in response; min: {min}, max: {max}, actual: {len(data[structure])}"
             )
 
     return res
@@ -265,7 +263,8 @@ def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
         log.exception("Error executing %s on %s", cmd, host)
 
 
-def parse_arguments(args: list[str] | None = None) -> argparse.Namespace:
+def main():
+
     # define arguments
     parser = argparse.ArgumentParser(description="LuxOS CLI Tool")
     parser.add_argument('--range_start', required=False, help="IP start range")
@@ -309,15 +308,9 @@ def parse_arguments(args: list[str] | None = None) -> argparse.Namespace:
                     type=int,
                     help="Delay between batches in seconds")
 
-    options = parser.parse_args()
-    options.error = parser.error
-    return options
-
-
-def main():
-
     # parse arguments
-    args = parse_arguments()
+    args = parser.parse_args()
+    args.error = parser.error
 
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(asctime)s [%(levelname)s] %(message)s",
@@ -352,25 +345,25 @@ def main():
 
         # start the thread
         threads.append(thread)
-        thread.start()
+        thread.run()
 
-        # Limit the number of concurrent threads
-        if len(threads) >= max_threads:
-            # Wait for the threads to finish
-            for thread in threads:
-                thread.join()
-
-            # Introduce the batch delay if specified
-            if args.batch_delay > 0:
-                print(f"Waiting {args.batch_delay} seconds")
-                time.sleep(args.batch_delay)
-
-            # Clear the thread list for the next batch
-            threads = []
-
-    # Wait for the remaining threads to finish
-    for thread in threads:
-        thread.join()
+    #     # Limit the number of concurrent threads
+    #     if len(threads) >= max_threads:
+    #         # Wait for the threads to finish
+    #         for thread in threads:
+    #             thread.join()
+    #
+    #         # Introduce the batch delay if specified
+    #         if args.batch_delay > 0:
+    #             print(f"Waiting {args.batch_delay} seconds")
+    #             time.sleep(args.batch_delay)
+    #
+    #         # Clear the thread list for the next batch
+    #         threads = []
+    #
+    # # Wait for the remaining threads to finish
+    # for thread in threads:
+    #     thread.join()
 
     # Execution completed
     end_time = time.time()

@@ -59,22 +59,28 @@ def onepack(parser, args, workdir):
     """create a one .pyz single file package"""
     from zipapp import create_archive
 
-    parser.add_argument("-o", "--output",
-                   default=workdir / "luxos.pyz", type=Path)
+    parser.add_argument("-o", "--output-dir",
+                   default=workdir, type=Path)
     o = parser.parse_args(args)
 
-    create_archive(
-        workdir / "src",
-        o.output,
-        main="luxos.api:main",
-        compressed=True
-    )
-    relpath = (
-        o.output.relative_to(Path.cwd())
-        if o.output.is_relative_to(Path.cwd())
-        else o.output
-    )
-    print(f"Written: {relpath}", file=sys.stderr)
+    targets = [
+        ("luxos.pyz", "luxos.api:main"),
+        ("health-checker.pyz", "luxos.scripts.health_checker:main"),
+    ]
+    for target, entrypoint in targets:
+        dst = o.output_dir / target
+        create_archive(
+            workdir / "src",
+            dst,
+            main=entrypoint,
+            compressed=True
+        )
+        relpath = (
+            dst.relative_to(Path.cwd())
+            if dst.is_relative_to(Path.cwd())
+            else dst
+        )
+        print(f"Written: {relpath}", file=sys.stderr)
 
 
 @task()
