@@ -38,7 +38,8 @@ Source = "https://github.com/LuxorLabs/firmware-biz-tools"
 Issues = "https://github.com/LuxorLabs/firmware-biz-tools/issues"
 
 [project.scripts]
-luxos = "luxos:api.main"
+luxos = "luxos.api:main"
+health-checker = "luxos.scripts.health_checker:main"
 
 [tool.ruff]
 target-version = "py310"

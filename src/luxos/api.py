@@ -149,6 +149,8 @@ def logon(host: str, port: int, timeout: int, verbose: bool) -> str:
     return s
 
 
+def logoff(host: str, port: int, sid: str, timeout: int=3) -> None:
+    send_cgminer_command(host, port, "logoff", sid, timeout, False)
 
 
 def logon_required(

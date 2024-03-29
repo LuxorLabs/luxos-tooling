@@ -6,11 +6,24 @@ This repository contains scripts we built to operate and troubleshoot miners run
 
 There are few ways to install the luxos package:
 
-1. Using pip
+1. Using pip:
    ```shell
    pip install luxos
-   (or)
    pip install git+https://github.com/LuxorLabs/luxos-tooling.git@pr/luxos-code-refactoring
+   
+   then
+   luxos --help
+   health-checker
+   ```
+   
+2. A single drop in file:
+   ```shell
+   curl -LO https://github.com/LuxorLabs/luxos-tooling/raw/pr/luxos-code-refactoring/health-checker.pyz
+   curl -LO https://github.com/LuxorLabs/luxos-tooling/raw/pr/luxos-code-refactoring/luxos.pyz
+
+   then
+   python luxos.pyz --help
+   python health-checker.pyz
    ```
 
 ## LuxOS API Wrapper - luxos.py
@@ -31,7 +44,7 @@ python3 -m luxos.api --range_start 192.168.1.0 --range_end 192.168.1.255 --cmd r
 If you prefer to integrate LuxOS functionality into your Python applications or scripts, luxos.py can also be used as a Python package. Here's a quick example:
 
 ```python
-from _luxos.api import (execute_command)
+from luxos.api import (execute_command)
 
 execute_command('192.168.1.1', 4028, 2, 'rebootdevice', '', False)
 ```
