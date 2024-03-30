@@ -1,7 +1,6 @@
+import functools
 import logging
-import sys
 import asyncio
-import itertools
 import json
 
 from typing import Any
@@ -9,21 +8,40 @@ from typing import Any
 from . import exceptions
 from . import api
 
-if sys.version_info >= (3, 12):
-    batched = itertools.batched
-else:
-
-    def batched(iterable, n):
-        if n < 1:
-            raise ValueError("n must be at least one")
-        it = iter(iterable)
-        while batch := tuple(itertools.islice(it, n)):
-            yield batch
-
 
 log = logging.getLogger(__name__)
 
 TIMEOUT = 3.0  # default timeout for operations
+
+
+def wrapped(function):
+    """wraps a function acting on a host and re-raise with internal exceptions
+
+    This re-raise exceptions so they all derive from MinerConnectionError, eg:
+    @wrapped
+    def somcode(host: str, port: int, ...):
+        ...
+
+    try:
+        await somecode()
+    except MinerConnectionError as e:  <- this will catch all exceptions!
+        e.address
+        raise MyNewExecption() from e  <- this will re-raise
+    """
+    @functools.wraps(function)
+    async def _function(host: str, port: int, *args, **kwargs):
+        try:
+            return await function(host, port, *args, **kwargs)
+        except asyncio.TimeoutError as e:
+            # we augment underlying TimeOuts
+            raise exceptions.MinerCommandTimeoutError(host, port) from e
+        except exceptions.MinerConnectionError:
+            raise
+        except Exception as e:
+            # we augment any other exception with (host, port) info
+            log.exception("internal error")
+            raise exceptions.MinerConnectionError(host, port, "internal error") from e
+    return _function
 
 
 async def _roundtrip(
@@ -55,7 +73,7 @@ async def _roundtrip(
 
     return response.decode()
 
-
+# TODO add annotations
 async def roundtrip(
     host: str,
     port: int,
@@ -68,8 +86,10 @@ async def roundtrip(
     """utility wrapper around _roundrip
 
     Example:
-        print(await roundtrip(host, port, {"version))
+        print(await roundtrip(host, port, {"version"}))
         -> (json) {'STATUS': [{'Code': 22, 'Description': 'LUXminer 20 ...
+        print(await roundtrip(host, port, "version"))
+        -> (str) "{'STATUS': [{'Code': 22, 'Description': 'LUXminer 20 ..
     """
     timeout = TIMEOUT if timeout is None else timeout
     count = 0
@@ -98,6 +118,8 @@ async def roundtrip(
 
 
 def validate_message(
+    host: str,
+    port: int,
     res: dict[str, Any],
     extrakey: str | None = None,
     minfields: None | int = None,
@@ -107,7 +129,7 @@ def validate_message(
     for key in ["STATUS", "id", *([extrakey] if extrakey else [])]:
         if key in res:
             continue
-        raise exceptions.MinerMalformedMessageError(f"missing {key}", res)
+        raise exceptions.MinerCommandMalformedMessageError(host, port, f"missing {key} from logon message", res)
 
     if not extrakey or not (minfields or maxfields):
         return res
@@ -120,9 +142,10 @@ def validate_message(
         msg = f"found {n} fields for {extrakey} invalid: " f"{n} >= {maxfields}"
     if msg is None:
         return res[extrakey]
-    raise exceptions.MinerMalformedMessageError(msg, res)
+    raise exceptions.MinerCommandMalformedMessageError(host, port, msg, res)
 
 
+@wrapped
 async def logon(host: str, port: int, timeout: float | None = 3) -> str:
     timeout = TIMEOUT if timeout is None else timeout
     res = await roundtrip(host, port, {"command": "logon"}, timeout)
@@ -131,22 +154,18 @@ async def logon(host: str, port: int, timeout: float | None = 3) -> str:
     #   [STATUS][SessionID]
     # on subsequent logon, we receive a
     #   [STATUS][Msg] == "Another session is active" ([STATUS][Code] 402)
-
-    try:
-        sessions = validate_message(res, "SESSION", 1, 1)
-    except exceptions.MinerMalformedMessageError as e:
-        if res.get("STATUS", [{}])[0].get("Code", None) == 402:
-            raise exceptions.MinerSessionAlreadyActive(
-                f"session active for {host}:{port}"
-            ) from e
+    if "SESSION" not in res and res.get("STATUS", [{}])[0].get("Code") == 402:
+        raise exceptions.MinerCommandSessionAlreadyActive(host, port, "connection active", res)
+    sessions = validate_message(host, port, res, "SESSION", 1, 1)
 
     session = sessions[0]  # type: ignore
 
     if "SessionID" not in session:
-        raise exceptions.MinerSessionAlreadyActive("no SessionID in data", res)
+        raise exceptions.MinerCommandSessionAlreadyActive(host, port, "no SessionID in data", res)
     return str(session["SessionID"])
 
 
+@wrapped
 async def logoff(
     host: str, port: int, sid: str, timeout: float | None = 3
 ) -> dict[str, Any]:
@@ -154,14 +173,17 @@ async def logoff(
     return await roundtrip(host, port, {"command": "logoff", "parameter": sid}, timeout)
 
 
+@wrapped
 async def execute_command(
     host: str,
     port: int,
     timeout_sec: float | None,
     cmd: str,
     parameters: list[str] | None = None,
-    verbose: bool = False
-):
+    verbose: bool = False,
+    asjson: bool | None = True,
+    add_address: bool = False
+) -> tuple[tuple[str, int], dict[str, Any]] | dict[str, Any]:
     timeout = TIMEOUT if timeout_sec is None else timeout_sec
     parameters = parameters or []
 
@@ -177,9 +199,8 @@ async def execute_command(
         packet = {"command": cmd}
         if parameters:
             packet["parameter"] = ",".join(parameters)
-        return await roundtrip(
-            host, port, packet, timeout
-        )
+        ret = await roundtrip(host, port, packet, timeout, asjson=asjson)
+        return ((host, port), ret) if add_address else ret
     finally:
         if sid:
             await logoff(host, port, sid)

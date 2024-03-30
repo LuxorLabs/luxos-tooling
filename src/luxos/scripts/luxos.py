@@ -280,6 +280,10 @@ def main():
                         dest="async_engine",
                         action="store_true",
                         help="enable the new async engine")
+    parser.add_argument("-a", "--all",
+                        dest="details",
+                        action="store_true",
+                        help="show full result output")
 
     # parse arguments
     args = parser.parse_args()
@@ -303,11 +307,21 @@ def main():
     # Set max threads to use, minimum of max threads and number of IP addresses
     max_threads = min(args.max_threads, len(ip_list))
 
+    # Set start time
+    start_time = time.monotonic()
+
+    if args.async_engine:
+        from . import async_luxos
+        async_luxos.main(ip_list, args.port, args.cmd, args.params, timeout_sec, args.batch_delay, args.details)
+
+        # TODO remove this duplicate code
+        end_time = time.monotonic()
+        execution_time = end_time - start_time
+        log.info(f"Execution completed in {execution_time:.2f} seconds.")
+        return
+
     # Create a list of threads
     threads = []
-
-    # Set start time
-    start_time = time.time()
 
     # Iterate over the IP addresses
     for ip in ip_list:

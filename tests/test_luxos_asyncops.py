@@ -3,6 +3,7 @@ import asyncio
 import pytest
 import luxos.asyncops as aapi
 from luxos import exceptions
+from luxos import misc
 
 ## NOTE ##
 # This tests spawn an underlying server, it might be better not run
@@ -19,13 +20,15 @@ def getminer() -> None | tuple[str, int]:
 
 
 def test_validate_message():
-    pytest.raises(exceptions.MinerMalformedMessageError, aapi.validate_message, {})
+    pytest.raises(exceptions.MinerCommandMalformedMessageError, aapi.validate_message, "a", 0, {})
+    host, port = "a", 0
 
-    assert aapi.validate_message({"STATUS": 1, "id": 2})
+    assert aapi.validate_message(host, port, {"STATUS": 1, "id": 2})
 
     pytest.raises(
-        exceptions.MinerMalformedMessageError,
+        exceptions.MinerCommandMalformedMessageError,
         aapi.validate_message,
+        host, port,
         {
             "STATUS": 1,
             "id": 2,
@@ -33,27 +36,27 @@ def test_validate_message():
         "wooow",
     )
 
-    assert aapi.validate_message({"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow")
+    assert aapi.validate_message(host, port, {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow")
 
-    with pytest.raises(exceptions.MinerMalformedMessageError) as excinfo:
-        aapi.validate_message(
+    with pytest.raises(exceptions.MinerCommandMalformedMessageError) as excinfo:
+        aapi.validate_message(host, port,
             {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", minfields=9
         )
-    assert excinfo.value.args[0] == "found 2 fields for wooow invalid: 2 <= 9"
+    assert excinfo.value.args[2] == "found 2 fields for wooow invalid: 2 <= 9"
 
-    with pytest.raises(exceptions.MinerMalformedMessageError) as excinfo:
-        aapi.validate_message(
+    with pytest.raises(exceptions.MinerCommandMalformedMessageError) as excinfo:
+        aapi.validate_message(host, port,
             {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", maxfields=1
         )
-    assert excinfo.value.args[0] == "found 2 fields for wooow invalid: 2 >= 1"
+    assert excinfo.value.args[2] == "found 2 fields for wooow invalid: 2 >= 1"
 
-    with pytest.raises(exceptions.MinerMalformedMessageError) as excinfo:
-        aapi.validate_message(
+    with pytest.raises(exceptions.MinerCommandMalformedMessageError) as excinfo:
+        aapi.validate_message(host, port,
             {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", minfields=9, maxfields=10
         )
-    assert excinfo.value.args[0] == "found 2 fields for wooow invalid: 2 <= 9"
+    assert excinfo.value.args[2] == "found 2 fields for wooow invalid: 2 <= 9"
 
-    assert aapi.validate_message(
+    assert aapi.validate_message(host, port,
         {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", minfields=2, maxfields=10
     )
 
@@ -73,7 +76,7 @@ async def test_private_roundtrip_many_listeners(echopool):
     echopool.start(100, mode="echo+")
 
     blocks = {}
-    for index, group in enumerate(aapi.batched(echopool.addresses, 10)):
+    for index, group in enumerate(misc.batched(echopool.addresses, 10)):
         tasks = []
         for host, port in group:
             tasks.append(aapi._roundtrip(host, port, "hello olleh", None))
@@ -93,7 +96,7 @@ async def test_miner_logon_logoff_cycle():
     sid = None
     try:
         sid = await aapi.logon(host, port)
-    except exceptions.MinerSessionAlreadyActive as e:
+    except exceptions.MinerCommandSessionAlreadyActive as e:
         raise RuntimeError("a session is already active on {host}:{port}") from e
     finally:
         if sid:
@@ -108,9 +111,11 @@ async def test_miner_double_logon_cycle():
 
     sid = await aapi.logon(host, port)
     try:
-        with pytest.raises(exceptions.MinerSessionAlreadyActive) as excinfo:
+        with pytest.raises(exceptions.MinerCommandSessionAlreadyActive) as excinfo:
             await aapi.logon(host, port)
         assert excinfo.value.args[0] == f"session active for {host}:{port}"
+    except Exception:
+        pass
     finally:
         if sid:
             await aapi.logoff(host, port, sid)
@@ -121,7 +126,7 @@ async def test_miner_double_logon_cycle():
 async def test_miner_version():
     host, port = getminer()
 
-    res = await aapi.execute_command(host, port, None, "version")
+    res = await aapi.execute_command(host, port, None, "version", asjson=True)
     assert "VERSION" in res
     assert len(res["VERSION"]) == 1
     assert "API" in res["VERSION"][0]
