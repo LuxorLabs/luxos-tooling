@@ -63,7 +63,7 @@ async def test_private_roundtrip_one_listener(echopool):
     """checks roundrtip sends and receive a message (1-listener)"""
     echopool.start(1, mode="echo+")
     host, port = echopool.addresses[0]
-    ret = await aapi._roundtrip(host, port, "hello")
+    ret = await aapi._roundtrip(host, port, "hello", None)
     assert ret == f"received by ('{host}', {port}): hello"
 
 
@@ -76,7 +76,7 @@ async def test_private_roundtrip_many_listeners(echopool):
     for index, group in enumerate(aapi.batched(echopool.addresses, 10)):
         tasks = []
         for host, port in group:
-            tasks.append(aapi._roundtrip(host, port, "hello olleh"))
+            tasks.append(aapi._roundtrip(host, port, "hello olleh", None))
         blocks[index] = await asyncio.gather(*tasks, return_exceptions=True)
 
     assert len(blocks) == 10
@@ -98,3 +98,30 @@ async def test_miner_logon_logoff_cycle():
     finally:
         if sid:
             await aapi.logoff(host, port, sid)
+
+
+
+@pytest.mark.skipif(not getminer(), reason="need to set LUXOS_TEST_MINER")
+@pytest.mark.asyncio
+async def test_miner_double_logon_cycle():
+    host, port = getminer()
+
+    sid = await aapi.logon(host, port)
+    try:
+        with pytest.raises(exceptions.MinerSessionAlreadyActive) as excinfo:
+            await aapi.logon(host, port)
+        assert excinfo.value.args[0] == f"session active for {host}:{port}"
+    finally:
+        if sid:
+            await aapi.logoff(host, port, sid)
+
+
+@pytest.mark.skipif(not getminer(), reason="need to set LUXOS_TEST_MINER")
+@pytest.mark.asyncio
+async def test_miner_version():
+    host, port = getminer()
+
+    res = await aapi.execute_command(host, port, None, "version")
+    assert "VERSION" in res
+    assert len(res["VERSION"]) == 1
+    assert "API" in res["VERSION"][0]

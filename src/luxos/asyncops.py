@@ -1,3 +1,4 @@
+import logging
 import sys
 import asyncio
 import itertools
@@ -6,7 +7,7 @@ import json
 from typing import Any
 
 from . import exceptions
-
+from . import api
 
 if sys.version_info >= (3, 12):
     batched = itertools.batched
@@ -20,8 +21,13 @@ else:
             yield batch
 
 
+log = logging.getLogger(__name__)
+
+TIMEOUT = 3.0  # default timeout for operations
+
+
 async def _roundtrip(
-    host: str, port: int, cmd: bytes | str, timeout: float | None = None
+    host: str, port: int, cmd: bytes | str, timeout: float | None
 ) -> str:
     """simple asyncio socket based send/receive function
 
@@ -65,6 +71,7 @@ async def roundtrip(
         print(await roundtrip(host, port, {"version))
         -> (json) {'STATUS': [{'Code': 22, 'Description': 'LUXminer 20 ...
     """
+    timeout = TIMEOUT if timeout is None else timeout
     count = 0
 
     if not isinstance(cmd, (bytes, str)):
@@ -75,6 +82,7 @@ async def roundtrip(
     last_exception = None
     while count <= retry:
         try:
+            timeout = TIMEOUT if timeout is None else timeout
             res = await _roundtrip(host, port, cmd, timeout)
             if asjson:
                 return json.loads(res)
@@ -107,17 +115,16 @@ def validate_message(
     n = len(res[extrakey])
     msg = None
     if minfields and (n < minfields):
-        msg = (f"found {n} fields for {extrakey} invalid: "
-               f"{n} <= {minfields}")
+        msg = f"found {n} fields for {extrakey} invalid: " f"{n} <= {minfields}"
     elif maxfields and (n > maxfields):
-        msg = (f"found {n} fields for {extrakey} invalid: "
-               f"{n} >= {maxfields}")
+        msg = f"found {n} fields for {extrakey} invalid: " f"{n} >= {maxfields}"
     if msg is None:
         return res[extrakey]
     raise exceptions.MinerMalformedMessageError(msg, res)
 
 
 async def logon(host: str, port: int, timeout: float | None = 3) -> str:
+    timeout = TIMEOUT if timeout is None else timeout
     res = await roundtrip(host, port, {"command": "logon"}, timeout)
 
     # when we first logon, we'll receive a token (session_id)
@@ -125,7 +132,14 @@ async def logon(host: str, port: int, timeout: float | None = 3) -> str:
     # on subsequent logon, we receive a
     #   [STATUS][Msg] == "Another session is active" ([STATUS][Code] 402)
 
-    sessions = validate_message(res, "SESSION", 1, 1)
+    try:
+        sessions = validate_message(res, "SESSION", 1, 1)
+    except exceptions.MinerMalformedMessageError as e:
+        if res.get("STATUS", [{}])[0].get("Code", None) == 402:
+            raise exceptions.MinerSessionAlreadyActive(
+                f"session active for {host}:{port}"
+            ) from e
+
     session = sessions[0]  # type: ignore
 
     if "SessionID" not in session:
@@ -133,5 +147,39 @@ async def logon(host: str, port: int, timeout: float | None = 3) -> str:
     return str(session["SessionID"])
 
 
-async def logoff(host: str, port: int, sid: str, timeout: float | None = 3) -> dict[str,Any]:
+async def logoff(
+    host: str, port: int, sid: str, timeout: float | None = 3
+) -> dict[str, Any]:
+    timeout = TIMEOUT if timeout is None else timeout
     return await roundtrip(host, port, {"command": "logoff", "parameter": sid}, timeout)
+
+
+async def execute_command(
+    host: str,
+    port: int,
+    timeout_sec: float | None,
+    cmd: str,
+    parameters: list[str] | None = None,
+    verbose: bool = False
+):
+    timeout = TIMEOUT if timeout_sec is None else timeout_sec
+    parameters = parameters or []
+
+    sid = None
+    if api.logon_required(cmd):
+        sid = await logon(host, port)
+        parameters = [sid, *parameters]
+        log.info("session id requested & obtained for %s:%i (%s)", host, port, sid)
+    else:
+        log.debug("no logon required for command %s on %s:%i", cmd, host, port)
+
+    try:
+        packet = {"command": cmd}
+        if parameters:
+            packet["parameter"] = ",".join(parameters)
+        return await roundtrip(
+            host, port, packet, timeout
+        )
+    finally:
+        if sid:
+            await logoff(host, port, sid)
