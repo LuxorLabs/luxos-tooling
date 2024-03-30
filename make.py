@@ -64,7 +64,7 @@ def onepack(parser, args, workdir):
     o = parser.parse_args(args)
 
     targets = [
-        ("luxos.pyz", "luxos.api:main"),
+        ("luxos.pyz", "luxos.scripts.luxos:main"),
         ("health-checker.pyz", "luxos.scripts.health_checker:main"),
     ]
     for target, entrypoint in targets:

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os
 import csv
 import json
@@ -9,204 +10,14 @@ import ipaddress
 import threading
 from typing import Any
 
-COMMANDS = {
-    "addgroup": {
-        "logon_required": False
-    },
-    "addpool": {
-        "logon_required": False
-    },
-    "asc": {
-        "logon_required": False
-    },
-    "asccount": {
-        "logon_required": False
-    },
-    "atm": {
-        "logon_required": False
-    },
-    "atmset": {
-        "logon_required": True
-    },
-    "check": {
-        "logon_required": False
-    },
-    "coin": {
-        "logon_required": False
-    },
-    "config": {
-        "logon_required": False
-    },
-    "curtail": {
-        "logon_required": True
-    },
-    "devdetails": {
-        "logon_required": False
-    },
-    "devs": {
-        "logon_required": False
-    },
-    "disablepool": {
-        "logon_required": False
-    },
-    "edevs": {
-        "logon_required": False
-    },
-    "enablepool": {
-        "logon_required": False
-    },
-    "estats": {
-        "logon_required": False
-    },
-    "fans": {
-        "logon_required": False
-    },
-    "fanset": {
-        "logon_required": True
-    },
-    "frequencyget": {
-        "logon_required": False
-    },
-    "frequencyset": {
-        "logon_required": True
-    },
-    "frequencystop": {
-        "logon_required": True
-    },
-    "groupquota": {
-        "logon_required": False
-    },
-    "healthchipget": {
-        "logon_required": False
-    },
-    "healthchipset": {
-        "logon_required": True
-    },
-    "healthctrl": {
-        "logon_required": False
-    },
-    "healthctrlset": {
-        "logon_required": True
-    },
-    "immersionswitch": {
-        "logon_required": True
-    },
-    "kill": {
-        "logon_required": False
-    },
-    "lcd": {
-        "logon_required": False
-    },
-    "limits": {
-        "logon_required": False
-    },
-    "logoff": {
-        "logon_required": True
-    },
-    "logon": {
-        "logon_required": False
-    },
-    "netset": {
-        "logon_required": True
-    },
-    "pools": {
-        "logon_required": False
-    },
-    "power": {
-        "logon_required": False
-    },
-    "profilenew": {
-        "logon_required": True
-    },
-    "profilerem": {
-        "logon_required": True
-    },
-    "profiles": {
-        "logon_required": False
-    },
-    "profileset": {
-        "logon_required": True
-    },
-    "reboot": {
-        "logon_required": True
-    },
-    "rebootdevice": {
-        "logon_required": True
-    },
-    "removegroup": {
-        "logon_required": False
-    },
-    "removepool": {
-        "logon_required": True
-    },
-    "resetminer": {
-        "logon_required": True
-    },
-    "session": {
-        "logon_required": False
-    },
-    "stats": {
-        "logon_required": False
-    },
-    "summary": {
-        "logon_required": False
-    },
-    "switchpool": {
-        "logon_required": False
-    },
-    "tempctrl": {
-        "logon_required": False
-    },
-    "tempctrlset": {
-        "logon_required": True
-    },
-    "temps": {
-        "logon_required": False
-    },
-    "updaterun": {
-        "logon_required": True
-    },
-    "updateset": {
-        "logon_required": True
-    },
-    "version": {
-        "logon_required": False
-    },
-    "voltageget": {
-        "logon_required": False
-    },
-    "voltageset": {
-        "logon_required": True
-    },
-    "profileget": {
-        "logon_required": False
-    },
-    "logset": {
-        "logon_required": True
-    },
-    "tempsensor": {
-        "logon_required": False
-    },
-    "tempsensorset": {
-        "logon_required": True
-    },
-    "uninstallluxos": {
-        "logon_required": True
-    }
-}
+from luxos.api import logon_required
 
-# Set up logging configuration
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[logging.StreamHandler(),
-              logging.FileHandler("LuxOS-CLI.log")],
-)
+log = logging.getLogger(__name__)
 
 
 # internal_send_cgminer_command sends a command to the cgminer API server and returns the response.
 def internal_send_cgminer_command(host: str, port: int, command: str,
-                                  timeout_sec: int, verbose: bool) -> str:
+                                  timeout_sec: int, verbose: bool) -> dict[str, Any]:
 
     # Create a socket connection to the server
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -245,8 +56,7 @@ def internal_send_cgminer_command(host: str, port: int, command: str,
 
             # Parse the response JSON
             r = json.loads(response.decode())
-            if verbose:
-                logging.info(r)
+            log.debug(r)
             return r
 
         except socket.error as e:
@@ -255,26 +65,23 @@ def internal_send_cgminer_command(host: str, port: int, command: str,
 
 # send_cgminer_command sends a command to the cgminer API server and returns the response.
 def send_cgminer_command(host: str, port: int, cmd: str, param: str,
-                         timeout: int, verbose: bool) -> str:
+                         timeout: int, verbose: bool) -> dict[str, Any]:
     req = str(f"{{\"command\": \"{cmd}\", \"parameter\": \"{param}\"}}\n")
-    if verbose:
-        logging.info(
-            f"Executing command: {cmd} with params: {param} to host: {host}")
+    log.debug(f"Executing command: {cmd} with params: {param} to host: {host}")
 
     return internal_send_cgminer_command(host, port, req, timeout, verbose)
 
 
 # send_cgminer_simple_command sends a command with no params to the miner and returns the response.
 def send_cgminer_simple_command(host: str, port: int, cmd: str, timeout: int,
-                                verbose: bool) -> str:
+                                verbose: bool) -> dict[str, Any]:
     req = str(f"{{\"command\": \"{cmd}\"}}\n")
-    if verbose:
-        logging.info(f"Executing command: {cmd} to host: {host}")
+    log.debug(f"Executing command: {cmd} to host: {host}")
     return internal_send_cgminer_command(host, port, req, timeout, verbose)
 
 
 # check_res_structure checks that the response has the expected structure.
-def check_res_structure(res: str, structure: str, min: int, max: int) -> str:
+def check_res_structure(res: dict[str, Any], structure: str, min: int, max: int) -> dict[str, Any]:
     # Check the structure of the response.
     if structure not in res or "STATUS" not in res or "id" not in res:
         raise ValueError("error: invalid response structure")
@@ -307,7 +114,7 @@ def check_res_structure(res: str, structure: str, min: int, max: int) -> str:
 
 
 # get_str_field tries to get the field as a string and returns it.
-def get_str_field(struct: str, name: str) -> str:
+def get_str_field(struct: dict[str, Any], name: str) -> str:
     try:
         s = str(struct[name])
     except Exception as e:
@@ -337,24 +144,6 @@ def logon(host: str, port: int, timeout: int, verbose: bool) -> str:
     return s
 
 
-def logon_required(cmd: str, commands_list=COMMANDS) -> bool:
-    # Check if the command requires logon to LuxOS API
-    user_cmd = None
-
-    keys = commands_list.keys()
-    for key in keys:
-        if key == cmd:
-            user_cmd = cmd
-            break
-
-    if user_cmd == None:
-        logging.info(
-            f"{cmd} command is not supported. Try again with a different command."
-        )
-        return
-    return commands_list[cmd]['logon_required']
-
-
 def add_session_id_parameter(session_id, parameters):
     # Add the session id to the parameters
     return [session_id, *parameters]
@@ -365,7 +154,7 @@ def parameters_to_string(parameters):
     return ",".join(parameters)
 
 
-def generate_ip_range(start_ip, end_ip):
+def generate_ip_range(start_ip: str, end_ip: str) -> list[str]:
     # Generate a list of IP addresses from the start and end IP
     start = ipaddress.IPv4Address(start_ip)
     end = ipaddress.IPv4Address(end_ip)
@@ -379,7 +168,7 @@ def generate_ip_range(start_ip, end_ip):
     return ip_list
 
 
-def load_ip_list_from_csv(csv_file):
+def load_ip_list_from_csv(csv_file: str) -> list[str]:
     # Check if file exists
     if not os.path.exists(csv_file):
         logging.info(f"Error: {csv_file} file not found.")
@@ -390,6 +179,9 @@ def load_ip_list_from_csv(csv_file):
     with open(csv_file, 'r') as f:
         reader = csv.reader(f)
         for i, row in enumerate(reader):
+            # skip commented lines
+            if row and row[0].strip().startswith("#"):
+                continue
             if i == 0 and row and row[0] == "hostname":
                 continue
             if row:  # Ignore empty rows
@@ -410,27 +202,25 @@ def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
             # Add the SessionID to the parameters list at the left.
             parameters = add_session_id_parameter(sid, parameters)
 
-            if verbose:
-                logging.info(
-                    f'Command requires a SessionID, logging in for host: {host}'
+            log.debug(
+                    "Command requires a SessionID, logging in for host: %s", host
                 )
-                logging.info(f'SessionID obtained for {host}: {sid}')
+            log.info("SessionID obtained for %s: %s", host, sid)
 
-        elif not logon_required and verbose:
-            logging.info(f"Logon not required for executing {cmd}")
+        # TODO verify this
+        elif not logon_required:  # type: ignore
+            log.debug("Logon not required for executing %s", cmd)
 
         # convert the params to a string that LuxOS API accepts
         param_string = parameters_to_string(parameters)
 
-        if verbose:
-            logging.info(f"{cmd} on {host} with parameters: {param_string}")
+        log.debug("%s on %s with parameters: %s", cmd, host, param_string)
 
         # Execute the API command
         res = send_cgminer_command(host, port, cmd, param_string, timeout_sec,
                                    verbose)
 
-        if verbose:
-            logging.info(res)
+        log.debug(res)
 
         # Log off to terminate the session
         if logon_req:
@@ -439,8 +229,8 @@ def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
 
         return res
 
-    except Exception as e:
-        logging.info(f"Error executing {cmd} on {host}: {e}")
+    except Exception:
+        log.exception("Error executing %s on %s", cmd, host)
 
 
 def main():
@@ -486,9 +276,18 @@ def main():
                     default=0,
                     type=int,
                     help="Delay between batches in seconds")
+    parser.add_argument('--async',
+                        dest="async_engine",
+                        action="store_true",
+                        help="enable the new async engine")
 
     # parse arguments
     args = parser.parse_args()
+    args.error = parser.error
+
+    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[logging.StreamHandler(), logging.FileHandler("LuxOS-CLI.log")], )
 
     # set timeout to milliseconds
     timeout_sec = args.timeout
@@ -499,8 +298,7 @@ def main():
     elif args.ipfile:
         ip_list = load_ip_list_from_csv(args.ipfile)
     else:
-        logging.info("No IP address or IP list found.")
-        exit(1)
+        args.error("No IP address or IP list found.")
 
     # Set max threads to use, minimum of max threads and number of IP addresses
     max_threads = min(args.max_threads, len(ip_list))
@@ -543,7 +341,7 @@ def main():
     # Execution completed
     end_time = time.time()
     execution_time = end_time - start_time
-    logging.info(f"Execution completed in {execution_time:.2f} seconds.")
+    log.info(f"Execution completed in {execution_time:.2f} seconds.")
 
 if __name__ == "__main__":
     main()
