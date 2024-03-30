@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """A make-like script"""
 import argparse
+import contextlib
 import os
 import sys
 import logging
@@ -58,15 +59,22 @@ def task(name=None):
 def onepack(parser, args, workdir):
     """create a one .pyz single file package"""
     from zipapp import create_archive
+    from configparser import ConfigParser, ParsingError
+
+    config = ConfigParser(strict=False)
+    with contextlib.suppress(ParsingError):
+        config.read(workdir / "pyproject.toml")
+
+    targets = []
+    section = "project.scripts"
+    for target in config.options(section):
+        entrypoint = config.get(section, target).strip("'").strip('"')
+        targets.append((f"{target}.pyz", entrypoint))
 
     parser.add_argument("-o", "--output-dir",
                    default=workdir, type=Path)
     o = parser.parse_args(args)
 
-    targets = [
-        ("luxos.pyz", "luxos.scripts.luxos:main"),
-        ("health-checker.pyz", "luxos.scripts.health_checker:main"),
-    ]
     for target, entrypoint in targets:
         dst = o.output_dir / target
         create_archive(
