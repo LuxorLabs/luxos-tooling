@@ -14,7 +14,7 @@ from datetime import datetime
 from typing import Any
 
 from tqdm.asyncio import tqdm as async_tqdm
-import asyncpg  # type: ignore
+import asyncpg
 import shutil
 import yaml
 import pandas as pd
