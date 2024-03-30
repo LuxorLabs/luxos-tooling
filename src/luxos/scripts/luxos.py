@@ -443,8 +443,7 @@ def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
         logging.info(f"Error executing {cmd} on {host}: {e}")
 
 
-if __name__ == "__main__":
-
+def main():
     # define arguments
     parser = argparse.ArgumentParser(description="LuxOS CLI Tool")
     parser.add_argument('--range_start', required=False, help="IP start range")
@@ -545,3 +544,6 @@ if __name__ == "__main__":
     end_time = time.time()
     execution_time = end_time - start_time
     logging.info(f"Execution completed in {execution_time:.2f} seconds.")
+
+if __name__ == "__main__":
+    main()
