@@ -108,3 +108,12 @@ def echopool(resolver):
         yield pool
     finally:
         pool.shutdown()
+
+
+def pytest_addoption(parser):
+    parser.addoption('--manual', action='store_true', dest="manual",
+                 default=False, help="run manual tests")
+
+def pytest_configure(config):
+    if not config.option.manual:
+        setattr(config.option, "markexpr", "not manual")

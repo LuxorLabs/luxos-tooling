@@ -4,6 +4,12 @@ import pytest
 import luxos.asyncops as aapi
 from luxos import exceptions
 
+## NOTE ##
+# This tests spawn an underlying server, it might be better not run
+# unattended. Some also require a miner, we might not have it handy.
+pytestmark = pytest.mark.manual
+
+
 
 def getminer() -> None | tuple[str, int]:
     if not (minerd := os.getenv("LUXOS_TEST_MINER")):
