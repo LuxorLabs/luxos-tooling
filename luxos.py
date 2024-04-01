@@ -28,6 +28,12 @@ COMMANDS = {
     "atmset": {
         "logon_required": True
     },
+    "autotunerget": {
+        "logon_required": False
+    },
+    "autotunerset": {
+        "logon_required": True
+    },
     "check": {
         "logon_required": False
     },
@@ -46,11 +52,17 @@ COMMANDS = {
     "devs": {
         "logon_required": False
     },
+    "disableboard": {
+        "logon_required": True
+    },
     "disablepool": {
         "logon_required": False
     },
     "edevs": {
         "logon_required": False
+    },
+    "enableboard": {
+        "logon_required": True
     },
     "enablepool": {
         "logon_required": False
@@ -106,8 +118,17 @@ COMMANDS = {
     "logon": {
         "logon_required": False
     },
+    "logset": {
+        "logon_required": False
+    },
     "netset": {
         "logon_required": True
+    },
+    "poolopts": {
+        "logon_required": False
+    },
+    "pooloptsset": {
+        "logon_required": False
     },
     "pools": {
         "logon_required": False
@@ -115,10 +136,16 @@ COMMANDS = {
     "power": {
         "logon_required": False
     },
+    "profileget": {
+        "logon_required": True
+    },
     "profilenew": {
         "logon_required": True
     },
     "profilerem": {
+        "logon_required": True
+    },
+    "profilerestore": {
         "logon_required": True
     },
     "profiles": {
@@ -136,11 +163,14 @@ COMMANDS = {
     "removegroup": {
         "logon_required": False
     },
-    "removepool": {
-        "logon_required": True
-    },
     "resetminer": {
         "logon_required": True
+    },
+    "resetconfig": {
+        "logon_required": True
+    },
+    "removepool": {
+        "logon_required": False
     },
     "session": {
         "logon_required": False
@@ -163,6 +193,21 @@ COMMANDS = {
     "temps": {
         "logon_required": False
     },
+    "tempsensor": {
+        "logon_required": False
+    },
+    "tempsensorset": {
+        "logon_required": True
+    },
+    "tunerstatus": {
+        "logon_required": False
+    },
+    "tunerswitch": {
+        "logon_required": True
+    },
+    "uninstallluxos": {
+        "logon_required": True
+    },
     "updaterun": {
         "logon_required": True
     },
@@ -180,18 +225,6 @@ COMMANDS = {
     },
     "profileget": {
         "logon_required": False
-    },
-    "logset": {
-        "logon_required": True
-    },
-    "tempsensor": {
-        "logon_required": False
-    },
-    "tempsensorset": {
-        "logon_required": True
-    },
-    "uninstallluxos": {
-        "logon_required": True
     }
 }
 
