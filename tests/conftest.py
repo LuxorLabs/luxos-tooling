@@ -1,7 +1,9 @@
 # nothing to see here, yet
+import contextlib
 import subprocess
 import sys
 import dataclasses as dc
+import time
 import types
 from pathlib import Path
 
@@ -42,13 +44,13 @@ def loadmod(path: Path) -> types.ModuleType:
     from importlib import util
 
     spec = util.spec_from_file_location(Path(path).name, Path(path))
-    module = util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    module = util.module_from_spec(spec)  # type: ignore
+    spec.loader.exec_module(module)  # type: ignore
     return module
 
 
 @pytest.fixture(scope="function")
-def echopool(resolver):
+def echopool(resolver, tmp_path, request):
     """yield a pool of echo servers
 
     Example:
@@ -66,38 +68,48 @@ def echopool(resolver):
     script = resolver.lookup("echopool.py")
     mod = loadmod(script)
 
+    @dc.dataclass
     class Pool:
         def __init__(self):
-            self.process = None
+            self.process: subprocess.Popen | None = None
+            self.addresses: list[tuple[str, int]] | None = None
 
         def start(
             self,
             number: int,
             mode: str = "echo+",
             verbose: bool = False,
-            delay_s: float | None = None,
-            async_delay_s: float | None = None,
+            timeout: float | None = None,
         ):
             cmd = [sys.executable, script, "--mode", mode]
+
             if verbose:
                 cmd.append("-v")
-            if delay_s:
-                cmd.extend(["--delay", delay_s])
-            if async_delay_s:
-                cmd.extend(["--async-delay", async_delay_s])
+            cmd.append("-v")
+
+            path = tmp_path / f"{request.function.__name__}.txt"
+            cmd.extend(["--server-file", path])
+
             cmd.append(number)
 
-            self.process = subprocess.Popen(
-                [str(c) for c in cmd], stdout=subprocess.PIPE
-            )
+            self.process = subprocess.Popen([str(c) for c in cmd])
 
-            self.addresses = []
-            while True:
-                line = str(self.process.stdout.readline(), "utf-8")
-                if found := mod.is_server_line(line):
-                    self.addresses.append(found)
-                if mod.is_end_server_lines(line):
-                    break
+            # wait at most 5 seconds for the underlying server to start up
+            timeout = 5.0 if timeout is None else timeout
+            ttl = (time.monotonic() + timeout) if timeout else None
+
+            while self.addresses is None:
+                if ttl and (time.monotonic() > ttl):
+                    raise RuntimeError("failed to start underlying server", cmd)
+                addresses = []
+                with contextlib.suppress(FileNotFoundError):
+                    for line in path.read_text().split("\n"):
+                        if found := mod.is_server_line(line):
+                            addresses.append(found)
+                        if mod.is_end_server_lines(line):
+                            self.addresses = addresses
+                            break
+                time.sleep(0.01)
 
         def shutdown(self):
             if self.process:
@@ -111,8 +123,14 @@ def echopool(resolver):
 
 
 def pytest_addoption(parser):
-    parser.addoption('--manual', action='store_true', dest="manual",
-                 default=False, help="run manual tests")
+    parser.addoption(
+        "--manual",
+        action="store_true",
+        dest="manual",
+        default=False,
+        help="run manual tests",
+    )
+
 
 def pytest_configure(config):
     if not config.option.manual:

@@ -6,6 +6,7 @@ import time
 import re
 import argparse
 import functools
+from pathlib import Path
 
 
 ENDCONFIG = "= DONE ="
@@ -34,7 +35,7 @@ async def handle_client(
     data = await reader.read(1024)
     message = data.decode()
     addr = writer.get_extra_info("peername")
-    this_addr = reader._transport.get_extra_info('sockname')
+    this_addr = reader._transport.get_extra_info("sockname")
 
     log.debug("received at %s: %s", this_addr, message)
     if mode == "echo+":
@@ -46,11 +47,7 @@ async def handle_client(
             "reason": "",
             "this": this_addr,
             "peer": addr,
-            "result": {
-                "message": message,
-                "input": "",
-                "output": ""
-            },
+            "result": {"message": message, "input": "", "output": ""},
         }
         try:
             message = json.loads(message)
@@ -65,15 +62,19 @@ async def handle_client(
             result["reason"] = str(e)
 
         data = json.dumps(result, indent=2, sort_keys=True).encode()
-        pass
+
+    # this instroduces a delay between request <-> reply
+    if async_delay_s:
+        await asyncio.sleep(async_delay_s)
+
     writer.write(data)
     await writer.drain()
 
     writer.close()
+
+    # this block the whole server!
     if delay_s:
         time.sleep(delay_s)
-    if async_delay_s:
-        await asyncio.sleep(async_delay_s)
 
 
 async def main():
@@ -82,13 +83,20 @@ async def main():
     """
     p = argparse.ArgumentParser()
     p.add_argument("-v", "--verbose", action="store_true")
-    p.add_argument("--delay", type=float, help="non async delay in s")
-    p.add_argument("--async-delay", type=float, help="async delay in s")
+    p.add_argument(
+        "--delay", type=float, help="non async delay in s (block the server)"
+    )
+    p.add_argument(
+        "--async-delay", type=float, help="async delay in s (block a single request)"
+    )
     p.add_argument("--mode", choices=["echo", "echo+", "json", "json+"], default="echo")
+    p.add_argument("--server-file", type=Path)
     p.add_argument("number", type=int)
 
     args = p.parse_args()
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
+
+    log.debug("starting %i servers in [%s] mode", args.number, args.mode)
 
     # Create a server for each port
     client = functools.partial(
@@ -100,12 +108,22 @@ async def main():
     servers = await asyncio.gather(
         *[asyncio.start_server(client, "127.0.0.1", 0) for _ in range(args.number)]
     )
-    for server in servers:
-        print(f"server: {server.sockets[0].getsockname()}")
-    print(ENDCONFIG)
+
+    message = [f"server: {server.sockets[0].getsockname()}" for server in servers]
+    message.append(ENDCONFIG)
+    txt = "\n".join(message)
+
+    if args.server_file:
+        args.server_file.parent.mkdir(parents=True, exist_ok=True)
+        args.server_file.write_text(txt)
+        log.debug("written servers to %s", args.server_file)
+    else:
+        print(txt)
 
     # Keep the main coroutine running
     while True:
+        if args.server_file and not args.server_file.exists():
+            break
         await asyncio.sleep(1)
 
 
