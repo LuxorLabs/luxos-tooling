@@ -85,7 +85,6 @@ def echopool(resolver, tmp_path, request):
 
             if verbose:
                 cmd.append("-v")
-            cmd.append("-v")
 
             path = tmp_path / f"{request.function.__name__}.txt"
             cmd.extend(["--server-file", path])
