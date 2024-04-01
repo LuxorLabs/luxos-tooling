@@ -7,7 +7,8 @@ def test_import():
     from luxos import api
     assert (Path(api.__file__).parent / "api.json").exists()
 
-    assert len(api.COMMANDS) == 57
+    ### Hardcoded is the number of api commands present in the json file
+    assert len(api.COMMANDS) == 71
 
 
 def test_logon_required():
