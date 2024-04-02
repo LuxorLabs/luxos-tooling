@@ -1,4 +1,5 @@
 from __future__ import annotations
+import asyncio
 import os
 import csv
 import json
@@ -16,9 +17,9 @@ log = logging.getLogger(__name__)
 
 
 # internal_send_cgminer_command sends a command to the cgminer API server and returns the response.
-def internal_send_cgminer_command(host: str, port: int, command: str,
-                                  timeout_sec: int, verbose: bool) -> dict[str, Any]:
-
+def internal_send_cgminer_command(
+    host: str, port: int, command: str, timeout_sec: int, verbose: bool
+) -> dict[str, Any]:
     # Create a socket connection to the server
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         try:
@@ -48,7 +49,7 @@ def internal_send_cgminer_command(host: str, port: int, command: str,
                         break
                 if not data:
                     break
-                null_index = data.find(b'\x00')
+                null_index = data.find(b"\x00")
                 if null_index >= 0:
                     response += data[:null_index]
                     break
@@ -64,24 +65,28 @@ def internal_send_cgminer_command(host: str, port: int, command: str,
 
 
 # send_cgminer_command sends a command to the cgminer API server and returns the response.
-def send_cgminer_command(host: str, port: int, cmd: str, param: str,
-                         timeout: int, verbose: bool) -> dict[str, Any]:
-    req = str(f"{{\"command\": \"{cmd}\", \"parameter\": \"{param}\"}}\n")
+def send_cgminer_command(
+    host: str, port: int, cmd: str, param: str, timeout: int, verbose: bool
+) -> dict[str, Any]:
+    req = str(f'{{"command": "{cmd}", "parameter": "{param}"}}\n')
     log.debug(f"Executing command: {cmd} with params: {param} to host: {host}")
 
     return internal_send_cgminer_command(host, port, req, timeout, verbose)
 
 
 # send_cgminer_simple_command sends a command with no params to the miner and returns the response.
-def send_cgminer_simple_command(host: str, port: int, cmd: str, timeout: int,
-                                verbose: bool) -> dict[str, Any]:
-    req = str(f"{{\"command\": \"{cmd}\"}}\n")
+def send_cgminer_simple_command(
+    host: str, port: int, cmd: str, timeout: int, verbose: bool
+) -> dict[str, Any]:
+    req = str(f'{{"command": "{cmd}"}}\n')
     log.debug(f"Executing command: {cmd} to host: {host}")
     return internal_send_cgminer_command(host, port, req, timeout, verbose)
 
 
 # check_res_structure checks that the response has the expected structure.
-def check_res_structure(res: dict[str, Any], structure: str, min: int, max: int) -> dict[str, Any]:
+def check_res_structure(
+    res: dict[str, Any], structure: str, min: int, max: int
+) -> dict[str, Any]:
     # Check the structure of the response.
     if structure not in res or "STATUS" not in res or "id" not in res:
         raise ValueError("error: invalid response structure")
@@ -176,7 +181,7 @@ def load_ip_list_from_csv(csv_file: str) -> list[str]:
 
     # Load the IP addresses from the CSV file
     ip_list = []
-    with open(csv_file, 'r') as f:
+    with open(csv_file, "r") as f:
         reader = csv.reader(f)
         for i, row in enumerate(reader):
             # skip commented lines
@@ -189,9 +194,9 @@ def load_ip_list_from_csv(csv_file: str) -> list[str]:
     return ip_list
 
 
-def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
-                    parameters: list, verbose: bool):
-
+def execute_command(
+    host: str, port: int, timeout_sec: int, cmd: str, parameters: list, verbose: bool
+):
     # Check if logon is required for the command
     logon_req = logon_required(cmd)
 
@@ -202,9 +207,7 @@ def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
             # Add the SessionID to the parameters list at the left.
             parameters = add_session_id_parameter(sid, parameters)
 
-            log.debug(
-                    "Command requires a SessionID, logging in for host: %s", host
-                )
+            log.debug("Command requires a SessionID, logging in for host: %s", host)
             log.info("SessionID obtained for %s: %s", host, sid)
 
         # TODO verify this
@@ -217,15 +220,13 @@ def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
         log.debug("%s on %s with parameters: %s", cmd, host, param_string)
 
         # Execute the API command
-        res = send_cgminer_command(host, port, cmd, param_string, timeout_sec,
-                                   verbose)
+        res = send_cgminer_command(host, port, cmd, param_string, timeout_sec, verbose)
 
         log.debug(res)
 
         # Log off to terminate the session
         if logon_req:
-            send_cgminer_command(host, port, "logoff", sid, timeout_sec,
-                                 verbose)
+            send_cgminer_command(host, port, "logoff", sid, timeout_sec, verbose)
 
         return res
 
@@ -236,62 +237,72 @@ def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
 def main():
     # define arguments
     parser = argparse.ArgumentParser(description="LuxOS CLI Tool")
-    parser.add_argument('--range_start', required=False, help="IP start range")
-    parser.add_argument('--range_end', required=False, help="IP end range")
-    parser.add_argument('--ipfile',
-                        required=False,
-                        default='ips.csv',
-                        help="File name to store IP addresses")
-    parser.add_argument('--cmd',
-                        required=True,
-                        help="Command to execute on LuxOS API")
-    parser.add_argument('--params',
-                        required=False,
-                        default=[],
-                        nargs='+',
-                        help="Parameters for LuxOS API")
+    parser.add_argument("--range_start", required=False, help="IP start range")
+    parser.add_argument("--range_end", required=False, help="IP end range")
     parser.add_argument(
-        '--max_threads',
+        "--ipfile",
+        required=False,
+        default="ips.csv",
+        help="File name to store IP addresses",
+    )
+    parser.add_argument("--cmd", required=True, help="Command to execute on LuxOS API")
+    parser.add_argument(
+        "--params",
+        required=False,
+        default=[],
+        nargs="+",
+        help="Parameters for LuxOS API",
+    )
+    parser.add_argument(
+        "--max_threads",
         required=False,
         default=10,
         type=int,
-        help="Maximum number of threads to use. Default is 10.")
-    parser.add_argument('--timeout',
-                        required=False,
-                        default=3,
-                        type=int,
-                        help="Timeout for network scan in seconds")
-    parser.add_argument('--port',
-                        required=False,
-                        default=4028,
-                        type=int,
-                        help="Port for LuxOS API")
-    parser.add_argument('--verbose',
-                        required=False,
-                        default=False,
-                        type=bool,
-                        help="Verbose output")
-    parser.add_argument('--batch_delay',
-                    required=False,
-                    default=0,
-                    type=int,
-                    help="Delay between batches in seconds")
-    parser.add_argument('--async',
-                        dest="async_engine",
-                        action="store_true",
-                        help="enable the new async engine")
-    parser.add_argument("-a", "--all",
-                        dest="details",
-                        action="store_true",
-                        help="show full result output")
+        help="Maximum number of threads to use. Default is 10.",
+    )
+    parser.add_argument(
+        "--timeout",
+        required=False,
+        default=3,
+        type=int,
+        help="Timeout for network scan in seconds",
+    )
+    parser.add_argument(
+        "--port", required=False, default=4028, type=int, help="Port for LuxOS API"
+    )
+    parser.add_argument(
+        "--verbose", required=False, default=False, type=bool, help="Verbose output"
+    )
+    parser.add_argument(
+        "--batch_delay",
+        required=False,
+        default=0,
+        type=int,
+        help="Delay between batches in seconds",
+    )
+    parser.add_argument(
+        "--async",
+        dest="async_engine",
+        action="store_true",
+        help="enable the new async engine",
+    )
+    parser.add_argument(
+        "-a",
+        "--all",
+        dest="details",
+        action="store_true",
+        help="show full result output",
+    )
 
     # parse arguments
     args = parser.parse_args()
     args.error = parser.error
 
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[logging.StreamHandler(), logging.FileHandler("LuxOS-CLI.log")], )
+        handlers=[logging.StreamHandler(), logging.FileHandler("LuxOS-CLI.log")],
+    )
 
     # set timeout to milliseconds
     timeout_sec = args.timeout
@@ -312,7 +323,19 @@ def main():
 
     if args.async_engine:
         from . import async_luxos
-        async_luxos.main(ip_list, args.port, args.cmd, args.params, timeout_sec, args.batch_delay, args.details)
+
+        asyncio.run(
+            async_luxos.run(
+                ipaddress=ip_list,
+                port=args.port,
+                cmd=args.cmd,
+                params=args.params,
+                timeout=timeout_sec,
+                delay=args.batch_delay,
+                details=args.details,
+                batchsize=args.max_threads,
+            )
+        )
 
         # TODO remove this duplicate code
         end_time = time.monotonic()
@@ -326,9 +349,10 @@ def main():
     # Iterate over the IP addresses
     for ip in ip_list:
         # create new thread for each IP address
-        thread = threading.Thread(target=execute_command,
-                                args=(ip, args.port, timeout_sec, args.cmd,
-                                        args.params, args.verbose))
+        thread = threading.Thread(
+            target=execute_command,
+            args=(ip, args.port, timeout_sec, args.cmd, args.params, args.verbose),
+        )
 
         # start the thread
         threads.append(thread)
@@ -356,6 +380,7 @@ def main():
     end_time = time.time()
     execution_time = end_time - start_time
     log.info(f"Execution completed in {execution_time:.2f} seconds.")
+
 
 if __name__ == "__main__":
     main()

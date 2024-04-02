@@ -7,18 +7,29 @@ from .. import asyncops
 
 
 async def run(
-    ip_list: list[str], port: int, cmd: str, params: list[str], timeout: float,
-    delay: float | None, details: bool
+    ip_list: list[str],
+    port: int,
+    cmd: str,
+    params: list[str],
+    timeout: float,
+    delay: float | None,
+    details: bool,
+    batchsize: int = 0,
 ) -> None:
-
-    batchsize = 50
     result = {}
-    for grupid, addresses in enumerate(
-        misc.batched([(ip, port) for ip in ip_list], n=batchsize)
-    ):
+    if batchsize >= 2:
+        it = misc.batched([(ip, port) for ip in ip_list], n=batchsize)
+    else:
+        it = ip_list
+
+    for grupid, addresses in enumerate(it):
         tasks = []
         for host, port in addresses:
-            tasks.append(asyncops.execute_command(host, port, timeout, cmd, params, add_address=True))
+            tasks.append(
+                asyncops.execute_command(
+                    host, port, timeout, cmd, params, add_address=True
+                )
+            )
         result[grupid] = await asyncio.gather(*tasks, return_exceptions=True)
 
         # runs only on batchsize, wait delay then proceed onto the next batch

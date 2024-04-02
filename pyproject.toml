@@ -8,7 +8,7 @@ version = "0.0.0"
 description = "The all encompassing LuxOS python library."
 readme = "README.md"
 license = { text = "MIT" }  # TODO I don't think this is a MIT??
-requires-python = ">= 3.8"  # TODO we might bump to 3.10
+requires-python = ">= 3.9"
 
 authors = [
   { name = "Antonio Cavallo", email = "antonio.cavallo@luxor.tech" },
@@ -42,7 +42,7 @@ luxos = "luxos.scripts.luxos:main"
 health-checker = "luxos.scripts.health_checker:main"
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py39"
 line-length = 88
 
 
