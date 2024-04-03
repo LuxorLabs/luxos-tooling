@@ -17,12 +17,11 @@ async def run(
     batchsize: int = 0,
 ) -> None:
     result = {}
-    if batchsize >= 2:
-        it = misc.batched([(ip, port) for ip in ip_list], n=batchsize)
-    else:
-        it = ip_list
+    batchsize = max(batchsize, 2)
 
-    for grupid, addresses in enumerate(it):
+    for grupid, addresses in enumerate(
+        misc.batched([(ip, port) for ip in ip_list], n=batchsize)
+    ):
         tasks = []
         for host, port in addresses:
             tasks.append(
