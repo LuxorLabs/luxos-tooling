@@ -17,6 +17,12 @@
   "atmset": {
     "logon_required": true
   },
+  "autotunerget": {
+    "logon_required": false
+  },
+  "autotunerset": {
+    "logon_required": true
+  },
   "check": {
     "logon_required": false
   },
@@ -35,11 +41,17 @@
   "devs": {
     "logon_required": false
   },
+  "disableboard": {
+    "logon_required": true
+  },
   "disablepool": {
     "logon_required": false
   },
   "edevs": {
     "logon_required": false
+  },
+  "enableboard": {
+    "logon_required": true
   },
   "enablepool": {
     "logon_required": false
@@ -95,8 +107,17 @@
   "logon": {
     "logon_required": false
   },
+  "logset": {
+    "logon_required": false
+  },
   "netset": {
     "logon_required": true
+  },
+  "poolopts": {
+    "logon_required": false
+  },
+  "pooloptsset": {
+    "logon_required": false
   },
   "pools": {
     "logon_required": false
@@ -116,6 +137,9 @@
   "profiles": {
     "logon_required": false
   },
+  "profilerestore": {
+    "logon_required": true
+  },
   "profileset": {
     "logon_required": true
   },
@@ -128,11 +152,14 @@
   "removegroup": {
     "logon_required": false
   },
-  "removepool": {
-    "logon_required": false
-  },
   "resetminer": {
     "logon_required": true
+  },
+  "resetconfig": {
+    "logon_required": true
+  },
+  "removepool": {
+    "logon_required": false
   },
   "session": {
     "logon_required": false
@@ -154,6 +181,21 @@
   },
   "temps": {
     "logon_required": false
+  },
+  "tempsensor": {
+    "logon_required": false
+  },
+  "tempsensorset": {
+    "logon_required": true
+  },
+  "tunerstatus": {
+    "logon_required": false
+  },
+  "tunerswitch": {
+    "logon_required": true
+  },
+  "uninstallluxos": {
+    "logon_required": true
   },
   "updaterun": {
     "logon_required": true
