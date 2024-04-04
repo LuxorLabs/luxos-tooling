@@ -1,0 +1,80 @@
+[build-system]
+requires = ["hatchling>=1.1.0",]
+build-backend = "hatchling.build"
+
+[project]
+name = "luxos"
+version = "0.0.0"
+description = "The all encompassing LuxOS python library."
+readme = "README.md"
+license = { text = "MIT" }  # TODO I don't think this is a MIT??
+requires-python = ">= 3.9"
+
+authors = [
+  { name = "Antonio Cavallo", email = "antonio.cavallo@luxor.tech" },
+]
+
+# TODO more classifiers
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+  "tqdm",
+  "asyncpg",
+  "pandas",
+  "pyyaml",
+  "httpx"
+]
+
+[project.urls]
+Source = "https://github.com/LuxorLabs/firmware-biz-tools"
+Issues = "https://github.com/LuxorLabs/firmware-biz-tools/issues"
+
+[project.scripts]
+luxos = "luxos.scripts.luxos:main"
+health-checker = "luxos.scripts.health_checker:main"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 88
+
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+disallow_untyped_defs = false
+follow_imports = "normal"
+ignore_missing_imports = true
+pretty = true
+show_column_numbers = true
+show_error_codes = true
+warn_no_return = false
+warn_unused_ignores = true
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.paths]
+source = [
+  "src/",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.pytest.ini_options]
+markers = [
+    "manual: marks tests unsafe for auto-run (eg. better run them manually)",
+]

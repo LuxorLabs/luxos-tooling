@@ -1,0 +1,20 @@
+asyncpg
+build
+httpx
+lxml
+mypy
+pandas
+pandas-stubs
+pre-commit
+pytest
+pytest-asyncio
+pytest-cov
+pytest-html
+pyyaml
+tqdm
+types-pyyaml
+types-tqdm
+
+# For you sanity please sync with .pre-commit-config.yaml
+ruff == 0.3.4
+mypy == 1.9.0

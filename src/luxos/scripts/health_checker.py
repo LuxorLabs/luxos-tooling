@@ -11,6 +11,7 @@ import json
 import threading
 import asyncio
 from datetime import datetime
+from typing import Any
 
 from tqdm.asyncio import tqdm as async_tqdm
 import asyncpg
@@ -18,10 +19,11 @@ import shutil
 import yaml
 import pandas as pd
 
-from luxos import (generate_ip_range, logon_required, logon,
+from luxos.api import logon_required
+
+from luxos.scripts.luxos import (generate_ip_range,
                    add_session_id_parameter, parameters_to_string,
-                   send_cgminer_simple_command, check_res_structure,
-                   get_str_field)
+                   check_res_structure, get_str_field)
 
 LOGGING_CONFIG = {
     'level': logging.INFO,
@@ -48,14 +50,18 @@ INTERMEDIATE_CSV = "report_in_progress.csv"
 
 LUXOS_MINERS = []
 
+log = logging.getLogger(__name__)
+
 
 def parse_args():
     """Parse arguments from config file."""
-    with open("config.yaml", 'r') as stream:
+    path = "config.yaml"
+    with open(path, 'r') as stream:
         try:
             config = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            logging.error(f"Unable to load configs! {exc}")
+        except yaml.YAMLError:
+            log.exception("Unable to load configs from %s!", path)
+            raise
 
     args = argparse.Namespace()
 
@@ -137,7 +143,7 @@ def get_value_with_default(dictionary, key, default=0):
 
 async def internal_send_cgminer_command(host: str, port: int, command: str,
                                         timeout_sec: int,
-                                        verbose: bool) -> dict:
+                                        verbose: bool) -> dict[str, Any]:
     writer = None
     try:
         reader, writer = await asyncio.wait_for(asyncio.open_connection(
@@ -175,7 +181,7 @@ async def internal_send_cgminer_command(host: str, port: int, command: str,
 
 
 async def send_cgminer_command(host: str, port: int, cmd: str, param: str,
-                               timeout_sec: int, verbose: bool) -> dict:
+                               timeout_sec: int, verbose: bool) -> dict[str, Any]:
     req = str(f"{{\"command\": \"{cmd}\", \"parameter\": \"{param}\"}}\n")
     if verbose:
         logging.info(
@@ -186,7 +192,7 @@ async def send_cgminer_command(host: str, port: int, cmd: str, param: str,
 
 
 async def send_cgminer_simple_command(host: str, port: int, cmd: str,
-                                      timeout: int, verbose: bool) -> str:
+                                      timeout: int, verbose: bool) -> dict[str, Any]:
     req = str(f"{{\"command\": \"{cmd}\"}}\n")
     if verbose:
         logging.info(f"Executing command: {cmd} to host: {host}")
@@ -217,7 +223,8 @@ async def execute_command(host: str, port: int, timeout_sec: int, cmd: str,
                     f'Command requires a SessionID, logging in for host: {host}'
                 )
                 logging.info(f'SessionID obtained for {host}: {sid}')
-        elif not logon_required and verbose:
+        # TODO fix this typing issue
+        elif not logon_required and verbose:  # type: ignore
             logging.info(f"Logon not required for executing {cmd}")
         param_string = parameters_to_string(parameters)
         if verbose:
@@ -768,7 +775,7 @@ async def main_loop(ip_list, args, lock, sem, buffer, db_config):
 
         end_time_healthcheck = time.time()
         execution_time_healthcheck = end_time_healthcheck - start_time_healthcheck
-        logging.info(f"Finished performing HealthCheck on all hosts.")
+        logging.info("Finished performing HealthCheck on all hosts.")
         logging.info(
             f"Execution time for Health Check: {execution_time_healthcheck:.2f} seconds."
         )
@@ -812,7 +819,7 @@ def stop_on_input(loop):
     message_thread.join()
 
 
-async def main():
+async def run():
     try:
         args = parse_args()
         logging.basicConfig(**LOGGING_CONFIG)
@@ -847,5 +854,9 @@ async def main():
         return
 
 
+def main():
+    asyncio.run(run())
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
