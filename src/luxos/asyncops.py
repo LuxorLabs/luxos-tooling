@@ -30,6 +30,7 @@ def wrapped(function):
         e.address
         raise MyNewExecption() from e  <- this will re-raise
     """
+
     @functools.wraps(function)
     async def _function(host: str, port: int, *args, **kwargs):
         try:
@@ -43,6 +44,7 @@ def wrapped(function):
             # we augment any other exception with (host, port) info
             log.exception("internal error")
             raise exceptions.MinerConnectionError(host, port, "internal error") from e
+
     return _function
 
 
@@ -74,6 +76,7 @@ async def _roundtrip(
         response += data
 
     return response.decode()
+
 
 # TODO add annotations
 async def roundtrip(
@@ -131,7 +134,9 @@ def validate_message(
     for key in ["STATUS", "id", *([extrakey] if extrakey else [])]:
         if key in res:
             continue
-        raise exceptions.MinerCommandMalformedMessageError(host, port, f"missing {key} from logon message", res)
+        raise exceptions.MinerCommandMalformedMessageError(
+            host, port, f"missing {key} from logon message", res
+        )
 
     if not extrakey or not (minfields or maxfields):
         return res
@@ -157,13 +162,17 @@ async def logon(host: str, port: int, timeout: float | None = 3) -> str:
     # on subsequent logon, we receive a
     #   [STATUS][Msg] == "Another session is active" ([STATUS][Code] 402)
     if "SESSION" not in res and res.get("STATUS", [{}])[0].get("Code") == 402:
-        raise exceptions.MinerCommandSessionAlreadyActive(host, port, "connection active", res)
+        raise exceptions.MinerCommandSessionAlreadyActive(
+            host, port, "connection active", res
+        )
     sessions = validate_message(host, port, res, "SESSION", 1, 1)
 
     session = sessions[0]  # type: ignore
 
     if "SessionID" not in session:
-        raise exceptions.MinerCommandSessionAlreadyActive(host, port, "no SessionID in data", res)
+        raise exceptions.MinerCommandSessionAlreadyActive(
+            host, port, "no SessionID in data", res
+        )
     return str(session["SessionID"])
 
 
@@ -184,7 +193,7 @@ async def execute_command(
     parameters: list[str] | None = None,
     verbose: bool = False,
     asjson: bool | None = True,
-    add_address: bool = False
+    add_address: bool = False,
 ) -> tuple[tuple[str, int], dict[str, Any]] | dict[str, Any]:
     timeout = TIMEOUT if timeout_sec is None else timeout_sec
     parameters = parameters or []
@@ -195,13 +204,21 @@ async def execute_command(
         parameters = [sid, *parameters]
         log.info("session id requested & obtained for %s:%i (%s)", host, port, sid)
     else:
-        log.debug("no logon required for command %s on %s:%i", cmd, host, port)
+        log.debug("no logon required for command '%s' on %s:%i", cmd, host, port)
 
     try:
         packet = {"command": cmd}
         if parameters:
             packet["parameter"] = ",".join(parameters)
+        log.debug(
+            "executing command '%s' on '%s:%i' with parameters: %s",
+            cmd,
+            host,
+            port,
+            packet.get("parameter", ""),
+        )
         ret = await roundtrip(host, port, packet, timeout, asjson=asjson)
+        log.debug("received from %s:%s: %s", host, port, str(ret))
         return ((host, port), ret) if add_address else ret
     finally:
         if sid:

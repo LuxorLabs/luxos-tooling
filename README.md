@@ -1,7 +1,5 @@
 # LuxOS Tools Repository
 
-> **WARNING** There are references into the PR luxos-code-refactoring
-
 This repository contains scripts we built to operate and troubleshoot miners running LuxOS.
 
 ## Install
@@ -11,14 +9,14 @@ There are few ways to install the luxos package:
 1. Using pip (suggested for end-users):
    ```shell
    pip install luxos
-   pip install git+https://github.com/LuxorLabs/luxos-tooling.git@pr/luxos-code-refactoring  
+   pip install git+https://github.com/LuxorLabs/luxos-tooling.git 
    ```
    Using pip gives you access to the cli commands `luxos` and `health-checker` as well
    the ability to import in python the `import luxos.api` api for luxos.
 
 2. A single drop in file (for support):
    ```shell
-   curl -LO https://github.com/LuxorLabs/luxos-tooling/raw/pr/luxos-code-refactoring/luxos.pyz
+   curl -LO https://github.com/LuxorLabs/luxos-tooling/raw/luxos.pyz
    ```
    These are two standalone [zipapp](https://docs.python.org/3/library/zipapp.html) files, you can use
    from the command line as `python luxos.pyz`, no dependencies beside a recent-*ish* python
