@@ -270,9 +270,7 @@ def main():
     parser.add_argument(
         "--port", required=False, default=4028, type=int, help="Port for LuxOS API"
     )
-    parser.add_argument(
-        "--verbose", required=False, default=False, type=bool, help="Verbose output"
-    )
+    parser.add_argument("--verbose", action="store_true", help="Verbose output")
     parser.add_argument(
         "--batch_delay",
         required=False,
@@ -326,7 +324,7 @@ def main():
 
         asyncio.run(
             async_luxos.run(
-                ipaddress=ip_list,
+                ipaddresses=ip_list,
                 port=args.port,
                 cmd=args.cmd,
                 params=args.params,

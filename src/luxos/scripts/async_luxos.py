@@ -7,7 +7,7 @@ from .. import asyncops
 
 
 async def run(
-    ip_list: list[str],
+    ipaddresses: list[str],
     port: int,
     cmd: str,
     params: list[str],
@@ -20,7 +20,7 @@ async def run(
     batchsize = max(batchsize, 2)
 
     for grupid, addresses in enumerate(
-        misc.batched([(ip, port) for ip in ip_list], n=batchsize)
+        misc.batched([(ip, port) for ip in ipaddresses], n=batchsize)
     ):
         tasks = []
         for host, port in addresses:
@@ -40,7 +40,7 @@ async def run(
     failures = [task for task in alltasks if isinstance(task, Exception)]
 
     # print a nice report
-    print(f"task executed sucessfully: {len(successes)}")
+    print(f"task executed sucessfully (use -a|--all for details): {len(successes)}")
     if details:
         for (host, port), task in successes:  # type: ignore
             print(f"  > {host}:{port}")
