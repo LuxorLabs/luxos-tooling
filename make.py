@@ -66,23 +66,40 @@ def onepack(parser, argv):
 
     for target, entrypoint in targets:
         dst = o.output_dir / target
+
+        # cleanup cache dirs
         for xx in (workdir / "src").rglob("__pycache__"):
             shutil.rmtree(xx, ignore_errors=True)
 
-        #dataset = extract(targets[0][0])
-        create_archive(
-            workdir / "src",
-            dst,
-            main=entrypoint,
-            compressed=True
-        )
-
+        # get the relatove path (nicer for display)
         relpath = (
             dst.relative_to(Path.cwd())
             if dst.is_relative_to(Path.cwd())
             else dst
         )
-        print(f"Written: {relpath}", file=sys.stderr)
+
+        generate = True
+        if dst.exists():
+            dst1 = dst.parent / f"{dst.name}.bak"
+            create_archive(
+                workdir / "src",
+                dst1,
+                main=entrypoint,
+                compressed=True
+            )
+            generate = (extract(dst) != extract(dst1))
+            dst1.unlink()
+        if generate:
+            create_archive(
+                workdir / "src",
+                dst,
+                main=entrypoint,
+                compressed=True
+            )
+
+            print(f"Written: {relpath}", file=sys.stderr)
+        else:
+            print(f"Skipping generation: {relpath}", file=sys.stderr)
 
 
 @task()
