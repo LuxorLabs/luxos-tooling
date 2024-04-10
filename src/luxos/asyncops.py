@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import functools
+import ipaddress
 import logging
 import asyncio
 import json
@@ -13,7 +14,9 @@ from . import api
 
 log = logging.getLogger(__name__)
 
-TIMEOUT = 3.0  # default timeout for operations
+TIMEOUT = 3.0       # default timeout for operations
+RETRY = 0           # default number (>1) of retry on a failed operation
+RETRY_DELAY = 1.0   # delay between retry
 
 
 def wrapped(function):
@@ -83,9 +86,9 @@ async def roundtrip(
     host: str,
     port: int,
     cmd: bytes | str | dict[str, Any],
-    timeout: float | None = None,
     asjson: bool | None = True,
-    retry: int = 0,
+    timeout: float | None = None,
+    retry: int | None = 0,
     retry_delay: float | None = None,
 ):
     """utility wrapper around _roundrip
@@ -97,7 +100,8 @@ async def roundtrip(
         -> (str) "{'STATUS': [{'Code': 22, 'Description': 'LUXminer 20 ..
     """
     timeout = TIMEOUT if timeout is None else timeout
-    count = 0
+    retry = RETRY if retry is None else retry
+    retry_delay = RETRY_DELAY if retry_delay is None else retry_delay
 
     if not isinstance(cmd, (bytes, str)):
         cmd = json.dumps(cmd, indent=2, sort_keys=True)
@@ -105,9 +109,8 @@ async def roundtrip(
             asjson = True
 
     last_exception = None
-    while count <= retry:
+    for _ in range(max(retry, 1)):
         try:
-            timeout = TIMEOUT if timeout is None else timeout
             res = await _roundtrip(host, port, cmd, timeout)
             if asjson:
                 return json.loads(res)
@@ -117,7 +120,7 @@ async def roundtrip(
             last_exception = e
         if retry_delay:
             await asyncio.sleep(retry_delay)
-        count += 1
+
     if last_exception is not None:
         raise last_exception
 
@@ -155,7 +158,7 @@ def validate_message(
 @wrapped
 async def logon(host: str, port: int, timeout: float | None = 3) -> str:
     timeout = TIMEOUT if timeout is None else timeout
-    res = await roundtrip(host, port, {"command": "logon"}, timeout)
+    res = await roundtrip(host, port, {"command": "logon"}, timeout=timeout)
 
     # when we first logon, we'll receive a token (session_id)
     #   [STATUS][SessionID]
@@ -181,7 +184,7 @@ async def logoff(
     host: str, port: int, sid: str, timeout: float | None = 3
 ) -> dict[str, Any]:
     timeout = TIMEOUT if timeout is None else timeout
-    return await roundtrip(host, port, {"command": "logoff", "parameter": sid}, timeout)
+    return await roundtrip(host, port, {"command": "logoff", "parameter": sid}, timeout=timeout)
 
 
 @wrapped
@@ -217,9 +220,97 @@ async def execute_command(
             port,
             packet.get("parameter", ""),
         )
-        ret = await roundtrip(host, port, packet, timeout, asjson=asjson)
+        ret = await roundtrip(host, port, packet, timeout=timeout, asjson=asjson)
         log.debug("received from %s:%s: %s", host, port, str(ret))
         return ((host, port), ret) if add_address else ret
     finally:
         if sid:
             await logoff(host, port, sid)
+
+
+async def rexec(
+        host: str | ipaddress.IPv4Address | ipaddress.IPv6Address, port: int,
+        cmd: str,
+        parameters: str | list[str] | None = None,
+        timeout: float | None = None,
+        retry: int | None = None,
+        retry_delay: float | None = None,
+) -> dict[str, Any] | None:
+    from . import api
+
+    parameters = ([parameters] if isinstance(parameters, str) else parameters) or []
+
+    timeout = TIMEOUT if timeout is None else timeout
+    retry = RETRY if retry is None else retry
+    retry_delay = RETRY_DELAY if retry_delay else retry_delay
+
+    # if cmd is logon/logoff we dealt with it differently
+    if cmd in {"logon", "logoff"}:
+        failure = None
+        for i in range(retry or 1):
+            try:
+                if cmd == "logon":
+                    return {"sid": await logon(host, port, timeout)}
+                else:
+                    return await logoff(host, port, parameters[0])
+            except Exception as exc:
+                failure = exc
+            if retry_delay:
+                await asyncio.sleep(retry_delay)
+        if isinstance(failure, Exception):
+            raise failure
+
+    sid = None
+    for i in range(retry or 1):
+        if not api.logon_required(cmd):
+            sid = False
+            log.debug("no logon required for command '%s' on %s:%i", cmd, host, port)
+            break
+        try:
+            sid = await logon(host, port, timeout)
+            parameters = [sid, *parameters]
+            log.info("session id requested & obtained for %s:%i (%s)", host, port, sid)
+            break
+        except Exception as exc:
+            sid = exc
+        if retry_delay:
+            await asyncio.sleep(retry_delay)
+
+    if isinstance(sid, Exception):
+        raise sid
+
+    packet = {"command": cmd}
+    if parameters:
+        packet["parameter"] = ",".join(parameters)
+    log.debug(
+        "executing command '%s' on '%s:%i' with parameters: %s",
+        cmd,
+        host,
+        port,
+        packet.get("parameter", ""),
+    )
+
+    failure = None
+    for i in range(retry or 1):
+        try:
+            ret = await roundtrip(host, port, packet, timeout=timeout)
+            log.debug("received from %s:%s: %s", host, port, str(ret))
+            if sid:
+                await logoff(host, port, sid)
+            return ret
+        except Exception as exc:
+            failure = exc
+        if retry_delay:
+            await asyncio.sleep(retry_delay)
+
+    if sid:
+        await logoff(host, port, sid)
+    if isinstance(failure, Exception):
+        raise failure
+
+
+
+
+
+
+
