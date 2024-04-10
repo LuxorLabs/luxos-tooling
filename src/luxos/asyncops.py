@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import functools
-import ipaddress
 import logging
 import asyncio
 import json
@@ -14,9 +13,9 @@ from . import api
 
 log = logging.getLogger(__name__)
 
-TIMEOUT = 3.0       # default timeout for operations
-RETRY = 0           # default number (>1) of retry on a failed operation
-RETRY_DELAY = 1.0   # delay between retry
+TIMEOUT = 3.0  # default timeout for operations
+RETRY = 0  # default number (>1) of retry on a failed operation
+RETRY_DELAY = 1.0  # delay between retry
 
 
 def wrapped(function):
@@ -184,7 +183,9 @@ async def logoff(
     host: str, port: int, sid: str, timeout: float | None = 3
 ) -> dict[str, Any]:
     timeout = TIMEOUT if timeout is None else timeout
-    return await roundtrip(host, port, {"command": "logoff", "parameter": sid}, timeout=timeout)
+    return await roundtrip(
+        host, port, {"command": "logoff", "parameter": sid}, timeout=timeout
+    )
 
 
 @wrapped
@@ -229,12 +230,13 @@ async def execute_command(
 
 
 async def rexec(
-        host: str, port: int,
-        cmd: str,
-        parameters: str | list[str] | None = None,
-        timeout: float | None = None,
-        retry: int | None = None,
-        retry_delay: float | None = None,
+    host: str,
+    port: int,
+    cmd: str,
+    parameters: str | list[str] | None = None,
+    timeout: float | None = None,
+    retry: int | None = None,
+    retry_delay: float | None = None,
 ) -> dict[str, Any] | None:
     from . import api
 
@@ -307,10 +309,3 @@ async def rexec(
         await logoff(host, port, sid)
     if isinstance(failure, Exception):
         raise failure
-
-
-
-
-
-
-
