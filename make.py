@@ -1,19 +1,16 @@
 #!/usr/bin/env python
 """A make-like script"""
-import argparse
+
 import contextlib
-import hashlib
 import json
 import os
-import shutil
 import sys
 import logging
 import subprocess
-import zipfile
 from pathlib import Path
 
 # curl -LO https://github.com/cav71/hatch-ci/raw/beta/0.1.4/make.pyz
-from make import fileos, misc, task, text  # type: ignore
+from make import fileos, misc, task  # type: ignore
 
 log = logging.getLogger(__name__)
 
@@ -35,8 +32,8 @@ argv: {argv}
 @task(name=None)
 def onepack(parser, argv):
     """create a one .pyz single file package"""
-    from zipapp import create_archive
     from configparser import ConfigParser, ParsingError
+
     workdir = Path.cwd()
 
     config = ConfigParser(strict=False)
@@ -49,54 +46,15 @@ def onepack(parser, argv):
         entrypoint = config.get(section, target).strip("'").strip('"')
         targets.append((f"{target}.pyz", entrypoint))
 
-    parser.add_argument("-o", "--output-dir",
-                   default=workdir, type=Path)
+    parser.add_argument("-o", "--output-dir", default=workdir, type=Path)
     o = parser.parse_args(argv)
-
-    def extract(path: Path) -> dict[str, list[str | None, str | None]]:
-        result = {}
-        if not path.exists():
-            return result
-        zfp = zipfile.ZipFile(path)
-        for item in zfp.infolist():
-            with zfp.open(item) as fp:
-                data = fp.read()
-                result[item.filename] = [hashlib.sha256(data).hexdigest(), None]
-        return result
 
     for target, entrypoint in targets:
         dst = o.output_dir / target
+        out = misc.makezapp(dst, workdir / "src", main=entrypoint, compressed=True)
 
-        # cleanup cache dirs
-        for xx in (workdir / "src").rglob("__pycache__"):
-            shutil.rmtree(xx, ignore_errors=True)
-
-        # get the relatove path (nicer for display)
-        relpath = (
-            dst.relative_to(Path.cwd())
-            if dst.is_relative_to(Path.cwd())
-            else dst
-        )
-
-        generate = True
-        if dst.exists():
-            dst1 = dst.parent / f"{dst.name}.bak"
-            create_archive(
-                workdir / "src",
-                dst1,
-                main=entrypoint,
-                compressed=True
-            )
-            generate = (extract(dst) != extract(dst1))
-            dst1.unlink()
-        if generate:
-            create_archive(
-                workdir / "src",
-                dst,
-                main=entrypoint,
-                compressed=True
-            )
-
+        relpath = dst.relative_to(Path.cwd()) if dst.is_relative_to(Path.cwd()) else dst
+        if out:
             print(f"Written: {relpath}", file=sys.stderr)
         else:
             print(f"Skipping generation: {relpath}", file=sys.stderr)
@@ -105,23 +63,26 @@ def onepack(parser, argv):
 @task()
 def checks():
     """runs all checks on code base"""
-    subprocess.check_call(["ruff", "check", "src", "tests"], cwd=workdir)
+    subprocess.check_call(["ruff", "check", "src", "tests"])
 
 
 @task()
 def tests():
     """runs all tests (excluding the manual ones)"""
     workdir = Path.cwd()
-    subprocess.check_call(
-        ["pytest", "-vvs", str(workdir / "tests") ]
-    )
+    subprocess.check_call(["pytest", "-vvs", str(workdir / "tests")])
 
 
 @task(name="beta-build")
 def beta_build(parser, argv):
     """create beta packages for luxos (only works in github)"""
 
-    parser.add_argument("-n", "--dry-run", dest="dryrun", action="store_true")
+    parser.add_argument(
+        "-n", "--dry-run", dest="dryrun", action="store_true", help="dry run"
+    )
+    parser.add_argument(
+        "--release", action="store_true", help="generate release packages"
+    )
     options = parser.parse_args(argv)
 
     github_dump = os.getenv("GITHUB_DUMP")
@@ -143,7 +104,7 @@ def beta_build(parser, argv):
         pyproject = save("pyproject.toml")
         lineno, current, quote = misc.get_variable_def(pyproject, "version")
         log.debug("found at LN:%i: version = '%s'", lineno, current)
-        version = f"{current}b{gdata['run_number']}"
+        version = current if options.release else f"{current}b{gdata['run_number']}"
 
         log.info("creating for version %s [%s]", version, gdata["sha"])
         misc.set_variable_def(pyproject, "version", lineno, version, quote)

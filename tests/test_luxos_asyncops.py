@@ -132,3 +132,43 @@ async def test_miner_version():
     assert "VERSION" in res
     assert len(res["VERSION"]) == 1
     assert "API" in res["VERSION"][0]
+
+
+@pytest.mark.skipif(not getminer(), reason="need to set LUXOS_TEST_MINER")
+@pytest.mark.asyncio
+async def test_miner_profile_sets():
+    from string import ascii_lowercase
+    from random import choices
+
+    # random profile name
+    profile = f"test-{''.join(choices(ascii_lowercase, k=5))}"
+
+    # get the initial profile list
+    host, port = getminer()
+    profiles = (await aapi.rexec(host, port, "profiles"))["PROFILES"]
+    assert profiles and profile not in {p["Profile Name"] for p in profiles}
+
+    # create a new profile
+    # TODO there's a bug
+    #  when ATM is running you shouldn't be able to create/delete
+    #  profiles, the following test shoudl fail at the first try
+    # -> to pass this test, you need to disable ATM
+
+    params = f"{profile},{profiles[0]['Frequency']},{profiles[0]['Voltage']}"
+    await aapi.rexec(host, port, "profilenew", params)
+
+    try:
+        profiles1 = (await aapi.rexec(host, port, "profiles"))["PROFILES"]
+        assert profile in {p["Profile Name"] for p in profiles1}
+    finally:
+        await aapi.rexec(host, port, "profilerem", profile)
+
+    # verify we restored the same profiles
+    profiles2 = (await aapi.rexec(host, port, "profiles"))["PROFILES"]
+    expected = {p["Profile Name"] for p in profiles}
+    found = {p["Profile Name"] for p in profiles2}
+    assert found == expected
+
+
+
+
