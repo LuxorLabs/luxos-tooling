@@ -1,6 +1,7 @@
 [build-system]
-requires = ["hatchling>=1.1.0",]
-build-backend = "hatchling.build"
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
 
 [project]
 name = "luxos"
@@ -40,6 +41,10 @@ Issues = "https://github.com/LuxorLabs/firmware-biz-tools/issues"
 [project.scripts]
 luxos = "luxos.scripts.luxos:main"
 health-checker = "luxos.scripts.health_checker:main"
+
+[tool.setuptools.package-data]
+'luxos' = ['*.json']
+
 
 [tool.ruff]
 target-version = "py39"
