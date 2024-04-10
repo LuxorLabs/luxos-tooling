@@ -77,8 +77,12 @@ def tests():
 def beta_build(parser, argv):
     """create beta packages for luxos (only works in github)"""
 
-    parser.add_argument("-n", "--dry-run", dest="dryrun", action="store_true", help="dry run")
-    parser.add_argument("--release", action="store_true", help="generate release packages")
+    parser.add_argument(
+        "-n", "--dry-run", dest="dryrun", action="store_true", help="dry run"
+    )
+    parser.add_argument(
+        "--release", action="store_true", help="generate release packages"
+    )
     options = parser.parse_args(argv)
 
     github_dump = os.getenv("GITHUB_DUMP")
@@ -100,7 +104,7 @@ def beta_build(parser, argv):
         pyproject = save("pyproject.toml")
         lineno, current, quote = misc.get_variable_def(pyproject, "version")
         log.debug("found at LN:%i: version = '%s'", lineno, current)
-        version = current if options.release else "{current}b{gdata['run_number']}"
+        version = current if options.release else f"{current}b{gdata['run_number']}"
 
         log.info("creating for version %s [%s]", version, gdata["sha"])
         misc.set_variable_def(pyproject, "version", lineno, version, quote)
