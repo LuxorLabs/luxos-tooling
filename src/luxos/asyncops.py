@@ -229,7 +229,7 @@ async def execute_command(
 
 
 async def rexec(
-        host: str | ipaddress.IPv4Address | ipaddress.IPv6Address, port: int,
+        host: str, port: int,
         cmd: str,
         parameters: str | list[str] | None = None,
         timeout: float | None = None,
@@ -260,10 +260,10 @@ async def rexec(
         if isinstance(failure, Exception):
             raise failure
 
-    sid = None
+    failure = None
+    sid = ""
     for i in range(retry or 1):
         if not api.logon_required(cmd):
-            sid = False
             log.debug("no logon required for command '%s' on %s:%i", cmd, host, port)
             break
         try:
@@ -272,12 +272,12 @@ async def rexec(
             log.info("session id requested & obtained for %s:%i (%s)", host, port, sid)
             break
         except Exception as exc:
-            sid = exc
+            failure = exc
         if retry_delay:
             await asyncio.sleep(retry_delay)
 
-    if isinstance(sid, Exception):
-        raise sid
+    if isinstance(failure, Exception):
+        raise failure
 
     packet = {"command": cmd}
     if parameters:

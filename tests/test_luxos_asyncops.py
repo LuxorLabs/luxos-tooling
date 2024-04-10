@@ -155,7 +155,7 @@ async def test_miner_profile_sets():
     # -> to pass this test, you need to disable ATM
 
     params = f"{profile},{profiles[0]['Frequency']},{profiles[0]['Voltage']}"
-    ret = await aapi.rexec(host, port, "profilenew", params)
+    await aapi.rexec(host, port, "profilenew", params)
 
     try:
         profiles1 = (await aapi.rexec(host, port, "profiles"))["PROFILES"]
