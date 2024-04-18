@@ -245,7 +245,7 @@ async def rexec(
 
     timeout = TIMEOUT if timeout is None else timeout
     retry = RETRY if retry is None else retry
-    retry_delay = RETRY_DELAY if retry_delay else retry_delay
+    retry_delay = RETRY_DELAY if retry_delay is None else retry_delay
 
     # if cmd is logon/logoff we dealt with it differently
     if cmd in {"logon", "logoff"}:
