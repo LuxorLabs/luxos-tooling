@@ -1,36 +1,91 @@
 """cli utilities
 
-This adds a `cli` decorator to make easier to write consistent scripts.
+This is the v1.cli decorator to help writing cli scripts with a consistent
+interface.
 
-It adds:
-    -v/--verbose/-q/--quiet flags to increase the logging verbosity level
-    -c/--config to pass a config file (default to config.yaml)
+A simple v1 script will always have:
+* `-v/--verbose | -q/--quiet` flags to increase the logging verbosity level
+* `-c/--config` to pass a config file (default to config.yaml)
 
-Eg. in your script
-    from luxos_firmware.cli.v1 import cli
+A `sample.py` script with default sensible and consistent interface:
 
-    # this is the plain calling function
-    @cli()
-    def main(args):
-        ... args is a argparse.Namespace
+```
+import argparse
+import luxos.cli.v1 as cli
+import logging
 
-    # This call allows to add arguments to the parser
+log = logging.getLogger(__name__)
 
-    def add_arguments(parser):
-        parser.add_argument(....
 
-    def process_args(args):
-        ...
+@cli.cli()
+def main(args: argparse.Namespace):
+    log.debug("a debug message, need to use -v|--verbose to display it")
+    log.info("an info message, you can silence it with -q|--quiet")
+    log.warning("a warning!")
 
-    @cli(add_arguments, process_args)
-    @def main(args):
-        ... args is a argparse.Namespace
 
-    # finally this will let you control the parser
-    @cli()
-    def main(parser):
-        parser.add_argument()
-        args = parser.parse_args()
+if __name__ == "__main__":
+    main()
+```
+
+
+### Advanced usages
+
+#### changing the default config file
+
+In the `sample.py` file, just add:
+
+```
+CONFIGPATH = "my.config.file.yaml"
+```
+
+`CONFIGPATH` is part of the module level "magic" variables.
+
+Another one is `LOGGING_CONFIG` (not recommended!):
+```
+LOGGING_CONFIG = {
+    'level': logging.INFO,
+    'format': "%(asctime)s:%(name)s:[%(levelname)s] %(message)s",
+    'handlers': [
+        logging.StreamHandler(),
+        logging.FileHandler("LuxOS-LoadControl.log")
+    ],
+}
+```
+
+The `LOGGING_CONFIG` is a dictionary feed into `logging.basicConfig(**LOGGING_CONFIG)`.
+
+#### add and process new extra arguments
+
+in the `sample.py` file:
+
+```
+def add_arguments(parser: argparse.ArgumentParser) -> None:
+    ... adds as many args needed
+
+
+def process_args(args: argparse.Namespace) -> argparse.Namespace | None:
+    ... you can manipulate args in place, changing its attributes in place
+    ... if you return a new Namespace instance then it will be fee to main below
+
+
+@cli.cli(add_arguments, process_args)
+def main(args: argparse.Namespace):
+    ... args is the Namespace instance returned by process_args if defined,
+    ... or the default processed one of process_args is not provided
+
+```
+
+#### escape hatch to handle all the parsing/processing
+
+```
+
+@cli.cli()
+def main(parser: argparse.ArgumentParser):
+    ... you can use directly the parser here
+
+```
+
 """
 
 from __future__ import annotations
@@ -42,7 +97,7 @@ import time
 from pathlib import Path
 import functools
 import argparse
-from typing import Any
+from typing import Callable, Any
 
 
 # SPECIAL MODULE LEVEL VARIABLES
@@ -132,7 +187,12 @@ class LuxosParser(argparse.ArgumentParser):
         return cls(module_variables=module_variables, formatter_class=Formatter)
 
 
-def cli(add_arguments=None, process_args=None):
+def cli(
+    add_arguments: Callable[[argparse.ArgumentParser], None] | None = None,
+    process_args: (
+        Callable[[argparse.Namespace], argparse.Namespace | None] | None
+    ) = None,
+):
     def _cli1(function):
         @contextlib.contextmanager
         def setup():
@@ -183,6 +243,7 @@ def cli(add_arguments=None, process_args=None):
             async def _cli2(*args, **kwargs):
                 with setup() as ba:
                     return await function(*ba.args, **ba.kwargs)
+
         else:
 
             @functools.wraps(function)

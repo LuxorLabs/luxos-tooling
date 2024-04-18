@@ -73,7 +73,7 @@ def onepack(parser, argv):
 
 
 @task()
-def checks():
+def check():
     """runs all checks on code base"""
     subprocess.check_call(["ruff", "check", "src", "tests"])
 
