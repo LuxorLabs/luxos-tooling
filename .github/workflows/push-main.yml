@@ -12,6 +12,9 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 env:
   PACKAGE: luxos
   GITHUB_DUMP: ${{ toJson(github) }}
+  XPY: "3.12"
+  XOS: "ubuntu-latest"
+
 
 jobs:
   build:
@@ -83,7 +86,7 @@ jobs:
 
       - name: "Publish beta package to pypi"
         uses: pypa/gh-action-pypi-publish@release/v1
-        if: ${{ matrix.python-version == env.XTARGET }}
+        if: ${{ (matrix.python-version == env.XPY) && (matrix.os == env.XOS) }}
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
 

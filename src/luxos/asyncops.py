@@ -241,6 +241,7 @@ async def rexec(
     from . import api
 
     parameters = ([parameters] if isinstance(parameters, str) else parameters) or []
+    parameters = [str(param) for param in parameters]
 
     timeout = TIMEOUT if timeout is None else timeout
     retry = RETRY if retry is None else retry

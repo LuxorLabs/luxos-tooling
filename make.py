@@ -10,7 +10,19 @@ import subprocess
 from pathlib import Path
 
 # curl -LO https://github.com/cav71/hatch-ci/raw/beta/0.1.4/make.pyz
-from make import fileos, misc, task  # type: ignore
+try:
+    from make import fileos, misc, task  # type: ignore
+except ImportError:
+    print(
+        """
+This script is not meant to be run directly, please:
+  $> curl -LO https://github.com/LuxorLabs/luxos-tooling/raw/main/make.pyz
+  $> python make.pyz
+""",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
 
 log = logging.getLogger(__name__)
 
@@ -115,13 +127,13 @@ def beta_build(parser, argv):
         log.debug("found at LN:%i: __version__ = '%s'", lineno, old)
         if old != "" and old != current:
             raise RuntimeError(f"found in {initfile} __version__ {old} != {current}")
-        misc.set_variable_def(pyproject, "__version__", lineno, version, quote)
+        misc.set_variable_def(initfile, "__version__", lineno, version, quote)
 
         lineno, old, quote = misc.get_variable_def(initfile, "__hash__")
         log.debug("found at LN:%i: __hash__ = '%s'", lineno, old)
         if old != "" and old != gdata["sha"]:
             raise RuntimeError(f"found in {initfile} __hash__ {old} != {gdata['sha']}")
-        misc.set_variable_def(pyproject, "__hash__", lineno, gdata["sha"], quote)
+        misc.set_variable_def(initfile, "__hash__", lineno, gdata["sha"], quote)
 
         if not options.dryrun:
             subprocess.check_call([sys.executable, "-m", "build"])  # noqa: S603

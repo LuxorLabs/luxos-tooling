@@ -42,50 +42,75 @@ import time
 from pathlib import Path
 import functools
 import argparse
+from typing import Any
+
 
 # SPECIAL MODULE LEVEL VARIABLES
 MODULE_VARIABLES = {
-    "LOGGING_CONFIG": None,
+    "LOGGING_CONFIG": None,  # logging config dict (passed to logging.basicConfig(**LOGGING_CONFIG))
+    "CONFIGPATH": Path("config.yaml"),  # config default path
 }
 
 
 log = logging.getLogger(__name__)
 
 
+def setup_logging(count: int, config: dict[str, Any]) -> None:
+    levelmap = {
+        1: logging.DEBUG,
+        0: logging.INFO,
+        -1: logging.WARNING,
+    }
+
+    # we can set the default log level in LOGGING_CONFIG
+    if config.get("level", None) is not None:
+        levelmap[0] = config["level"]
+
+    config["level"] = levelmap[count]
+    logging.basicConfig(**config)
+
+
 class LuxosParser(argparse.ArgumentParser):
     def __init__(self, module_variables, *args, **kwargs):
-        self.module_variables = module_variables or {}
         super().__init__(*args, **kwargs)
+
+        self.module_variables = module_variables or {}
+
+        # we're adding the -v|-q flags, to control the logging level
         self.add_argument(
             "-v", "--verbose", action="count", help="report verbose logging"
         )
         self.add_argument("-q", "--quiet", action="count", help="report quiet logging")
+
+        # we add the -c|--config flag to point to a config file
+        configpath = (
+            self.module_variables.get("CONFIGPATH") or MODULE_VARIABLES["CONFIGPATH"]
+        )
+        configpath = Path(configpath).expanduser().absolute()
+        if configpath.is_relative_to(Path.cwd()):
+            configpath = configpath.relative_to(Path.cwd())
+
         self.add_argument(
             "-c",
             "--config",
-            default=Path("config.yaml"),
+            default=configpath,
             type=Path,
-            help="load yaml config file",
+            help="path to a config file",
         )
 
     def parse_args(self, args=None, namespace=None):
         options = super().parse_args(args, namespace)
+
+        # we provide an error function to nicely bail out the script
         options.error = self.error
 
-        # set the logging level
-        count = (options.verbose or 0) - (options.quiet or 0)
-        level = {
-            1: logging.DEBUG,
-            0: logging.INFO,
-            -1: logging.WARNING,
-        }[max(min(count, 1), -1)]
-
-        module_variables = self.module_variables
+        # setup the logging
         config = {}
-        if value := module_variables.get("LOGGING_CONFIG"):
+        if value := self.module_variables.get("LOGGING_CONFIG"):
             config = value.copy()
-        config["level"] = level
-        logging.basicConfig(**config)
+
+        count = max(min((options.verbose or 0) - (options.quiet or 0), 1), -1)
+        setup_logging(count, config)
 
         return options
 
