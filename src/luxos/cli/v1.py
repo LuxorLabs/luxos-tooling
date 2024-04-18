@@ -55,6 +55,14 @@ MODULE_VARIABLES = {
 log = logging.getLogger(__name__)
 
 
+class CliBaseError(Exception):
+    pass
+
+
+class AbortCliError(CliBaseError):
+    pass
+
+
 def setup_logging(count: int, config: dict[str, Any]) -> None:
     levelmap = {
         1: logging.DEBUG,
@@ -148,6 +156,7 @@ def cli(add_arguments=None, process_args=None):
 
             t0 = time.monotonic()
             success = "completed"
+            errormsg = ""
             try:
                 if "parser" not in sig.parameters:
                     args = parser.parse_args()
@@ -156,12 +165,17 @@ def cli(add_arguments=None, process_args=None):
                     if "args" in sig.parameters:
                         kwargs["args"] = args
                 yield sig.bind(**kwargs)
+            except AbortCliError as exc:
+                errormsg = str(exc)
+                success = "failed"
             except Exception:
                 log.exception("un-handled exception")
                 success = "failed"
             finally:
                 delta = round(time.monotonic() - t0, 2)
                 log.info("task %s in %.2fs", success, delta)
+            if errormsg:
+                parser.error(errormsg)
 
         if inspect.iscoroutinefunction(function):
 
