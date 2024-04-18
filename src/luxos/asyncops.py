@@ -241,10 +241,11 @@ async def rexec(
     from . import api
 
     parameters = ([parameters] if isinstance(parameters, str) else parameters) or []
+    parameters = [str(param) for param in parameters]
 
     timeout = TIMEOUT if timeout is None else timeout
     retry = RETRY if retry is None else retry
-    retry_delay = RETRY_DELAY if retry_delay else retry_delay
+    retry_delay = RETRY_DELAY if retry_delay is None else retry_delay
 
     # if cmd is logon/logoff we dealt with it differently
     if cmd in {"logon", "logoff"}:

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "luxos"
-version = "0.0.1"
+version = "0.0.2"
 description = "The all encompassing LuxOS python library."
 readme = "README.md"
 license = { text = "MIT" }  # TODO I don't think this is a MIT??
@@ -43,7 +43,7 @@ luxos = "luxos.scripts.luxos:main"
 health-checker = "luxos.scripts.health_checker:main"
 
 [tool.setuptools.package-data]
-'luxos' = ['*.json']
+'luxos' = ['*.json', 'py.typed']
 
 
 [tool.ruff]
