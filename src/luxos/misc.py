@@ -2,11 +2,14 @@
 from __future__ import annotations
 import sys
 import itertools
+import ipaddress
+from typing import Generator
 
 
 if sys.version_info >= (3, 12):
     batched = itertools.batched
 else:
+
     def batched(iterable, n):
         if n < 1:
             raise ValueError("n must be at least one")
@@ -29,3 +32,27 @@ def indent(txt: str, pre: str = " " * 2) -> str:
 
     result = pre + txt.replace("\n", "\n" + pre) + last_eol
     return result if result.strip() else result.strip()
+
+
+def iter_ip_ranges(txt: str) -> Generator[str, None, None]:
+    """iterate over ip ranges
+
+    for ip in iter_ip_ranges("127.0.0.1-127.0.0.3:127.0.0.15"):
+        print(ip)
+
+    127.0.0.1
+    127.0.0.2
+    127.0.0.3
+    127.0.0.15
+    """
+
+    for segment in txt.split(":"):
+        start, _, end = segment.partition("-")
+        if not end:
+            yield start
+        else:
+            cur = ipaddress.IPv4Address(start)
+            last = ipaddress.IPv4Address(end)
+            while cur <= last:
+                yield str(cur)
+                cur += 1
