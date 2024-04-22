@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+  runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4.1.0
+      with:
+        ref: ${{ github.event.push.ref }}
+  
+    - name: Setup Python toolchain
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Build wheel packages
+      run: |
+        python make.pyz beta-build --release -v
+
+    - name: "Publish beta package to pypi"
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
