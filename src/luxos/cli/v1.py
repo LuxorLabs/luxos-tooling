@@ -118,7 +118,7 @@ class AbortCliError(CliBaseError):
     pass
 
 
-def setup_logging(count: int, config: dict[str, Any]) -> None:
+def setup_logging(config: dict[str, Any], count: int) -> None:
     levelmap = {
         1: logging.DEBUG,
         0: logging.INFO,
@@ -173,18 +173,20 @@ class LuxosParser(argparse.ArgumentParser):
             config = value.copy()
 
         count = max(min((options.verbose or 0) - (options.quiet or 0), 1), -1)
-        setup_logging(count, config)
+        setup_logging(config, count)
 
         return options
 
     @classmethod
-    def get_parser(cls, module_variables):
+    def get_parser(cls, module_variables, **kwargs):
         class Formatter(
             argparse.ArgumentDefaultsHelpFormatter, argparse.RawTextHelpFormatter
         ):
             pass
 
-        return cls(module_variables=module_variables, formatter_class=Formatter)
+        return cls(
+            module_variables=module_variables, formatter_class=Formatter, **kwargs
+        )
 
 
 def cli(
@@ -206,8 +208,13 @@ def cli(
             if "args" in sig.parameters and "parser" in sig.parameters:
                 raise RuntimeError("cannot use args and parser at the same time")
 
+            description, _, epilog = (
+                (function.__doc__ or module.__doc__ or "").strip().partition("\n")
+            )
             kwargs = {}
-            parser = LuxosParser.get_parser(module_variables)
+            parser = LuxosParser.get_parser(
+                module_variables, description=description, epilog=epilog
+            )
             if add_arguments:
                 add_arguments(parser)
 
@@ -254,3 +261,17 @@ def cli(
         return _cli2
 
     return _cli1
+
+
+### standard arguments
+
+
+def add_argument_csv_miners(parser: argparse.ArgumentParser, *args, **kwargs):
+    """adds arguments handling miners config in a csv file"""
+
+    parser.add_argument("--ip-start", help="start of the IP range")
+    parser.add_argument("--ip-end", help="start of the IP range")
+    parser.add_argument("--ip-file", type=Path, help="csv file containing ip addresses")
+    parser.add_argument(
+        "--port", type=int, default=4028, help="Port number for the miner API"
+    )
