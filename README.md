@@ -59,6 +59,15 @@ from luxos.api import (execute_command)
 execute_command("192.168.1.1", 4028, 2, "rebootdevice", "", False)
 ```
 
+There's an alternative api:
+```
+from luxos.asyncops import rexec
+
+rexec(host="192.168.1.1", port=4028, cmd="rebootdevice", parameters="", timeout=2., retry=1, retry_delay=3.)
+```
+(note the host/port/cmd etc. shouldn't needed, there are here for readability)
+
+
 ## LuxOS HealthChecker - health_checker.py
 
 The HealthChecker script is designed to continuously pull miner data from LuxOS, providing valuable insights into the health of your mining machines.

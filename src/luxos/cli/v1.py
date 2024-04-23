@@ -264,7 +264,6 @@ def cli(
                     delta = round(time.monotonic() - t0, 2)
                     log.info("task %s in %.2fs", success, delta)
             if errormsg:
-                breakpoint()
                 parser.error(errormsg)
 
         if inspect.iscoroutinefunction(function):
