@@ -90,6 +90,7 @@ def main(parser: argparse.ArgumentParser):
 
 from __future__ import annotations
 
+import sys
 import contextlib
 import inspect
 import logging
@@ -118,18 +119,28 @@ class AbortCliError(CliBaseError):
     pass
 
 
+class AbortWrongArgument(CliBaseError):
+    pass
+
+
 def setup_logging(config: dict[str, Any], count: int) -> None:
-    levelmap = {
-        1: logging.DEBUG,
-        0: logging.INFO,
-        -1: logging.WARNING,
-    }
+    levelmap = [
+        logging.WARNING,
+        logging.INFO,
+        logging.DEBUG,
+    ]
+    n = len(levelmap)
 
-    # we can set the default log level in LOGGING_CONFIG
+    # awlays start from info level
+    level = logging.INFO
+
+    # we can set the default start log level in LOGGING_CONFIG
     if config.get("level", None) is not None:
-        levelmap[0] = config["level"]
+        level = config["level"]
 
-    config["level"] = levelmap[count]
+    # we control if we go verbose or quite here
+    index = levelmap.index(level) + count
+    config["level"] = levelmap[max(min(index, n - 1), 0)]
     logging.basicConfig(**config)
 
 
@@ -165,6 +176,10 @@ class LuxosParser(argparse.ArgumentParser):
         options = super().parse_args(args, namespace)
 
         # we provide an error function to nicely bail out the script
+        def error(msg):
+            raise AbortWrongArgument(msg)
+
+        self.error = error
         options.error = self.error
 
         # setup the logging
@@ -172,7 +187,7 @@ class LuxosParser(argparse.ArgumentParser):
         if value := self.module_variables.get("LOGGING_CONFIG"):
             config = value.copy()
 
-        count = max(min((options.verbose or 0) - (options.quiet or 0), 1), -1)
+        count = (options.verbose or 0) - (options.quiet or 0)
         setup_logging(config, count)
 
         return options
@@ -224,6 +239,7 @@ def cli(
             t0 = time.monotonic()
             success = "completed"
             errormsg = ""
+            show_timing = True
             try:
                 if "parser" not in sig.parameters:
                     args = parser.parse_args()
@@ -235,20 +251,31 @@ def cli(
             except AbortCliError as exc:
                 errormsg = str(exc)
                 success = "failed"
+            except AbortWrongArgument as exc:
+                show_timing = False
+                parser.print_usage(sys.stderr)
+                print(f"{parser.prog}: error: {exc.args[0]}", file=sys.stderr)
+                sys.exit(2)
             except Exception:
                 log.exception("un-handled exception")
                 success = "failed"
             finally:
-                delta = round(time.monotonic() - t0, 2)
-                log.info("task %s in %.2fs", success, delta)
+                if show_timing:
+                    delta = round(time.monotonic() - t0, 2)
+                    log.info("task %s in %.2fs", success, delta)
             if errormsg:
                 parser.error(errormsg)
+
+        def log_sys_info():
+            log.debug("interpreter: %s", sys.executable)
+            log.debug("version: %s", sys.version)
 
         if inspect.iscoroutinefunction(function):
 
             @functools.wraps(function)
             async def _cli2(*args, **kwargs):
                 with setup() as ba:
+                    log_sys_info()
                     return await function(*ba.args, **ba.kwargs)
 
         else:
@@ -256,22 +283,9 @@ def cli(
             @functools.wraps(function)
             def _cli2(*args, **kwargs):
                 with setup() as ba:
+                    log_sys_info()
                     return function(*ba.args, **ba.kwargs)
 
         return _cli2
 
     return _cli1
-
-
-### standard arguments
-
-
-def add_argument_csv_miners(parser: argparse.ArgumentParser, *args, **kwargs):
-    """adds arguments handling miners config in a csv file"""
-
-    parser.add_argument("--ip-start", help="start of the IP range")
-    parser.add_argument("--ip-end", help="start of the IP range")
-    parser.add_argument("--ip-file", type=Path, help="csv file containing ip addresses")
-    parser.add_argument(
-        "--port", type=int, default=4028, help="Port number for the miner API"
-    )
