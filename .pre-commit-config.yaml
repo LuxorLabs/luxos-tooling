@@ -12,6 +12,7 @@
 
 repos:
   - repo: local
+    verbose: true
     hooks:
       - id: onepack
         name: onepack
