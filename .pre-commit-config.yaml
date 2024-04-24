@@ -13,7 +13,13 @@
 repos:
   - repo: local
     hooks:
-      # repo: https://github.com/astral-sh/ruff-pre-commit
+      - id: onepack
+        name: onepack
+        description: "Create the pyz files"
+        entry: python3 make.pyz onepack
+        language: system
+        types_or: [python, pyi]
+
       - id: ruff
         name: ruff
         description: "Run 'ruff' for extremely fast Python linting"
