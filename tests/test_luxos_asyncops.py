@@ -13,7 +13,6 @@ from luxos import misc
 pytestmark = pytest.mark.manual
 
 
-
 def getminer() -> None | tuple[str, int]:
     if not (minerd := os.getenv("LUXOS_TEST_MINER")):
         return None
@@ -21,8 +20,19 @@ def getminer() -> None | tuple[str, int]:
     return host.strip(), int(port)
 
 
+def test_rexec_paramteres():
+    assert aapi._rexec_paramteres(None) == []
+    assert aapi._rexec_paramteres("hello") == ["hello"]
+    assert aapi._rexec_paramteres(["hello", "world"]) == ["hello", "world"]
+    assert aapi._rexec_paramteres(["hello", 1]) == ["hello", "1"]
+    assert aapi._rexec_paramteres({"hello": 1}) == ["hello=1"]
+    assert aapi._rexec_paramteres({"hello": True}) == ["hello=true"]
+
+
 def test_validate_message():
-    pytest.raises(exceptions.MinerCommandMalformedMessageError, aapi.validate_message, "a", 0, {})
+    pytest.raises(
+        exceptions.MinerCommandMalformedMessageError, aapi.validate_message, "a", 0, {}
+    )
     host, port = "a", 0
 
     assert aapi.validate_message(host, port, {"STATUS": 1, "id": 2})
@@ -30,7 +40,8 @@ def test_validate_message():
     pytest.raises(
         exceptions.MinerCommandMalformedMessageError,
         aapi.validate_message,
-        host, port,
+        host,
+        port,
         {
             "STATUS": 1,
             "id": 2,
@@ -38,28 +49,40 @@ def test_validate_message():
         "wooow",
     )
 
-    assert aapi.validate_message(host, port, {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow")
+    assert aapi.validate_message(
+        host, port, {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow"
+    )
 
     with pytest.raises(exceptions.MinerCommandMalformedMessageError) as excinfo:
-        aapi.validate_message(host, port,
-            {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", minfields=9
+        aapi.validate_message(
+            host, port, {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", minfields=9
         )
     assert excinfo.value.args[2] == "found 2 fields for wooow invalid: 2 <= 9"
 
     with pytest.raises(exceptions.MinerCommandMalformedMessageError) as excinfo:
-        aapi.validate_message(host, port,
-            {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", maxfields=1
+        aapi.validate_message(
+            host, port, {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", maxfields=1
         )
     assert excinfo.value.args[2] == "found 2 fields for wooow invalid: 2 >= 1"
 
     with pytest.raises(exceptions.MinerCommandMalformedMessageError) as excinfo:
-        aapi.validate_message(host, port,
-            {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", minfields=9, maxfields=10
+        aapi.validate_message(
+            host,
+            port,
+            {"STATUS": 1, "id": 2, "wooow": [1, 2]},
+            "wooow",
+            minfields=9,
+            maxfields=10,
         )
     assert excinfo.value.args[2] == "found 2 fields for wooow invalid: 2 <= 9"
 
-    assert aapi.validate_message(host, port,
-        {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", minfields=2, maxfields=10
+    assert aapi.validate_message(
+        host,
+        port,
+        {"STATUS": 1, "id": 2, "wooow": [1, 2]},
+        "wooow",
+        minfields=2,
+        maxfields=10,
     )
 
 
@@ -103,7 +126,6 @@ async def test_miner_logon_logoff_cycle():
     finally:
         if sid:
             await aapi.logoff(host, port, sid)
-
 
 
 @pytest.mark.skipif(not getminer(), reason="need to set LUXOS_TEST_MINER")
@@ -168,7 +190,3 @@ async def test_miner_profile_sets():
     expected = {p["Profile Name"] for p in profiles}
     found = {p["Profile Name"] for p in profiles2}
     assert found == expected
-
-
-
-

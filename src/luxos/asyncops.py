@@ -229,19 +229,37 @@ async def execute_command(
             await logoff(host, port, sid)
 
 
+def _rexec_paramteres(
+    parameters: str | list[str] | dict[str, Any] | None = None,
+) -> list[str]:
+    if isinstance(parameters, dict):
+        data = []
+        for key, value in parameters.items():
+            if value is None:
+                value = "null"
+            elif value is True:
+                value = "true"
+            elif value is False:
+                value = "false"
+            data.append(f"{key}={value}")
+        parameters = data
+    parameters = ([parameters] if isinstance(parameters, str) else parameters) or []
+    parameters = [str(param) for param in parameters]
+    return parameters
+
+
 async def rexec(
     host: str,
     port: int,
     cmd: str,
-    parameters: str | list[str] | None = None,
+    parameters: str | list[str] | dict[str, Any] | None = None,
     timeout: float | None = None,
     retry: int | None = None,
     retry_delay: float | None = None,
 ) -> dict[str, Any] | None:
     from . import api
 
-    parameters = ([parameters] if isinstance(parameters, str) else parameters) or []
-    parameters = [str(param) for param in parameters]
+    parameters = _rexec_paramteres(parameters)
 
     timeout = TIMEOUT if timeout is None else timeout
     retry = RETRY if retry is None else retry
