@@ -16,7 +16,7 @@ repos:
       - id: onepack
         name: onepack
         description: "Create the pyz files"
-        entry: python3 make.pyz onepack
+        entry: make.pyz onepack
         language: system
         types_or: [python, pyi]
 
