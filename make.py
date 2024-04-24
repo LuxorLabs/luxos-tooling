@@ -61,6 +61,7 @@ def onepack(parser, argv):
     parser.add_argument("-o", "--output-dir", default=workdir, type=Path)
     o = parser.parse_args(argv)
 
+    changed = False
     for target, entrypoint in targets:
         dst = o.output_dir / target
         out = misc.makezapp(dst, workdir / "src", main=entrypoint, compressed=True)
@@ -68,8 +69,10 @@ def onepack(parser, argv):
         relpath = dst.relative_to(Path.cwd()) if dst.is_relative_to(Path.cwd()) else dst
         if out:
             print(f"Written: {relpath}", file=sys.stderr)
+            changed = True
         else:
             print(f"Skipping generation: {relpath}", file=sys.stderr)
+    sys.exit(int(changed))
 
 
 @task()

@@ -19,6 +19,7 @@ repos:
         entry: python3 make.pyz onepack
         language: system
         types_or: [python, pyi]
+        pass_filenames: false
         always_run: true
 
       - id: ruff
