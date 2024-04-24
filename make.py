@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# Usage:
+#   curl -LO https://github.com/LuxorLabs/luxos-tooling/raw/main/make.pyz
+#   python make.pyz
 """A make-like script"""
 
 import contextlib
@@ -9,20 +12,7 @@ import logging
 import subprocess
 from pathlib import Path
 
-# curl -LO https://github.com/cav71/hatch-ci/raw/beta/0.1.4/make.pyz
-try:
-    from make import fileos, misc, task  # type: ignore
-except ImportError:
-    print(
-        """
-This script is not meant to be run directly, please:
-  $> curl -LO https://github.com/LuxorLabs/luxos-tooling/raw/main/make.pyz
-  $> python make.pyz
-""",
-        file=sys.stderr,
-    )
-    sys.exit(1)
-
+from make import fileos, misc, task  # type: ignore
 
 log = logging.getLogger(__name__)
 
@@ -140,3 +130,14 @@ def beta_build(parser, argv):
 
         if not options.dryrun:
             subprocess.check_call([sys.executable, "-m", "build"])  # noqa: S603
+
+
+if __name__ == "__main__":
+    print(
+        """
+This script is not mean to be run directly, please:
+  $> curl -LO https://github.com/LuxorLabs/luxos-tooling/raw/main/make.pyz
+  $> python make.pyz
+""",
+        file=sys.stderr,
+    )
