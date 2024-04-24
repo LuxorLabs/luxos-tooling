@@ -12,7 +12,6 @@
 
 repos:
   - repo: local
-    verbose: true
     hooks:
       - id: onepack
         name: onepack
@@ -20,6 +19,7 @@ repos:
         entry: python3 make.pyz onepack
         language: system
         types_or: [python, pyi]
+        always_run: true
 
       - id: ruff
         name: ruff
