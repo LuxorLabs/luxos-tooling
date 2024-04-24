@@ -125,9 +125,9 @@ class AbortWrongArgument(CliBaseError):
 
 def setup_logging(config: dict[str, Any], count: int) -> None:
     levelmap = [
-        logging.DEBUG,
-        logging.INFO,
         logging.WARNING,
+        logging.INFO,
+        logging.DEBUG,
     ]
     n = len(levelmap)
 
@@ -266,11 +266,16 @@ def cli(
             if errormsg:
                 parser.error(errormsg)
 
+        def log_sys_info():
+            log.debug("interpreter: %s", sys.executable)
+            log.debug("version: %s", sys.version)
+
         if inspect.iscoroutinefunction(function):
 
             @functools.wraps(function)
             async def _cli2(*args, **kwargs):
                 with setup() as ba:
+                    log_sys_info()
                     return await function(*ba.args, **ba.kwargs)
 
         else:
@@ -278,6 +283,7 @@ def cli(
             @functools.wraps(function)
             def _cli2(*args, **kwargs):
                 with setup() as ba:
+                    log_sys_info()
                     return function(*ba.args, **ba.kwargs)
 
         return _cli2
