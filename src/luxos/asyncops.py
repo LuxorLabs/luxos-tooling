@@ -276,14 +276,14 @@ async def rexec(
                     return await logoff(host, port, parameters[0])
             except Exception as exc:
                 failure = exc
-            if retry_delay:
+            if retry and (i < retry) and retry_delay:
                 await asyncio.sleep(retry_delay)
         if isinstance(failure, Exception):
             raise failure
 
     failure = None
     sid = ""
-    for i in range(retry or 1):
+    for i in range(retry + 1):
         if not api.logon_required(cmd):
             log.debug("no logon required for command '%s' on %s:%i", cmd, host, port)
             break
@@ -294,7 +294,7 @@ async def rexec(
             break
         except Exception as exc:
             failure = exc
-        if retry_delay:
+        if retry and (i < retry) and retry_delay:
             await asyncio.sleep(retry_delay)
 
     if isinstance(failure, Exception):
@@ -312,7 +312,7 @@ async def rexec(
     )
 
     failure = None
-    for i in range(retry or 1):
+    for i in range(retry + 1):
         try:
             ret = await roundtrip(host, port, packet, timeout=timeout)
             log.debug("received from %s:%s: %s", host, port, str(ret))
@@ -321,7 +321,8 @@ async def rexec(
             return ret
         except Exception as exc:
             failure = exc
-        if retry_delay:
+        if retry and (i < retry) and retry_delay:
+            log.debug("failed attempt %i (out of %i)", i + 1, retry)
             await asyncio.sleep(retry_delay)
 
     if sid:
