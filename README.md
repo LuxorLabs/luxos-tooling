@@ -1,72 +1,84 @@
 # LuxOS Tools Repository
 
+[![PyPI version](https://img.shields.io/pypi/v/luxos.svg?color=blue)](https://pypi.org/project/luxos)
+[![Python versions](https://img.shields.io/pypi/pyversions/luxos.svg)](https://pypi.org/project/luxos)
+[![License - MIT](https://img.shields.io/badge/license-MIT-9400d3.svg)](https://spdx.org/licenses/)
+[![Build](https://github.com/LuxorLabs/luxos-tooling/actions/workflows/push-main.yml/badge.svg)](https://github.com/LuxorLabs/luxos/actions/runs/0)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/luxos)
+[![Mypy](https://img.shields.io/badge/types-Mypy-blue.svg)](https://mypy-lang.org/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 This repository contains scripts we built to operate and troubleshoot miners running LuxOS.
 
-## Install
+This gather togheter tools, script and a library to handle miners supporting operations and maintenance.
 
-There are few ways to install the luxos package:
+## Installation
 
-1. Using pip (suggested for end-users):
-   ```shell
-   pip install luxos
-   pip install git+https://github.com/LuxorLabs/luxos-tooling.git 
-   ```
-   Using pip gives you access to the cli commands `luxos` and `health-checker` as well
-   the ability to import in python the `import luxos.api` api for luxos.
-
-2. A single drop in file (for support):
-   ```shell
-   curl -LO https://github.com/LuxorLabs/luxos-tooling/raw/luxos.pyz
-   ```
-   These are two standalone [zipapp](https://docs.python.org/3/library/zipapp.html) files, you can use
-   from the command line as `python luxos.pyz`, no dependencies beside a recent-*ish* python
-   version (eg. >= 3.10)
-
-3. From the [github](https://github.com/LuxorLabs/luxos-tooling) source checkout (for devs):
-   ```shell
-   python -m venv venv 
-   source venv/bin/activate # for Windows: .\myenv\Scripts\activate)
-
-   pip install -r tests/requirements.txt
-   
-   export PYTHONPATH=$(pwd)/src # for Windows: SET PYTHONPATH=%CD%\src
-   (or)
-   pip install -e .
-   ```
-
-## LuxOS API Wrapper - luxos
-
-This tool offers a convenient way to interact with LuxOS through a command-line interface (CLI) or as Python packages for more advanced integrations.
-
-**CLI Usage**
-
-The luxos.py script serves as a versatile LuxOS API wrapper, allowing users to interact with LuxOS features directly from the command line. Below are some basic examples:
-
+To install the latest and greatest version:
 ```bash
-python3 -m luxos --ipfile miners.csv --cmd rebootdevice --timeout 2
-python3 -m luxos --range_start 192.168.1.0 --range_end 192.168.1.255 --cmd rebootdevice --verbose True
+   $> pip install -U luxos
 ```
 
-> **NOTE** Please don't forget to set the PYTHONPATH.
+To install a beta (see [here](https://pypi.org/project/luxos/#history) for the complete list):
+```bash
+   $> pip install -U luxos==0.0.5b18
+```
 
-**Library Usage**
+Finally you can install the latest bleeding edge code as:
+```bash
+   $> pip install git+https://github.com/LuxorLabs/luxos-tooling.git
+```
 
-If you prefer to integrate LuxOS functionality into your Python applications or scripts, luxos.py can also be used as a Python package. Here's a quick example:
+If you're new to a python `venv`, there are generic instructions [venv](https://docs.python.org/3/library/venv.html).
+
+## Verify
+
+Once installed you can verify the version and the commit the code is from using:
+```bash
+   $> python -c "import luxos; print(luxos.__version__, luxos.__hash__)"
+   0.0.5 08cc733ce8aedf406856c8ad9ccbe44e78917a37
+```
+
+## Help
+
+See files under the docs/folder.
+
+
+## Examples
+This is a curated list of examples.
+
+### The LuxOS API - luxos
+
+This package offers a convenient way to interact with LuxOS through a command-line interface (CLI) or as Python packages for more advanced integrations.
+
+**Usage (cli)**
+
+This will reboot all miners in the `miner.csv` file list:
+```bash
+   $> luxos --ipfile miners.csv --cmd rebootdevice --timeout 2 --verbose
+   (same as)
+   $> python -m luxos --ipfile miners.csv --cmd rebootdevice --timeout 2 --verbose
+```
+> **NOTE** You can pass the `--async` flag for async operations (it should be faster if the number of miners is large).
+
+**Usage (api)**
+
+The same operation can be done using the internal api:
 
 ```python
-from luxos.api import (execute_command)
-
-execute_command("192.168.1.1", 4028, 2, "rebootdevice", "", False)
+   from luxos.api import (execute_command)
+   
+   execute_command("192.168.1.1", 4028, 2, "version", "", False)
 ```
 
-There's an alternative api:
+There's an alternative (async) api:
+```python
+   import asyncio
+   from luxos.utils import rexec
+   
+   # note the timeout/retry/retry_delay aren't needed
+   asyncio.run(rexec(host="192.168.1.1", port=4028, cmd="version", parameters="", timeout=2., retry=1, retry_delay=3.))
 ```
-from luxos.asyncops import rexec
-
-rexec(host="192.168.1.1", port=4028, cmd="rebootdevice", parameters="", timeout=2., retry=1, retry_delay=3.)
-```
-(note the host/port/cmd etc. shouldn't needed, there are here for readability)
-
 
 ## LuxOS HealthChecker - health_checker.py
 
