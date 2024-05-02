@@ -375,7 +375,7 @@ def main():
         thread.join()
 
     # Execution completed
-    end_time = time.time()
+    end_time = time.monotonic()
     execution_time = end_time - start_time
     log.info(f"Execution completed in {execution_time:.2f} seconds.")
 
