@@ -16,13 +16,28 @@ def load_ips_from_csv(path: Path | str, port: int = 4028) -> list[tuple[str, int
     return result
 
 
-async def alaunch(addresses: list[tuple[str, int]], call: Callable, **kwargs) -> Any:
+async def launch(
+    addresses: list[tuple[str, int]],
+    call: Callable[[str, int], Any],
+    batch: int | None = None,
+) -> Any:
     """launch an async function on a list of (host, port) miners
 
     Eg.
         async printme(host, port):
             print(await rexec(host, port, "version"))
-        asyncio.run(alaunch([("127.0.0.1", 4028)], printme))
+        asyncio.run(launch([("127.0.0.1", 4028)], printme))
     """
-    tasks = [call(ip, port, **kwargs) for ip, port in addresses]
-    return await asyncio.gather(*tasks, return_exceptions=True)
+    # see https://www.artificialworlds.net/blog/2017/06/12/making-100-million-requests-with-python-aiohttp/
+    from luxos.misc import batched
+
+    if batch:
+        result = []
+        for arguments in batched(addresses, batch):
+            tasks = [call(*args) for args in arguments]
+            for task in await asyncio.gather(*tasks, return_exceptions=True):
+                result.append(task)
+        return result
+    else:
+        tasks = [call(*args) for args in addresses]
+        return await asyncio.gather(*tasks, return_exceptions=True)

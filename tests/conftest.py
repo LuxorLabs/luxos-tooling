@@ -54,10 +54,14 @@ def echopool(resolver, tmp_path, request):
     """yield a pool of echo servers
 
     Example:
-        def test_me(echopool):
-            echopool.start(30)
+        @pytest.mark.asyncio
+        async def test_me(echopool):
+            # spawns a server listening to 30 ports
+            echopool.start(30, mode="echo+") # echo+ is the default
+
             host, port = echopool.addresses[0]
-            ret = luxos.api.send_cgminer_command(host, port, "helo", "world")
+            ret = await luxos.asyncops.roundtrip(host, port, "hello world", asjson=False)
+            assert ret == f"received by ('{host}', {port}): hello world"
 
     Note:
         set the environemnt variable to a miner to test against it,
