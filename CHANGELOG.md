@@ -15,9 +15,15 @@ Please, use the format:
 -->
 
 ## [Unreleased]
+
+
+## [0.0.6]
+
+- support for misc.launch batched uperations
 - fix timing report issue hor-1155
 
 ## [0.0.5]
+
 - new cli support for epilog/description
 - add new iter_ip_ranges function
 
