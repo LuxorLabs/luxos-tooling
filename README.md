@@ -10,7 +10,13 @@
 
 This repository contains scripts we built to operate and troubleshoot miners running LuxOS.
 
-This gather togheter tools, script and a library to handle miners supporting operations and maintenance.
+For an example how to use the luxos line tool 👉 [here](#usage-cli)
+
+For a quick example how to control miners using the luxos api 👉 [here](#usage-api)
+
+
+For an example how to use the command line tool 👉 [here](docs/CLI.md)
+
 
 ## Installation
 
@@ -51,7 +57,9 @@ This is a curated list of examples.
 
 This package offers a convenient way to interact with LuxOS through a command-line interface (CLI) or as Python packages for more advanced integrations.
 
-**Usage (cli)**
+#### Usage (cli)
+
+The luxos wheel package comes with a luxos comand line script:
 
 This will reboot all miners in the `miner.csv` file list:
 ```bash
@@ -59,25 +67,59 @@ This will reboot all miners in the `miner.csv` file list:
    (same as)
    $> python -m luxos --ipfile miners.csv --cmd rebootdevice --timeout 2 --verbose
 ```
-> **NOTE** You can pass the `--async` flag for async operations (it should be faster if the number of miners is large).
 
-**Usage (api)**
-
-The same operation can be done using the internal api:
-
-```python
-   from luxos.api import (execute_command)
-   
-   execute_command("192.168.1.1", 4028, 2, "version", "", False)
+There's an `async` version that can work better on multiple miners, just use the `--async` flag:
+```bash
+   $> luxos --ipfile miners.csv --cmd version --timeout 2 --async --all
+   > 10.206.1.153:4028
+   | {
+   |   "STATUS": [
+   |     {
+   |       "Code": 22,
+   |       "Description": "LUXminer 2024.5.1.155432-f2badc0f",
 ```
 
-There's an alternative (async) api:
+
+#### Usage (api)
+
+You can use the python api to perform the commands instead the CLI.
+
+This is way to get version data from a miner:
 ```python
-   import asyncio
-   from luxos.utils import rexec
-   
-   # note the timeout/retry/retry_delay aren't needed
-   asyncio.run(rexec(host="192.168.1.1", port=4028, cmd="version", parameters="", timeout=2., retry=1, retry_delay=3.))
+
+   >>> from luxos.api import execute_command
+   >>> execute_command("127.0.0.1", 4028, 2, "version", "", False)
+   {'STATUS': [{'Code': 22, 'Description': 'LUXminer ...
+   ```
+
+Alternatively, you can use the module `utils`, where there are support functions for one-shot command execution:
+
+```python
+   >>> import asyncio
+   >>> from luxos import utils
+   >>> asyncio.run(utils.rexec("127.0.0.1", 4028, "vesion"))
+   {'STATUS': [{'Code': 22, 'Description': 'LUXminer ...
+```
+`rexec` has a nicer api and it takes care of formatting the parameters, the full signature is:
+```python
+rexec(host="127.0.0.1", port=4028, cmd="version", parameters="", timeout=2., retry=1, retry_delay=3.)
+```
+Where `parameters` can be a string a list of any type (it will be converted into a str) or a dictionary (same conversion to string will apply).
+timeout is the timeout for a call, retry is the number of try before giving up, and retry_delay controls the delay between retry.
+
+The `luxos.utils.lauch` allows to rexec commands to a list of miners stored in a file:
+
+```python
+   >>> import asyncio
+   >>> from luxos import utils
+   >>> async def task(host: str, port: int):                   # task must be a callable 
+   ...   return await utils.rexec(host, port, "version")
+   >>> addresses = utils.load_ips_from_csv("miners.csv")       # miners.csv contains a list of ip addresses, one per line
+   >>> asyncio.run(utils.launch(addresses, task, batch=None))  # batched is a keyword argument to limit execution rate (if set to a positive int)
+   [{'STATUS': [{'Code': 22, 'Description': 'LUXmin ....
+
+   OR in one line:
+   >>> asyncio.run(utils.launch(addresses, utils.rexec, "version", batch=None))
 ```
 
 ## LuxOS HealthChecker - health_checker.py
