@@ -43,7 +43,6 @@ async def test_basic_batched_call(echopool):
     from luxos.misc import batched
 
     for group in batched(calls, 100):
-        print("Launched 1k tasks")
         tasks = await asyncio.gather(*group, return_exceptions=True)
         found.update(tasks)
     assert expected == found
@@ -90,5 +89,5 @@ async def test_util_launch_batched(echopool):
         f"received by ('{host}', {port}): hello world {index}" for index, _ in addresses
     }
 
-    ret = await utils.launch(addresses, call, 100)
+    ret = await utils.launch(addresses, call, batch=100)
     assert set(ret) == expected

@@ -230,7 +230,7 @@ async def execute_command(
 
 
 def _rexec_paramteres(
-    parameters: str | list[str] | dict[str, Any] | None = None,
+    parameters: str | list[Any] | dict[str, Any] | None = None,
 ) -> list[str]:
     if isinstance(parameters, dict):
         data = []
@@ -252,7 +252,7 @@ async def rexec(
     host: str,
     port: int,
     cmd: str,
-    parameters: str | list[str] | dict[str, Any] | None = None,
+    parameters: str | list[Any] | dict[str, Any] | None = None,
     timeout: float | None = None,
     retry: int | None = None,
     retry_delay: float | None = None,

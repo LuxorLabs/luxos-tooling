@@ -29,7 +29,7 @@ async def launch(
         asyncio.run(launch([("127.0.0.1", 4028)], printme, value=11, batch=10))
     """
     # special kwargs!!
-    n = int(kwargs.pop("batch")) if "batch" else None
+    n = int(kwargs.pop("batch")) if "batch" in kwargs else None
     if n and n < 0:
         raise RuntimeError(
             f"cannot pass the 'batch' keyword argument with a value < 0: batch={n}"
