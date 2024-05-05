@@ -10,12 +10,11 @@
 
 This repository contains scripts we built to operate and troubleshoot miners running LuxOS.
 
-For an example how to use the luxos line tool 👉 [here](#usage-cli)
+For an example how to use the luxos command line tool 👉 [here](#usage-cli).
 
-For a quick example how to control miners using the luxos api 👉 [here](#usage-api)
+For a quick example how to control miners using the luxos api 👉 [here](#usage-api).
 
-
-For an example how to use the command line tool 👉 [here](docs/CLI.md)
+If you're developing a script, you might want to leverage the luxos cli package 👉 [here](docs/CLI.md).
 
 
 ## Installation
@@ -53,7 +52,7 @@ See files under the docs/folder.
 ## Examples
 This is a curated list of examples.
 
-### The LuxOS API - luxos
+### The LuxOS package - luxos
 
 This package offers a convenient way to interact with LuxOS through a command-line interface (CLI) or as Python packages for more advanced integrations.
 

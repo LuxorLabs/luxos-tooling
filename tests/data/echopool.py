@@ -89,7 +89,16 @@ async def main():
     p.add_argument(
         "--async-delay", type=float, help="async delay in s (block a single request)"
     )
-    p.add_argument("--mode", choices=["echo", "echo+", "json", "json+"], default="echo")
+    p.add_argument(
+        "--mode",
+        choices=[
+            "echo",  # raw reply <message>: '<message>'
+            "echo+",  # raw reply to <message> formatted as 'received by <ip-address>: <message>'
+            "json",  # json formatted reply to a <json-message>
+            "json+",  # same as json, but if <json-message> contains {"sleep": 123.0} will sleep
+        ],
+        default="echo",
+    )
     p.add_argument("--server-file", type=Path)
     p.add_argument("number", type=int)
 
