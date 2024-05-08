@@ -37,7 +37,7 @@ def test_wrapped_cli():
         """a simple main function
 
            Lorem Ipsum is simply dummy text of the printing and
-         typesetting industry. Lorem Ipsum has been the industry's standard
+         typesetting industry. Lorem Ipsum has been the industry's
         dummy text ever since the 1500s, when an unknown printer
           took a galley of type and scrambled it to make a type specimen book.
         """
@@ -55,25 +55,5 @@ def test_wrapped_cli():
         """
         assert isinstance(parser, argparse.ArgumentParser)
 
-    assert (
-        main.attrs["doc"]
-        == """a simple main function
-
-            Lorem Ipsum is simply dummy text of the printing and
-          typesetting industry. Lorem Ipsum has been the industry's standard
-         dummy text ever since the 1500s, when an unknown printer
-           took a galley of type and scrambled it to make a type specimen book.
-        """
-    )
-
-    assert (
-        main2.attrs["doc"]
-        == """another simple main function
-
-           Lorem Ipsum is simply dummy text of the printing and
-               typesetting industry. Lorem Ipsum has been the industry's standard
-             dummy text ever since the 1500s, when an unknown printer
-           took a galley of type and scrambled it to make a type specimen book.
-
-        """
-    )
+    assert main.attributes["doc"] == main.__doc__
+    assert main2.attributes["doc"] == main2.__doc__
