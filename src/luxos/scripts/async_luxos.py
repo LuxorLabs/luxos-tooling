@@ -3,6 +3,7 @@ import asyncio
 import json
 
 from .. import misc
+from .. import text
 from .. import asyncops
 
 
@@ -44,7 +45,7 @@ async def run(
     if details:
         for (host, port), task in successes:  # type: ignore
             print(f"  > {host}:{port}")
-            print(misc.indent(json.dumps(task, indent=2, sort_keys=True), pre="  | "))
+            print(text.indent(json.dumps(task, indent=2, sort_keys=True), pre="  | "))
     print(f"task executed failures: {len(failures)}")
     for failure in failures:
         print(f"  {failure}")

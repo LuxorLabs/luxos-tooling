@@ -17,6 +17,11 @@ Please, use the format:
 ## [Unreleased]
 
 
+## [0.0.7]
+
+- add to the cli.cli decorated function an 'attributes' attribute
+
+
 ## [0.0.6]
 
 - support for misc.launch batched uperations

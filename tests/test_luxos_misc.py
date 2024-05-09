@@ -14,22 +14,6 @@ def test_misc_batched():
     }
 
 
-def test_indent():
-    txt = """\
-     An unusually complicated text
-    with un-even indented lines
-   that make life harder
-"""
-    assert (
-        misc.indent(txt, pre="..")
-        == """\
-..  An unusually complicated text
-.. with un-even indented lines
-..that make life harder
-"""
-    )
-
-
 def test_iter_ip_ranges():
     assert set(misc.iter_ip_ranges("127.0.0.1")) == {"127.0.0.1"}
     assert set(misc.iter_ip_ranges("127.0.0.1-127.0.0.3")) == {

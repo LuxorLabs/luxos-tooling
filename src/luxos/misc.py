@@ -5,7 +5,6 @@ import itertools
 import ipaddress
 from typing import Generator
 
-
 if sys.version_info >= (3, 12):
     batched = itertools.batched
 else:
@@ -16,22 +15,6 @@ else:
         it = iter(iterable)
         while batch := tuple(itertools.islice(it, n)):
             yield batch
-
-
-def indent(txt: str, pre: str = " " * 2) -> str:
-    """simple text indentation"""
-
-    from textwrap import dedent
-
-    txt = dedent(txt)
-    if txt.endswith("\n"):
-        last_eol = "\n"
-        txt = txt[:-1]
-    else:
-        last_eol = ""
-
-    result = pre + txt.replace("\n", "\n" + pre) + last_eol
-    return result if result.strip() else result.strip()
 
 
 def iter_ip_ranges(txt: str) -> Generator[str, None, None]:

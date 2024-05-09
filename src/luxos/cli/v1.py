@@ -211,12 +211,13 @@ def cli(
     ) = None,
 ):
     def _cli1(function):
+        module = inspect.getmodule(function)
+
         @contextlib.contextmanager
         def setup():
             sig = inspect.signature(function)
 
             module_variables = MODULE_VARIABLES.copy()
-            module = inspect.getmodule(function)
             for name in list(module_variables):
                 module_variables[name] = getattr(module, name, None)
 
@@ -286,6 +287,9 @@ def cli(
                     log_sys_info()
                     return function(*ba.args, **ba.kwargs)
 
+        _cli2.attributes = {
+            "doc": function.__doc__ or module.__doc__ or "",
+        }
         return _cli2
 
     return _cli1
