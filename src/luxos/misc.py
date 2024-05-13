@@ -17,7 +17,9 @@ else:
             yield batch
 
 
-def iter_ip_ranges(txt: str) -> Generator[str, None, None]:
+def iter_ip_ranges(
+    txt: str, gsep: str = ":", rsep: str = "-"
+) -> Generator[str, None, None]:
     """iterate over ip ranges
 
     for ip in iter_ip_ranges("127.0.0.1-127.0.0.3:127.0.0.15"):
@@ -27,10 +29,12 @@ def iter_ip_ranges(txt: str) -> Generator[str, None, None]:
     127.0.0.2
     127.0.0.3
     127.0.0.15
+
+    NOTE: use the `:` (gsep) to separate ips groups, and `-` (rsep) to define a range.
     """
 
-    for segment in txt.split(":"):
-        start, _, end = segment.partition("-")
+    for segment in txt.split(gsep):
+        start, _, end = segment.partition(rsep)
         if not end:
             yield start
         else:

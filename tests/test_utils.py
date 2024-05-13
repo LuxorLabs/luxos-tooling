@@ -91,3 +91,18 @@ async def test_util_launch_batched(echopool):
 
     ret = await utils.launch(addresses, call, batch=100)
     assert set(ret) == expected
+
+
+def test_util_ip_ranges():
+    assert set(utils.ip_ranges("127.0.0.1")) == {"127.0.0.1"}
+    assert set(utils.ip_ranges("127.0.0.1->127.0.0.3", gsep="\n", rsep="->")) == {
+        "127.0.0.1",
+        "127.0.0.2",
+        "127.0.0.3",
+    }
+    assert set(utils.ip_ranges("127.0.0.1-127.0.0.3\n127.0.0.15", gsep="\n")) == {
+        "127.0.0.1",
+        "127.0.0.2",
+        "127.0.0.3",
+        "127.0.0.15",
+    }

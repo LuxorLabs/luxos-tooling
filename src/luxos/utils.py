@@ -9,6 +9,25 @@ from luxos.asyncops import rexec  # noqa: F401
 import luxos.misc
 
 
+def ip_ranges(txt: str, gsep: str = ":", rsep: str = "-") -> list[str]:
+    """return a list of ips given a text expression.
+
+    Eg.
+        >>> for ip in ip_ranges("127.0.0.1"):
+        ...     print(ip)
+        127.0.0.1
+
+        >>> for ip in ip_ranges("127.0.0.1-127.0.0.3"):
+        ...     print(ip)
+        127.0.0.1
+        127.0.0.2
+        127.0.0.3
+
+    NOTE: use the `:` (gsep) to separate ips groups, and `-` (rsep) to define a range.
+    """
+    return list(luxos.misc.iter_ip_ranges(txt, gsep, rsep))
+
+
 def load_ips_from_csv(path: Path | str, port: int = 4028) -> list[tuple[str, int]]:
     from luxos.scripts.luxos import load_ip_list_from_csv
 

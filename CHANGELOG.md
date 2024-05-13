@@ -16,6 +16,10 @@ Please, use the format:
 
 ## [Unreleased]
 
+## [0.0.8]
+
+- add luxos.utils.ip_ranges to list ip addresses from a text
+
 
 ## [0.0.7]
 
