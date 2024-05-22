@@ -9,3 +9,4 @@ Add your description here.
 - [ ] I have updated the `CHANGELOG` (yeah, last chance to do it).
 - [ ] My code passes all tests, linter and formatting checks:
       ```python make.pyz check```
+      ```python make.pyz tests```

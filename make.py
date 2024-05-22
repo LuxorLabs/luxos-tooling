@@ -75,7 +75,11 @@ def check():
 def tests():
     """runs all tests (excluding the manual ones)"""
     workdir = Path.cwd()
-    subprocess.check_call(["pytest", "-vvs", str(workdir / "tests")])
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(Path.cwd() / "src")
+    subprocess.check_call(
+        ["pytest", "-vvs", "--manual", str(workdir / "tests")], env=env
+    )
 
 
 @task(name="beta-build")
