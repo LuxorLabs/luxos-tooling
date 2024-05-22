@@ -100,6 +100,8 @@ import time
 from pathlib import Path
 from typing import Any, Callable
 
+from . import flags  # noqa: F401
+
 # SPECIAL MODULE LEVEL VARIABLES
 MODULE_VARIABLES = {
     "LOGGING_CONFIG": None,  # logging config dict
