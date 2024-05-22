@@ -286,7 +286,7 @@ def cli(
                     log_sys_info()
                     return function(*ba.args, **ba.kwargs)
 
-        _cli2.attributes = {  # type: ignore
+        _cli2.attributes = {  # type: ignore[attr-defined]
             "doc": function.__doc__ or module.__doc__ or "",
         }
         return _cli2
