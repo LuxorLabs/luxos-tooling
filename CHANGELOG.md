@@ -16,6 +16,11 @@ Please, use the format:
 
 ## [Unreleased]
 
+- remove *pyz files
+- update pyproject.toml with latest ruff settings
+- apply ruff to the code base
+
+
 ## [0.0.8]
 
 - add luxos.utils.ip_ranges to list ip addresses from a text

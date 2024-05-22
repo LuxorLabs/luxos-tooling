@@ -49,10 +49,22 @@ health-checker = "luxos.scripts.health_checker:main"
 [tool.ruff]
 target-version = "py39"
 line-length = 88
-
+src = ["src/luxos"]
+exclude = [
+    "src/luxos/scripts/health_checker.py",
+    "src/luxos/scripts/luxos.py"
+]
 
 [tool.ruff.format]
 quote-style = "double"
+
+[tool.ruff.lint]
+ignore = []
+select = ["F", "E", "W", "Q", "I001"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["luxos"]
+
 
 [tool.mypy]
 disallow_untyped_defs = false
@@ -63,6 +75,13 @@ show_column_numbers = true
 show_error_codes = true
 warn_no_return = false
 warn_unused_ignores = true
+exclude = [
+    "^make\\.py",
+    "docs/conf\\.py",
+    "^docs/\\.*",
+    "^build/\\.*",
+    "^src/luxos/scripts/health_checker\\.py"
+]
 
 [tool.coverage.run]
 branch = true
