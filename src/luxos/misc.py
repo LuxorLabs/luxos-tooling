@@ -1,8 +1,9 @@
 # catch-all module (find later a better place)
 from __future__ import annotations
-import sys
-import itertools
+
 import ipaddress
+import itertools
+import sys
 from typing import Generator
 
 if sys.version_info >= (3, 12):

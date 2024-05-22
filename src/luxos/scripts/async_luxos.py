@@ -1,10 +1,9 @@
 from __future__ import annotations
+
 import asyncio
 import json
 
-from .. import misc
-from .. import text
-from .. import asyncops
+from .. import asyncops, misc, text
 
 
 async def run(

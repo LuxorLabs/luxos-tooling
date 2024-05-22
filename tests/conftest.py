@@ -1,14 +1,13 @@
 # nothing to see here, yet
 import contextlib
+import dataclasses as dc
 import subprocess
 import sys
-import dataclasses as dc
 import time
 import types
 from pathlib import Path
 
 import pytest
-
 
 DATADIR = Path(__file__).parent / "data"
 
@@ -60,7 +59,8 @@ def echopool(resolver, tmp_path, request):
             echopool.start(30, mode="echo+") # echo+ is the default
 
             host, port = echopool.addresses[0]
-            ret = await luxos.asyncops.roundtrip(host, port, "hello world", asjson=False)
+            ret = await luxos.asyncops.roundtrip(host, port,
+                        "hello world", asjson=False)
             assert ret == f"received by ('{host}', {port}): hello world"
 
     Note:

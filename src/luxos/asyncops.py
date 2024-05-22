@@ -1,15 +1,12 @@
 from __future__ import annotations
 
-import functools
-import logging
 import asyncio
+import functools
 import json
-
+import logging
 from typing import Any
 
-from . import exceptions
-from . import api
-
+from . import api, exceptions
 
 log = logging.getLogger(__name__)
 
