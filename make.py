@@ -12,9 +12,39 @@ import subprocess
 import sys
 from pathlib import Path
 
-from make import fileos, misc, task  # type: ignore
+try:
+    from make import fileos, misc, task  # type: ignore
+except ImportError:
+    print("""Please run:
+  python make.pyz <command>
+""")
+    sys.exit()
 
 log = logging.getLogger(__name__)
+
+DOCDIR = Path.cwd() / "build" / "docs"  # output doc dir
+
+
+def getdocdir():
+    if not DOCDIR.exists():
+        subprocess.check_call(
+            [
+                "git",
+                "clone",
+                "-b",
+                "gh-pages",
+                "git@github.com:LuxorLabs/luxos-tooling.git",
+                str(DOCDIR),
+            ]
+        )
+        for path in DOCDIR.glob("*"):
+            if path.name == ".git":
+                continue
+            if path.is_file():
+                path.unlink()
+            else:
+                fileos.rmtree(path)
+    return str(DOCDIR)
 
 
 @task()
@@ -136,12 +166,28 @@ def beta_build(parser, argv):
             subprocess.check_call([sys.executable, "-m", "build"])  # noqa: S603
 
 
-if __name__ == "__main__":
-    print(
-        """
-This script is not mean to be run directly, please:
-  $> curl -LO https://github.com/LuxorLabs/luxos-tooling/raw/main/make.pyz
-  $> python make.pyz
-""",
-        file=sys.stderr,
-    )
+@task()
+def docs():
+    """build the documentation"""
+    from sphinx.cmd.build import main
+
+    argv = [
+        Path.cwd() / "docs",
+        getdocdir(),
+    ]
+    main([str(c) for c in argv])
+    # PYTHONPATH=src sphinx-apidoc -o docs/api  src/luxos
+
+
+@task(name="serve-docs")
+def serve_docs():
+    from sphinx_autobuild.__main__ import main
+
+    argv = [
+        "--port",
+        "8000",
+        Path.cwd() / "docs",
+        getdocdir(),
+    ]
+    sys.argv = ["", *[str(c) for c in argv]]
+    main()

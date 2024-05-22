@@ -26,7 +26,11 @@ def add_arguments(parser: argparse.ArgumentParser):
 async def main(args: argparse.Namespace):
     addresses = utils.load_ips_from_csv(args.config, port=args.port)
     for result in await utils.launch(
-        addresses, utils.rexec, args.command, args.extra, batch=args.batch
+        addresses,
+        utils.rexec,
+        args.command,
+        args.extra,
+        batch=args.batch,
     ):
         print(f"{repr(result)}")
 
