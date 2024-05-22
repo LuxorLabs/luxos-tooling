@@ -102,6 +102,13 @@ def check():
 
 
 @task()
+def fmt():
+    """format and fix the code"""
+    subprocess.check_call(["ruff", "check", "--fix", "src", "tests"])
+    subprocess.check_call(["ruff", "format", "src", "tests"])
+
+
+@task()
 def tests():
     """runs all tests (excluding the manual ones)"""
     workdir = Path.cwd()

@@ -15,7 +15,7 @@ def logon_required(cmd: str, commands_list=COMMANDS) -> bool | None:
 
     if cmd not in COMMANDS:
         log.info(
-            "%s command is not supported. " "Try again with a different command.", cmd
+            "%s command is not supported. Try again with a different command.", cmd
         )
         return None
 

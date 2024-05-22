@@ -1,0 +1,15 @@
+# a test file containing ip addresses for miners
+
+# form no. 1 - a simple ip address
+  127.0.0.1
+
+# form no.2 - a single address with port
+ 127.0.0.2:8080
+
+# form no.3 - a range
+127.0.0.3-127.0.0.4
+
+# form no. 4 a range and a port
+  127.0.0.5-127.0.0.7:9999
+
+

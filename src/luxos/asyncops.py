@@ -226,7 +226,7 @@ async def execute_command(
             await logoff(host, port, sid)
 
 
-def _rexec_paramteres(
+def _rexec_parameters(
     parameters: str | list[Any] | dict[str, Any] | None = None,
 ) -> list[str]:
     if isinstance(parameters, dict):
@@ -256,7 +256,7 @@ async def rexec(
 ) -> dict[str, Any] | None:
     from . import api
 
-    parameters = _rexec_paramteres(parameters)
+    parameters = _rexec_parameters(parameters)
 
     timeout = TIMEOUT if timeout is None else timeout
     retry = RETRY if retry is None else retry
