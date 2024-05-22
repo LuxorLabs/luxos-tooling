@@ -8,8 +8,10 @@ class MinerConnectionError(LuxosBaseException):
         self.address = (host, port)
 
     def __str__(self):
-        return (f"<{self.address[0]}:{self.address[1]}>: {self.__class__.__name__}, "
-                f"{self.args[2] if self.args[2:] else 'unknown reason'}")
+        return (
+            f"<{self.address[0]}:{self.address[1]}>: {self.__class__.__name__}, "
+            f"{self.args[2] if self.args[2:] else 'unknown reason'}"
+        )
 
 
 class MinerCommandSessionAlreadyActive(MinerConnectionError):

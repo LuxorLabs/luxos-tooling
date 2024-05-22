@@ -6,6 +6,7 @@ put a larger description, some comments and an example here.
 
 import argparse
 import logging
+
 import luxos.cli.v1 as cli
 
 log = logging.getLogger(__name__)

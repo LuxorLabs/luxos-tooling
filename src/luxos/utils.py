@@ -1,12 +1,13 @@
 """user facing functions for normal use"""
 
 from __future__ import annotations
+
 import asyncio
 from pathlib import Path
 from typing import Any, Callable
 
-from luxos.asyncops import rexec  # noqa: F401
 import luxos.misc
+from luxos.asyncops import rexec  # noqa: F401
 
 
 def ip_ranges(txt: str, gsep: str = ":", rsep: str = "-") -> list[str]:

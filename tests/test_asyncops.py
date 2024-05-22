@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-import os
 import asyncio
+import os
+
 import pytest
+
 import luxos.asyncops as aapi
-from luxos import exceptions
-from luxos import misc
+from luxos import exceptions, misc
 
 ## NOTE ##
 # This tests spawn an underlying server, it might be better not run
@@ -159,8 +160,8 @@ async def test_miner_version():
 @pytest.mark.skipif(not getminer(), reason="need to set LUXOS_TEST_MINER")
 @pytest.mark.asyncio
 async def test_miner_profile_sets():
-    from string import ascii_lowercase
     from random import choices
+    from string import ascii_lowercase
 
     # random profile name
     profile = f"test-{''.join(choices(ascii_lowercase, k=5))}"

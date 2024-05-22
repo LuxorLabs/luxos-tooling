@@ -1,3 +1,4 @@
+# ruff: noqa: W291, W293
 import pytest
 
 from luxos import text

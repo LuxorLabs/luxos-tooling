@@ -1,5 +1,5 @@
-import asyncio
 import argparse
+import asyncio
 
 import luxos.cli.v1 as cli
 

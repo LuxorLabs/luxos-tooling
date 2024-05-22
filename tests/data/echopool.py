@@ -1,13 +1,13 @@
 from __future__ import annotations
+
+import argparse
 import asyncio
+import functools
 import json
 import logging
-import time
 import re
-import argparse
-import functools
+import time
 from pathlib import Path
-
 
 ENDCONFIG = "= DONE ="
 SERVERLINE = re.compile(r"server:[(]['](?P<host>[^']+)['][,](?P<port>[^)]+)")
@@ -93,9 +93,11 @@ async def main():
         "--mode",
         choices=[
             "echo",  # raw reply <message>: '<message>'
-            "echo+",  # raw reply to <message> formatted as 'received by <ip-address>: <message>'
+            "echo+",  # raw reply to <message> formatted as
+            #   'received by <ip-address>: <message>'
             "json",  # json formatted reply to a <json-message>
-            "json+",  # same as json, but if <json-message> contains {"sleep": 123.0} will sleep
+            "json+",  # same as json, but if <json-message>
+            #   contains {"sleep": 123.0} will sleep
         ],
         default="echo",
     )

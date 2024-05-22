@@ -90,20 +90,20 @@ def main(parser: argparse.ArgumentParser):
 
 from __future__ import annotations
 
-import sys
+import argparse
 import contextlib
+import functools
 import inspect
 import logging
+import sys
 import time
 from pathlib import Path
-import functools
-import argparse
-from typing import Callable, Any
-
+from typing import Any, Callable
 
 # SPECIAL MODULE LEVEL VARIABLES
 MODULE_VARIABLES = {
-    "LOGGING_CONFIG": None,  # logging config dict (passed to logging.basicConfig(**LOGGING_CONFIG))
+    "LOGGING_CONFIG": None,  # logging config dict
+    # (passed to logging.basicConfig(**LOGGING_CONFIG))
     "CONFIGPATH": Path("config.yaml"),  # config default path
 }
 
@@ -160,9 +160,10 @@ class LuxosParser(argparse.ArgumentParser):
         configpath = (
             self.module_variables.get("CONFIGPATH") or MODULE_VARIABLES["CONFIGPATH"]
         )
-        configpath = Path(configpath).expanduser().absolute()
-        if configpath.is_relative_to(Path.cwd()):
-            configpath = configpath.relative_to(Path.cwd())
+        if configpath:
+            configpath = Path(configpath).expanduser().absolute()
+            if configpath.is_relative_to(Path.cwd()):
+                configpath = configpath.relative_to(Path.cwd())
 
         self.add_argument(
             "-c",
@@ -172,14 +173,12 @@ class LuxosParser(argparse.ArgumentParser):
             help="path to a config file",
         )
 
+    def error(self, message: str):
+        raise AbortWrongArgument(message)
+
     def parse_args(self, args=None, namespace=None):
         options = super().parse_args(args, namespace)
 
-        # we provide an error function to nicely bail out the script
-        def error(msg):
-            raise AbortWrongArgument(msg)
-
-        self.error = error
         options.error = self.error
 
         # setup the logging
