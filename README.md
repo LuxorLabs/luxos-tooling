@@ -14,7 +14,7 @@ For an example how to use the luxos command line tool 👉 [here](#usage-cli).
 
 For a quick example how to control miners using the luxos api 👉 [here](#usage-api).
 
-If you're developing a script, you might want to leverage the luxos cli package 👉 [here](docs/CLI.md).
+If you're developing a script, you might want to leverage the luxos cli package 👉 [here](docs/api/cli.md).
 
 
 ## Installation
