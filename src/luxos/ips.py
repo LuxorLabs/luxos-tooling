@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import ipaddress
+import os
 import re
+from pathlib import Path
 from typing import Generator
 
 
@@ -55,3 +57,35 @@ def iter_ip_ranges(
             while cur <= last:
                 yield (str(cur), theport)
                 cur += 1
+
+
+def load_ips_from_csv(path: Path | str, port: int = 4028) -> list[tuple[str, int]]:
+    """loads ip addresses from a csv file
+
+    Example:
+    ```python
+
+    foobar.csv contains ranges as parsed by iter_ip_ranges
+    127.0.0.1 # a single address
+    127.0.0.2-127.0.0.10
+
+
+    for ip in load_ips_from_csv("foobar.csv"):
+        print(ip)
+
+    (127.0.0.1, 4028)
+    (127.0.0.2, 4028)
+    (127.0.0.3, 4028)
+    ...
+    (127.0.0.10, 4028)
+    ```
+
+    """
+    result = []
+    for line in Path(path).read_text().split(os.linesep):
+        line = line.partition("#")[0]
+        if not line.strip():
+            continue
+        for host, port2 in iter_ip_ranges(line):
+            result.append((host, port2 or port))
+    return result

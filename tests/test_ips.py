@@ -41,3 +41,17 @@ def test_iter_ip_ranges():
         ("127.0.0.3", 1234),
         ("127.0.0.15", 999),
     }
+
+
+def test_load_ips_from_csv(resolver):
+    pytest.raises(FileNotFoundError, ips.load_ips_from_csv, "/xwexwe/ewdew")
+
+    assert ips.load_ips_from_csv(resolver.lookup("miners.csv")) == [
+        ("127.0.0.1", 4028),
+        ("127.0.0.2", 8080),
+        ("127.0.0.3", 4028),
+        ("127.0.0.4", 4028),
+        ("127.0.0.5", 9999),
+        ("127.0.0.6", 9999),
+        ("127.0.0.7", 9999),
+    ]

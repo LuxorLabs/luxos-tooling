@@ -9,20 +9,6 @@ import luxos.asyncops
 from luxos import utils
 
 
-def test_load_ips_from_csv(resolver):
-    pytest.raises(FileNotFoundError, utils.load_ips_from_csv, "/xwexwe/ewdew")
-
-    assert utils.load_ips_from_csv(resolver.lookup("miners.csv")) == [
-        ("127.0.0.1", 4028),
-        ("127.0.0.2", 8080),
-        ("127.0.0.3", 4028),
-        ("127.0.0.4", 4028),
-        ("127.0.0.5", 9999),
-        ("127.0.0.6", 9999),
-        ("127.0.0.7", 9999),
-    ]
-
-
 @pytest.mark.manual
 @pytest.mark.asyncio
 async def test_basic_call(echopool):
