@@ -14,16 +14,12 @@ Please, use the format:
 
 -->
 
-## [Unreleased]
-
-- remove *pyz files
-- update pyproject.toml with latest ruff settings
-- apply ruff to the code base
-
-
 ## [0.0.8]
 
+- added a new cli.flags module to handle range flags (eg. allowing 127.0.0.1-127.0.0.9 ranges)
 - add luxos.utils.ip_ranges to list ip addresses from a text
+- remove *pyz files
+- update pyproject.toml with latest ruff settings and pplied ruff to the codebase
 
 
 ## [0.0.7]
