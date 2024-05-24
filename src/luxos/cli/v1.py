@@ -100,6 +100,8 @@ import time
 from pathlib import Path
 from typing import Any, Callable
 
+from . import flags  # noqa: F401
+
 # SPECIAL MODULE LEVEL VARIABLES
 MODULE_VARIABLES = {
     "LOGGING_CONFIG": None,  # logging config dict
@@ -286,7 +288,7 @@ def cli(
                     log_sys_info()
                     return function(*ba.args, **ba.kwargs)
 
-        _cli2.attributes = {
+        _cli2.attributes = {  # type: ignore[attr-defined]
             "doc": function.__doc__ or module.__doc__ or "",
         }
         return _cli2

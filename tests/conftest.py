@@ -1,4 +1,6 @@
 # nothing to see here, yet
+from __future__ import annotations
+
 import contextlib
 import dataclasses as dc
 import subprocess

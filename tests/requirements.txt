@@ -4,8 +4,6 @@ httpx
 lxml
 mypy
 myst-parser
-mkdocstrings-python
-mkdocs-material
 pandas
 pandas-stubs
 pre-commit

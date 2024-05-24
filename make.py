@@ -22,6 +22,7 @@ except ImportError:
 
 log = logging.getLogger(__name__)
 
+BUILDDIR = Path.cwd() / "build"
 DOCDIR = Path.cwd() / "build" / "docs"  # output doc dir
 
 
@@ -102,14 +103,32 @@ def check():
 
 
 @task()
+def fmt():
+    """format and fix the code"""
+    subprocess.check_call(["ruff", "check", "--fix", "src", "tests"])
+    subprocess.check_call(["ruff", "format", "src", "tests"])
+
+
+@task()
 def tests():
     """runs all tests (excluding the manual ones)"""
     workdir = Path.cwd()
     env = os.environ.copy()
     env["PYTHONPATH"] = str(Path.cwd() / "src")
     subprocess.check_call(
-        ["pytest", "-vvs", "--manual", str(workdir / "tests")], env=env
+        [
+            "pytest",
+            "-vvs",
+            "--manual",
+            "--cov",
+            "luxos",
+            "--cov-report",
+            f"html:{BUILDDIR / 'coverage'}",
+            str(workdir / "tests"),
+        ],
+        env=env,
     )
+    print(f"Coverage report under {BUILDDIR / 'coverage'}")
 
 
 @task(name="beta-build")

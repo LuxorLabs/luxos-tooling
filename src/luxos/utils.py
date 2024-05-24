@@ -3,14 +3,19 @@
 from __future__ import annotations
 
 import asyncio
-from pathlib import Path
 from typing import Any, Callable
 
 import luxos.misc
+
+# we bring here functions from other modules
 from luxos.asyncops import rexec  # noqa: F401
+from luxos.ips import load_ips_from_csv  # noqa: F401
+from luxos.scripts.luxos import execute_command  # noqa: F401
 
 
-def ip_ranges(txt: str, gsep: str = ":", rsep: str = "-") -> list[str]:
+def ip_ranges(
+    txt: str, rsep: str = "-", gsep: str = ":"
+) -> list[tuple[str, int | None]]:
     """return a list of ips given a text expression.
 
     Eg.
@@ -26,16 +31,9 @@ def ip_ranges(txt: str, gsep: str = ":", rsep: str = "-") -> list[str]:
 
     NOTE: use the `:` (gsep) to separate ips groups, and `-` (rsep) to define a range.
     """
-    return list(luxos.misc.iter_ip_ranges(txt, gsep, rsep))
+    from .ips import iter_ip_ranges
 
-
-def load_ips_from_csv(path: Path | str, port: int = 4028) -> list[tuple[str, int]]:
-    from luxos.scripts.luxos import load_ip_list_from_csv
-
-    result = []
-    for ip in load_ip_list_from_csv(str(path)):
-        result.append((ip, port))
-    return result
+    return list(iter_ip_ranges(txt, rsep=rsep, gsep=gsep))
 
 
 async def launch(
