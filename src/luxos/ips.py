@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import ipaddress
-import os
 import re
 from pathlib import Path
 from typing import Generator
@@ -82,7 +81,7 @@ def load_ips_from_csv(path: Path | str, port: int = 4028) -> list[tuple[str, int
 
     """
     result = []
-    for line in Path(path).read_text().split(os.linesep):
+    for line in Path(path).read_text().split("\n"):
         line = line.partition("#")[0]
         if not line.strip():
             continue
