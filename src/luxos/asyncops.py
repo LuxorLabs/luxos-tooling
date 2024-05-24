@@ -203,7 +203,7 @@ async def execute_command(
     if api.logon_required(cmd):
         sid = await logon(host, port)
         parameters = [sid, *parameters]
-        log.info("session id requested & obtained for %s:%i (%s)", host, port, sid)
+        log.debug("session id requested & obtained for %s:%i (%s)", host, port, sid)
     else:
         log.debug("no logon required for command '%s' on %s:%i", cmd, host, port)
 
@@ -287,7 +287,7 @@ async def rexec(
         try:
             sid = await logon(host, port, timeout)
             parameters = [sid, *parameters]
-            log.info("session id requested & obtained for %s:%i (%s)", host, port, sid)
+            log.debug("session id requested & obtained for %s:%i (%s)", host, port, sid)
             break
         except Exception as exc:
             failure = exc
