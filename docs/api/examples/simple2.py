@@ -27,6 +27,12 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
         "--range", action="append", type=cli.flags.type_range, help="add ranged hosts"
     )
 
+    # adds rexec flags
+    cli.flags.add_arguments_rexec(parser)
+
+    # add a new time flag
+    parser.add_argument("--time", type=cli.flags.type_hhmm)
+
 
 def process_args(args: argparse.Namespace) -> argparse.Namespace | None:
     args.x = 2 * args.x
@@ -38,9 +44,14 @@ def process_args(args: argparse.Namespace) -> argparse.Namespace | None:
 @cli.cli(add_arguments, process_args)
 async def main(args: argparse.Namespace):
     """a simple test script with a simple description"""
-    print(f"Got for x='{args.x}'")
-    for host, port in args.range or []:
-        print(f"  {host}:{port}")
+
+    if args.range:
+        print("args.range")
+        for host, port in args.range or []:
+            print(f"  {host}:{port}")
+    for key in ["x", "time", "timeout", "max_retries", "delay_retry"]:
+        if getattr(args, key, None) is not None:
+            print(f"args.{key}: {getattr(args, key)} ({type(getattr(args, key))})")
 
 
 if __name__ == "__main__":
