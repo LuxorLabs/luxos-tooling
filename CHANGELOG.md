@@ -16,9 +16,16 @@ Please, use the format:
 
 ## [Unreleased]
 
+
+## [0.0.9]
+
+- asyncops: standardize module level variables TIMEOUT/RETRIES/RETRIES_DELAY
+- asyncops: re-raise timeouts with the correct exception MinerCommandTimeoutError
+- cli: handle flags for rexec (TIMEOUT/RETRIES/RETRIES_DELAY)
 - cli: new log format
 - cli: better support for exceptions captured in cli.cli
 - utils: launch uses a base LuxosLaunchError for all exceptions
+
 
 ## [0.0.8]
 

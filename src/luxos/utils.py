@@ -52,14 +52,15 @@ async def launch(
 
     Special kwargs:
         - batch execute operation in group of batch tasks (rate limiting)
-        - naked do not wrap the call (default None)
+        - naked do not wrap the call, so is up to you catching exceptions (default None)
 
     Eg.
         async printme(host, port, value):
             print(await rexec(host, port, "version"))
         asyncio.run(launch([("127.0.0.1", 4028)], printme, value=11, batch=10))
     """
-    # special kwargs!!
+
+    # a naked options, wraps the 'call' and re-raise exceptions as LuxosLaunchError
     naked = kwargs.pop("naked") if "naked" in kwargs else None
 
     def wraps(fn):
