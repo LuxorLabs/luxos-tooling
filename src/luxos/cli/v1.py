@@ -95,6 +95,7 @@ import contextlib
 import functools
 import inspect
 import logging
+import logging.handlers
 import sys
 import time
 from pathlib import Path
@@ -109,8 +110,21 @@ MODULE_VARIABLES = {
     "CONFIGPATH": Path("config.yaml"),  # config default path
 }
 
-
 log = logging.getLogger(__name__)
+
+
+class MyHandler(logging.StreamHandler):
+    def emit(self, record):
+        record.shortname = record.levelname[0]
+        return super().emit(record)
+
+
+LOGGING_CONFIG = {
+    "format": "%(asctime)s [%(shortname)s] %(name)s: %(message)s",
+    "handlers": [
+        MyHandler(),
+    ],
+}
 
 
 class CliBaseError(Exception):
@@ -143,7 +157,20 @@ def setup_logging(config: dict[str, Any], count: int) -> None:
     # we control if we go verbose or quite here
     index = levelmap.index(level) + count
     config["level"] = levelmap[max(min(index, n - 1), 0)]
-    logging.basicConfig(**config)
+
+    config2 = LOGGING_CONFIG.copy()
+    config2.update(config)
+    logging.basicConfig(**config2)  # type: ignore
+
+
+def log_sys_info():
+    from luxos import __hash__, __version__
+
+    log.info(
+        "py[%s], luxos[%s/%s]", sys.version.partition(" ")[0], __version__, __hash__
+    )
+    log.debug("interpreter: %s", sys.executable)
+    log.debug("version: %s", sys.version)
 
 
 class LuxosParser(argparse.ArgumentParser):
@@ -190,7 +217,7 @@ class LuxosParser(argparse.ArgumentParser):
 
         count = (options.verbose or 0) - (options.quiet or 0)
         setup_logging(config, count)
-
+        log_sys_info()
         return options
 
     @classmethod
@@ -251,13 +278,18 @@ def cli(
                         kwargs["args"] = args
                 yield sig.bind(**kwargs)
             except AbortCliError as exc:
-                errormsg = str(exc)
-                success = "failed"
+                show_timing = False
+                if exc.args:
+                    print(str(exc), file=sys.stderr)
+                sys.exit(2)
             except AbortWrongArgument as exc:
                 show_timing = False
                 parser.print_usage(sys.stderr)
                 print(f"{parser.prog}: error: {exc.args[0]}", file=sys.stderr)
                 sys.exit(2)
+            except SystemExit as exc:
+                show_timing = False
+                sys.exit(exc.code)
             except Exception:
                 log.exception("un-handled exception")
                 success = "failed"
@@ -268,16 +300,11 @@ def cli(
             if errormsg:
                 parser.error(errormsg)
 
-        def log_sys_info():
-            log.debug("interpreter: %s", sys.executable)
-            log.debug("version: %s", sys.version)
-
         if inspect.iscoroutinefunction(function):
 
             @functools.wraps(function)
             async def _cli2(*args, **kwargs):
                 with setup() as ba:
-                    log_sys_info()
                     return await function(*ba.args, **ba.kwargs)
 
         else:
@@ -285,7 +312,6 @@ def cli(
             @functools.wraps(function)
             def _cli2(*args, **kwargs):
                 with setup() as ba:
-                    log_sys_info()
                     return function(*ba.args, **ba.kwargs)
 
         _cli2.attributes = {  # type: ignore[attr-defined]

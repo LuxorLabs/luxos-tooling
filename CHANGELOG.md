@@ -14,6 +14,12 @@ Please, use the format:
 
 -->
 
+## [Unreleased]
+
+- cli: new log format
+- cli: better support for exceptions captured in cli.cli
+- utils: launch uses a base LuxosLaunchError for all exceptions
+
 ## [0.0.8]
 
 - added a new cli.flags module to handle range flags (eg. allowing 127.0.0.1-127.0.0.9 ranges)
