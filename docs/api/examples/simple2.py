@@ -15,8 +15,11 @@ Example:
 
 import argparse
 import asyncio
+import logging
 
 import luxos.cli.v1 as cli
+
+log = logging.getLogger(__name__)
 
 
 def add_arguments(parser: argparse.ArgumentParser) -> None:
@@ -45,6 +48,23 @@ def process_args(args: argparse.Namespace) -> argparse.Namespace | None:
 async def main(args: argparse.Namespace):
     """a simple test script with a simple description"""
 
+    # many ways to abort a script
+    # 1. raising various exceptions
+    #     (dump a stack trace)
+    #     >>> raise RuntimeError("aborting")
+    #     (dump a nice error message on the cli)
+    #     >>> raise cli.AbortWrongArgument("a message)
+    #     (abort unconditionally the application)
+    #     >>> raise cli.AbortCliError("abort")
+    # 2. using args.error (nice cli error message)
+    #     >>> args.error("too bad")
+
+    # logging to report messages
+    log.debug("a debug message")
+    log.info("an info message")
+    log.warning("a warning message")
+
+    # handle the args
     if args.range:
         print("args.range")
         for host, port in args.range or []:

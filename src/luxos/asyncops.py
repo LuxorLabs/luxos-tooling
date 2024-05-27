@@ -11,8 +11,8 @@ from . import api, exceptions
 log = logging.getLogger(__name__)
 
 TIMEOUT = 3.0  # default timeout for operations
-RETRY = 0  # default number (>1) of retry on a failed operation
-RETRY_DELAY = 1.0  # delay between retry
+RETRIES = 0  # default number (>1) of retry on a failed operation
+RETRIES_DELAY = 1.0  # delay between retry
 
 
 def wrapped(function):
@@ -96,8 +96,8 @@ async def roundtrip(
         -> (str) "{'STATUS': [{'Code': 22, 'Description': 'LUXminer 20 ..
     """
     timeout = TIMEOUT if timeout is None else timeout
-    retry = RETRY if retry is None else retry
-    retry_delay = RETRY_DELAY if retry_delay is None else retry_delay
+    retry = RETRIES if retry is None else retry
+    retry_delay = RETRIES_DELAY if retry_delay is None else retry_delay
 
     if not isinstance(cmd, (bytes, str)):
         cmd = json.dumps(cmd, indent=2, sort_keys=True)
@@ -114,11 +114,11 @@ async def roundtrip(
                 return res
         except (Exception, asyncio.TimeoutError) as e:
             last_exception = e
-        if retry_delay:
+        if retry and retry_delay:
             await asyncio.sleep(retry_delay)
 
     if last_exception is not None:
-        raise last_exception
+        raise exceptions.MinerCommandTimeoutError(host, port) from last_exception
 
 
 def validate_message(
@@ -259,8 +259,8 @@ async def rexec(
     parameters = _rexec_parameters(parameters)
 
     timeout = TIMEOUT if timeout is None else timeout
-    retry = RETRY if retry is None else retry
-    retry_delay = RETRY_DELAY if retry_delay is None else retry_delay
+    retry = RETRIES if retry is None else retry
+    retry_delay = RETRIES_DELAY if retry_delay is None else retry_delay
 
     # if cmd is logon/logoff we dealt with it differently
     if cmd in {"logon", "logoff"}:

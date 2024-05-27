@@ -3,14 +3,23 @@
 from __future__ import annotations
 
 import asyncio
+import functools
 from typing import Any, Callable
 
 import luxos.misc
+from luxos.asyncops import rexec  # noqa: F401
 
 # we bring here functions from other modules
-from luxos.asyncops import rexec  # noqa: F401
+from luxos.exceptions import MinerConnectionError
 from luxos.ips import load_ips_from_csv  # noqa: F401
+
+# TODO prepare for refactoring using example in
+#      tests.test_asyncops.test_bridge_execute_command
 from luxos.scripts.luxos import execute_command  # noqa: F401
+
+
+class LuxosLaunchError(MinerConnectionError):
+    pass
 
 
 def ip_ranges(
@@ -41,17 +50,36 @@ async def launch(
 ) -> Any:
     """launch an async function on a list of (host, port) miners
 
+    Special kwargs:
+        - batch execute operation in group of batch tasks (rate limiting)
+        - naked do not wrap the call, so is up to you catching exceptions (default None)
+
     Eg.
         async printme(host, port, value):
             print(await rexec(host, port, "version"))
         asyncio.run(launch([("127.0.0.1", 4028)], printme, value=11, batch=10))
     """
-    # special kwargs!!
+
+    # a naked options, wraps the 'call' and re-raise exceptions as LuxosLaunchError
+    naked = kwargs.pop("naked") if "naked" in kwargs else None
+
+    def wraps(fn):
+        @functools.wraps(fn)
+        async def _fn(host: str, port: int):
+            try:
+                return await fn(host, port)
+            except Exception as exc:
+                raise LuxosLaunchError(host, port) from exc
+
+        return _fn
+
     n = int(kwargs.pop("batch") or 0) if "batch" in kwargs else None
     if n and n < 0:
         raise RuntimeError(
             f"cannot pass the 'batch' keyword argument with a value < 0: batch={n}"
         )
+    if not naked:
+        call = wraps(call)
 
     if n:
         result = []

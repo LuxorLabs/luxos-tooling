@@ -51,18 +51,36 @@ def type_hhmm(txt: str):
 
 
 def add_arguments_rexec(parser: argparse.ArgumentParser) -> None:
+    """adds the rexec timing for timeout/retries/delays
+
+    Ex.
+
+    def add_arguments(parser):
+        cli.flags.add_arguments_rexec(parser)
+
+    def process_args(args):
+        asyncops.TIMEOUT = args.timeout
+        asyncops.RETRIES = args.retries
+        asyncops.RETRIES_DELAY = args.retries_delay
+        return args
+    """
+    from ..asyncops import RETRIES, RETRIES_DELAY, TIMEOUT
+
     group = parser.add_argument_group(
         "Remote execution", "rexec remote execution limits/timeouts"
     )
     group.add_argument(
-        "--timeout", type=float, default=3.0, help="Timeout for each command"
+        "--timeout", type=float, default=TIMEOUT, help="Timeout for each command"
     )
     group.add_argument(
-        "--max-retries",
+        "--retries",
         type=int,
-        default=3,
+        default=RETRIES,
         help="Maximum number of retries for each command",
     )
     group.add_argument(
-        "--delay-retry", type=float, default=3.0, help="Delay in s between retries"
+        "--retries-delay",
+        type=float,
+        default=RETRIES_DELAY,
+        help="Delay in s between retries",
     )

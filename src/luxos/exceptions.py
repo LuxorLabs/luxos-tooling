@@ -1,3 +1,6 @@
+import asyncio
+
+
 class LuxosBaseException(Exception):
     pass
 
@@ -18,7 +21,7 @@ class MinerCommandSessionAlreadyActive(MinerConnectionError):
     pass
 
 
-class MinerCommandTimeoutError(MinerConnectionError):
+class MinerCommandTimeoutError(MinerConnectionError, asyncio.TimeoutError):
     pass
 
 

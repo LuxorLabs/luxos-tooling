@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import os
 
 import pytest
@@ -191,3 +192,34 @@ async def test_miner_profile_sets():
     expected = {p["Profile Name"] for p in profiles}
     found = {p["Profile Name"] for p in profiles2}
     assert found == expected
+
+
+@pytest.mark.asyncio
+async def test_roundtrip_timeout():
+    """checks roundrtip sends and receive a message (1-listener)"""
+    host, port = "127.0.0.99", 12345
+    with pytest.raises(aapi.exceptions.MinerCommandTimeoutError):
+        await aapi.rexec(host, port, "hello", timeout=0.5)
+
+
+@pytest.mark.skipif(not getminer(), reason="need to set LUXOS_TEST_MINER")
+def test_bridge_execute_command():
+    from luxos.scripts.luxos import execute_command
+    from luxos.utils import rexec
+
+    # get the initial profile list
+    host, port = getminer()
+
+    def adapter(awaitable):
+        with contextlib.suppress(asyncio.TimeoutError):
+            loop = asyncio.get_event_loop()
+            return loop.run_until_complete(awaitable)
+
+    out = execute_command(host, port, 3, "profiles", parameters=[], verbose=True)
+    out1 = adapter(rexec(host, port, cmd="profiles"))
+    assert out["PROFILES"] == out1["PROFILES"]
+
+    port += 1
+    out = execute_command(host, port, 3, "profiles", parameters=[], verbose=True)
+    out1 = adapter(rexec(host, port, cmd="profiles"))
+    assert out == out1
