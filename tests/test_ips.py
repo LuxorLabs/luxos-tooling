@@ -15,26 +15,43 @@ def test_iter_ip_ranges():
     assert set(ips.iter_ip_ranges("127.0.0.1")) == {("127.0.0.1", None)}
     assert set(ips.iter_ip_ranges("127.0.0.1:8080")) == {("127.0.0.1", 8080)}
 
-    assert set(ips.iter_ip_ranges("127.0.0.1-127.0.0.3")) == {
-        ("127.0.0.1", None),
-        ("127.0.0.2", None),
-        ("127.0.0.3", None),
-    }
+    # ip-ip or ip:ip
+    alts = ["127.0.0.1-127.0.0.3", "127.0.0.1:127.0.0.3"]
+    for alt in alts:
+        assert set(ips.iter_ip_ranges(alt)) == {
+            ("127.0.0.1", None),
+            ("127.0.0.2", None),
+            ("127.0.0.3", None),
+        }
 
-    assert set(ips.iter_ip_ranges("127.0.0.1:8080-127.0.0.3")) == {
-        ("127.0.0.1", 8080),
-        ("127.0.0.2", 8080),
-        ("127.0.0.3", 8080),
-    }
+    # ip:port-ip or ip:port:ip
+    alts = []
+    for alt in alts:
+        assert set(ips.iter_ip_ranges(alt)) == {
+            ("127.0.0.1", 8080),
+            ("127.0.0.2", 8080),
+            ("127.0.0.3", 8080),
+        }
 
-    assert set(ips.iter_ip_ranges("127.0.0.1-127.0.0.3:9090")) == {
-        ("127.0.0.1", 9090),
-        ("127.0.0.2", 9090),
-        ("127.0.0.3", 9090),
-    }
+    # ip-ip:port or ip:ip:port
+    alts = [
+        "127.0.0.1:8080-127.0.0.3",
+        "127.0.0.1:8080:127.0.0.3",
+        "127.0.0.1-127.0.0.3:8080",
+        "127.0.0.1:127.0.0.3:8080",
+        "127.0.0.1:8080-127.0.0.3:8080",
+        "127.0.0.1:8080:127.0.0.3:8080",
+    ]
+    for alt in alts:
+        assert set(ips.iter_ip_ranges(alt)) == {
+            ("127.0.0.1", 8080),
+            ("127.0.0.2", 8080),
+            ("127.0.0.3", 8080),
+        }
 
+    _ = set(ips.iter_ip_ranges("127.0.0.1:8080:127.0.0.3:8080"))
     pytest.raises(
-        RuntimeError, set, ips.iter_ip_ranges("127.0.0.1:8080-127.0.0.3:9090")
+        RuntimeError, set, ips.iter_ip_ranges("127.0.0.1:8080:127.0.0.3:8081")
     )
 
     assert set(ips.iter_ip_ranges("127.0.0.1:1234 - 127.0.0.3, 127.0.0.15:999")) == {
