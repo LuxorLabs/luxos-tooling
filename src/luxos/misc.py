@@ -4,6 +4,8 @@ from __future__ import annotations
 import ipaddress
 import itertools
 import sys
+import types
+from pathlib import Path
 from typing import Generator
 
 if sys.version_info >= (3, 12):
@@ -44,3 +46,12 @@ def iter_ip_ranges(
             while cur <= last:
                 yield str(cur)
                 cur += 1
+
+
+def loadmod(path: Path) -> types.ModuleType:
+    from importlib import util
+
+    spec = util.spec_from_file_location(Path(path).name, Path(path))
+    module = util.module_from_spec(spec)  # type: ignore
+    spec.loader.exec_module(module)  # type: ignore
+    return module
