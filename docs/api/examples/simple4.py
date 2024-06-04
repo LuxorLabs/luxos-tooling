@@ -1,3 +1,12 @@
+"""
+A complete luxos script.
+
+This is a complete script showing how a real script can be built.
+
+Example:
+    simple4.py --range 127.0.0.1 version
+"""
+
 import argparse
 import asyncio
 import logging
@@ -18,6 +27,12 @@ def add_arguments(parser: argparse.ArgumentParser):
         help="execute command limiting to batch concurrent operations",
     )
     parser.add_argument("-p", "--port", type=int, default=4028)
+    parser.add_argument(
+        "--range",
+        type=cli.flags.type_range,
+        help="list of miners (or a @file in csv format)",
+    )
+
     parser.add_argument("command")
     parser.add_argument("extra", nargs="*")
 
