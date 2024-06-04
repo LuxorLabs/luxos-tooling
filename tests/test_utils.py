@@ -107,3 +107,24 @@ def test_util_ip_ranges():
         ("127.0.0.3", None),
         ("127.0.0.15", None),
     }
+
+
+@pytest.mark.asyncio
+@pytest.mark.manual
+async def test_launch_with_exceptions(miner_host_port):
+    host, port = miner_host_port
+
+    async def broken(host, port):
+        return (await utils.rexec(host, port, "config"))["CONFIG"][0]["ProfilXe"]
+
+    result = (await utils.launch([(host, port)], broken))[0]
+    assert isinstance(result, utils.MinerConnectionError)
+    assert isinstance(result, utils.LuxosLaunchError)
+    assert isinstance(result, Exception)
+    assert "KeyError: 'ProfilXe'" in str(result)
+
+    result = (await utils.launch([(host, port + 1)], broken))[0]
+    assert isinstance(result, utils.MinerConnectionError)
+    assert isinstance(result, utils.LuxosLaunchTimeoutError)
+    assert isinstance(result, asyncio.TimeoutError)
+    assert "ConnectionRefusedError" in str(result)

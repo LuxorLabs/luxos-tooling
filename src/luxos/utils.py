@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import functools
+import traceback
 from typing import Any, Callable
 
 import luxos.misc
@@ -19,6 +20,18 @@ from luxos.scripts.luxos import execute_command  # noqa: F401
 
 
 class LuxosLaunchError(MinerConnectionError):
+    def __init__(self, tback: str, host: str, port: int, *args, **kwargs):
+        self.tback = tback
+        super().__init__(host, port, *args, **kwargs)
+
+    def __str__(self):
+        from .text import indent
+
+        msg = indent(str(self.tback), "| ")
+        return f"{self.address}: \n{msg}"
+
+
+class LuxosLaunchTimeoutError(LuxosLaunchError, asyncio.TimeoutError):
     pass
 
 
@@ -68,8 +81,12 @@ async def launch(
         async def _fn(host: str, port: int):
             try:
                 return await fn(host, port)
+            except asyncio.TimeoutError as exc:
+                tback = "".join(traceback.format_exception(exc))
+                raise LuxosLaunchTimeoutError(tback, host, port) from exc
             except Exception as exc:
-                raise LuxosLaunchError(host, port) from exc
+                tback = "".join(traceback.format_exception(exc))
+                raise LuxosLaunchError(tback, host, port) from exc
 
         return _fn
 
@@ -91,3 +108,36 @@ async def launch(
     else:
         tasks = [call(*address, *args, **kwargs) for address in addresses]
         return await asyncio.gather(*tasks, return_exceptions=True)
+
+
+if __name__ == "__main__":
+
+    async def main():
+        from .text import indent
+
+        hosts = [
+            ("10.206.0.213", 4028),
+            ("10.206.0.213", 4029),
+        ]
+
+        async def task(host, port):
+            return (await rexec(host, port, "config"))["CONFIG"][0]["ProfilXe"]  # type: ignore
+
+        results = await launch(hosts, task)
+        for result in results:
+            if isinstance(result, asyncio.TimeoutError):
+                print("== TIMEOUT EXCEPTION")
+                print(indent(str(result), "| "))
+            if isinstance(result, LuxosLaunchTimeoutError):
+                print("== LUXOS TIMEOUT EXCEPTION")
+                print(indent(str(result), "| "))
+            if isinstance(result, LuxosLaunchError):
+                print("== LUXOS ERROR EXCEPTION")
+                print(indent(str(result), "| "))
+            if isinstance(result, Exception):
+                print("== EXCEPTION")
+                print(indent(str(result), "| "))
+            else:
+                print(f"RESULT: {result}")
+
+    asyncio.run(main())
