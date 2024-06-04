@@ -147,8 +147,9 @@ async def test_miner_version(miner_host_port):
     assert "API" in res["VERSION"][0]
 
 
+@pytest.mark.skip("a likely bug in luxminer way to set/delete profiles")
 @pytest.mark.asyncio
-async def _test_miner_profile_sets(miner_host_port):
+async def test_miner_profile_sets(miner_host_port):
     from random import choices
     from string import ascii_lowercase
 
