@@ -20,7 +20,7 @@ jobs:
   sonarqube-scan-and-report:
     name: Sonarqube Scan and Report
     timeout-minutes: 30
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     permissions:
       contents: write
