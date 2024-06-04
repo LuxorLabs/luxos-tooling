@@ -82,10 +82,10 @@ async def launch(
             try:
                 return await fn(host, port)
             except asyncio.TimeoutError as exc:
-                tback = "".join(traceback.format_exception(exc))
+                tback = "".join(traceback.format_exc())
                 raise LuxosLaunchTimeoutError(tback, host, port) from exc
             except Exception as exc:
-                tback = "".join(traceback.format_exception(exc))
+                tback = "".join(traceback.format_exc())
                 raise LuxosLaunchError(tback, host, port) from exc
 
         return _fn
