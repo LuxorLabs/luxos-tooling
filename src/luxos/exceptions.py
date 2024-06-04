@@ -17,11 +17,19 @@ class MinerConnectionError(LuxosBaseException):
         )
 
 
-class MinerCommandSessionAlreadyActive(MinerConnectionError):
-    pass
-
-
 class MinerCommandTimeoutError(MinerConnectionError, asyncio.TimeoutError):
+    def __str__(self):
+        msg = "unknown reason"
+        if getattr(self, "__cause__"):
+            msg = repr(self.__cause__)
+        txt = (
+            f"<{self.address[0]}:{self.address[1]}>: {self.__class__.__name__}, "
+            f"{msg}"
+        )
+        return txt
+
+
+class MinerCommandSessionAlreadyActive(MinerConnectionError):
     pass
 
 
