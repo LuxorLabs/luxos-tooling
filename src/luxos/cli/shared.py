@@ -1,11 +1,16 @@
 from __future__ import annotations
 
 import argparse
+import sys
 import types
 from typing import Callable
 
 # The return type of add_arguments
-ArgsCallback = Callable[[argparse.Namespace], None | argparse.Namespace]
+
+if sys.version_info >= (3, 10):
+    ArgsCallback = Callable[[argparse.Namespace], None | argparse.Namespace]
+else:
+    ArgsCallback = Callable
 
 
 # The luxor base parser
