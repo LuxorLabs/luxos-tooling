@@ -220,8 +220,7 @@ async def test_roundtrip_timeout(miner_host_port):
 
 
 def test_bridge_execute_command(miner_host_port):
-    from luxos.scripts.luxos import execute_command
-    from luxos.utils import rexec
+    from luxos.utils import execute_command, rexec
 
     # get the initial profile list
     host, port = miner_host_port
