@@ -204,7 +204,6 @@ def add_arguments_database(parser: LuxosParserBase):
 
     group = parser.add_argument_group("database", "Database related options")
     group.add_argument("--db", dest="engine", help="sqlalchemy uri or filename")
-    group.add_argument("--dbpass", dest="engine", help="sqlalchemy uri or filename")
 
     def callback(args: argparse.Namespace):
         from sqlalchemy import create_engine
