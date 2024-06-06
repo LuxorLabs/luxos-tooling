@@ -7,6 +7,12 @@ import re
 from pathlib import Path
 from typing import Generator
 
+from .exceptions import LuxosBaseException
+
+
+class DataParsingError(LuxosBaseException):
+    pass
+
 
 def splitip(txt: str) -> tuple[str, int | None]:
     expr = re.compile(r"(?P<ip>\d{1,3}([.]\d{1,3}){3})(:(?P<port>\d+))?")
@@ -99,9 +105,9 @@ def iter_ip_ranges(
     for ip in iter_ip_ranges("127.0.0.1 , 127.0.0.3-127.0.0.15"):
         print(ip)
 
-    127.0.0.1
-    127.0.0.2
-    127.0.0.3
+    (127.0.0.1, None),
+    (127.0.0.2, None),
+    (127.0.0.3, None),
     ...
     127.0.0.15
     ```
@@ -153,3 +159,25 @@ def load_ips_from_csv(path: Path | str, port: int = 4028) -> list[tuple[str, int
         for host, port2 in iter_ip_ranges(line):
             result.append((host, port2 or port))
     return result
+
+
+def load_ips_from_yaml(path: Path | str, port: int = 4028) -> list[tuple[str, int]]:
+    """Loads ip addresses from a yaml file"""
+    from yaml import safe_load
+
+    txt = Path(path).read_text()
+    try:
+        data = safe_load(txt)
+    except Exception as exc:
+        raise DataParsingError(f"cannot parse yaml file {path}") from exc
+
+    if "miners" in data and "addresses" in data["miners"]:
+        miners = data["miners"]
+        default_port = miners.get("luxos_port", None)
+        result = []
+        for address in data["miners"]["addresses"]:
+            for host, thisport in iter_ip_ranges(address):
+                result.append((host, thisport or default_port or port))
+        return result
+
+    raise DataParsingError(f"cannot find miners definitions in {path}")

@@ -74,3 +74,20 @@ def test_load_ips_from_csv(resolver):
         ("127.0.0.6", 9999),
         ("127.0.0.7", 9999),
     ]
+
+
+def test_load_ips_from_yaml(resolver):
+    pytest.raises(FileNotFoundError, ips.load_ips_from_yaml, "/xwexwe/ewdew")
+    pytest.raises(
+        ips.DataParsingError, ips.load_ips_from_yaml, resolver.lookup("miners.csv")
+    )
+
+    assert ips.load_ips_from_yaml(resolver.lookup("miners.yaml")) == [
+        ("127.0.0.1", 4028),
+        ("127.0.0.2", 8080),
+        ("127.0.0.3", 4028),
+        ("127.0.0.4", 4028),
+        ("127.0.0.5", 9999),
+        ("127.0.0.6", 9999),
+        ("127.0.0.7", 9999),
+    ]
