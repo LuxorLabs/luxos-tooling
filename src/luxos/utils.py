@@ -13,9 +13,6 @@ from luxos.asyncops import rexec  # noqa: F401
 # we bring here functions from other modules
 from luxos.exceptions import MinerConnectionError
 from luxos.ips import load_ips_from_csv  # noqa: F401
-
-# TODO prepare for refactoring using example in
-#      tests.test_asyncops.test_bridge_execute_command
 from luxos.scripts.luxos import execute_command  # noqa: F401
 
 
@@ -108,36 +105,3 @@ async def launch(
     else:
         tasks = [call(*address, *args, **kwargs) for address in addresses]
         return await asyncio.gather(*tasks, return_exceptions=True)
-
-
-if __name__ == "__main__":
-
-    async def main():
-        from .text import indent
-
-        hosts = [
-            ("10.206.0.213", 4028),
-            ("10.206.0.213", 4029),
-        ]
-
-        async def task(host, port):
-            return (await rexec(host, port, "config"))["CONFIG"][0]["ProfilXe"]  # type: ignore
-
-        results = await launch(hosts, task)
-        for result in results:
-            if isinstance(result, asyncio.TimeoutError):
-                print("== TIMEOUT EXCEPTION")
-                print(indent(str(result), "| "))
-            if isinstance(result, LuxosLaunchTimeoutError):
-                print("== LUXOS TIMEOUT EXCEPTION")
-                print(indent(str(result), "| "))
-            if isinstance(result, LuxosLaunchError):
-                print("== LUXOS ERROR EXCEPTION")
-                print(indent(str(result), "| "))
-            if isinstance(result, Exception):
-                print("== EXCEPTION")
-                print(indent(str(result), "| "))
-            else:
-                print(f"RESULT: {result}")
-
-    asyncio.run(main())
