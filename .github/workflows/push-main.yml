@@ -58,7 +58,7 @@ jobs:
           OUTDIR: build/qa-${{ matrix.python-version }}-${{ matrix.os}}
         run: |
           mypy src \
-            --no-incremental --no-warn-unused-ignores --xslt-html-report $OUTDIR/mypy
+            --no-incremental --xslt-html-report $OUTDIR/mypy
 
       - name: Run Python checks
         shell: bash
