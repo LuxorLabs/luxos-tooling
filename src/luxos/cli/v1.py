@@ -289,7 +289,7 @@ def cli(
                 with setup(function, add_arguments, process_args) as ba:
                     return function(*ba.args, **ba.kwargs)
 
-        _cli2.attributes = {  # type: ignore[attr-defined]
+        _cli2.attributes = {
             "doc": function.__doc__ or module.__doc__ or "",
         }
         return _cli2
