@@ -27,11 +27,19 @@ def type_range(txt: str) -> Sequence[tuple[str, int | None]]:
 
         Alternatively you can pass a @filename to read data from a csv file
     """
-    from luxos.ips import iter_ip_ranges, load_ips_from_csv
+    from luxos.ips import iter_ip_ranges, load_ips_from_csv, load_ips_from_yaml
+
+    path = None
+    if txt.startswith("@") and not (path := Path(txt[1:])).exists():
+        raise argparse.ArgumentTypeError(f"file not found {path}")
+
+    if path:
+        with contextlib.suppress(RuntimeError):
+            return load_ips_from_yaml(path)
 
     try:
-        if txt.startswith("@"):
-            return load_ips_from_csv(Path(txt[1:]))
+        if path:
+            return load_ips_from_csv(path)
         return list(iter_ip_ranges(txt))
     except RuntimeError as exc:
         raise argparse.ArgumentTypeError(f"conversion failed '{txt}': {exc.args[0]}")
@@ -132,7 +140,7 @@ def add_argumens_config(parser: LuxosParserBase) -> ArgsCallback:
 
 
 def add_arguments_logging(parser: LuxosParserBase) -> ArgsCallback:
-    group = parser.add_argument_group("logging", "Logging related options")
+    group = parser.add_argument_group("Logging", "Logging related options")
     group.add_argument("-v", "--verbose", action="count", help="report verbose logging")
     group.add_argument("-q", "--quiet", action="count", help="report quiet logging")
 
@@ -195,14 +203,14 @@ def add_arguments_database(parser: LuxosParserBase) -> ArgsCallback:
     """
 
     group = parser.add_argument_group("database", "Database related options")
-    group.add_argument("-db", dest="engine", help="sqlalchemy uri or filename")
+    group.add_argument("--db", dest="engine", help="sqlalchemy uri or filename")
+    group.add_argument("--dbpass", dest="engine", help="sqlalchemy uri or filename")
 
     def callback(args: argparse.Namespace):
         from sqlalchemy import create_engine
         from sqlalchemy.engine.url import make_url
         from sqlalchemy.exc import ArgumentError
 
-        breakpoint()
         if not args.engine or not args.engine.strip():
             return None
         with contextlib.suppress(ArgumentError):
