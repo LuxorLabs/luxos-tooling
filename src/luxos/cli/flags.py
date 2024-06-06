@@ -212,9 +212,11 @@ def add_arguments_database(parser: LuxosParserBase):
 
         if not args.engine or not args.engine.strip():
             return None
+
+        engine = None
         with contextlib.suppress(ArgumentError):
             url = make_url(args.engine)
-            return create_engine(url)
-        args.engine = create_engine(f"sqlite:///{args.engine}", echo=False)
+            engine = create_engine(url)
+        args.engine = engine or create_engine(f"sqlite:///{args.engine}", echo=False)
 
     parser.callbacks.append(callback)
