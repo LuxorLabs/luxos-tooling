@@ -9,7 +9,7 @@ import logging
 from pathlib import Path
 from typing import Any, Sequence
 
-from .shared import ArgsCallback, LuxosParserBase
+from .shared import LuxosParserBase
 
 
 def type_range(txt: str) -> Sequence[tuple[str, int | None]]:
@@ -69,7 +69,7 @@ def type_hhmm(txt: str):
     raise argparse.ArgumentTypeError(f"failed conversion into HH:MM for '{txt}'")
 
 
-def add_arguments_rexec(parser: argparse.ArgumentParser) -> ArgsCallback:
+def add_arguments_rexec(parser: LuxosParserBase):
     """adds the rexec timing for timeout/retries/delays
 
     Ex.
@@ -104,17 +104,17 @@ def add_arguments_rexec(parser: argparse.ArgumentParser) -> ArgsCallback:
         help="Delay in s between retries",
     )
 
-    def callme(args: argparse.Namespace):
+    def callback(args: argparse.Namespace):
         from .. import asyncops
 
         asyncops.TIMEOUT = args.timeout
         asyncops.RETRIES = args.retries
         asyncops.RETRIES_DELAY = args.retries_delay
 
-    return callme
+    parser.callbacks.append(callback)
 
 
-def add_argumens_config(parser: LuxosParserBase) -> ArgsCallback:
+def add_arguments_config(parser: LuxosParserBase):
     # find the CONFIGPATH, from the module then from luxos.cli.v*
     default = None
     for module in reversed(parser.modules):
@@ -136,10 +136,10 @@ def add_argumens_config(parser: LuxosParserBase) -> ArgsCallback:
     def callback(args: argparse.Namespace):
         args.config = args.config.absolute() if args.config else 1
 
-    return callback
+    parser.callbacks.append(callback)
 
 
-def add_arguments_logging(parser: LuxosParserBase) -> ArgsCallback:
+def add_arguments_logging(parser: LuxosParserBase):
     group = parser.add_argument_group("Logging", "Logging related options")
     group.add_argument("-v", "--verbose", action="count", help="report verbose logging")
     group.add_argument("-q", "--quiet", action="count", help="report quiet logging")
@@ -176,10 +176,10 @@ def add_arguments_logging(parser: LuxosParserBase) -> ArgsCallback:
         delattr(args, "verbose")
         delattr(args, "quiet")
 
-    return callback
+    parser.callbacks.append(callback)
 
 
-def add_arguments_database(parser: LuxosParserBase) -> ArgsCallback:
+def add_arguments_database(parser: LuxosParserBase):
     """
     takes a string on a command line and retunr a sa engine.
 
@@ -218,4 +218,4 @@ def add_arguments_database(parser: LuxosParserBase) -> ArgsCallback:
             return create_engine(url)
         args.engine = create_engine(f"sqlite:///{args.engine}", echo=False)
 
-    return callback
+    parser.callbacks.append(callback)

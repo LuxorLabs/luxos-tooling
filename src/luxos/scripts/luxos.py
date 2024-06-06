@@ -24,7 +24,7 @@ def execute_command(host: str, port: int, timeout_sec: int, cmd: str, parameters
     return adapter(rexec(host, port, timeout=timeout_sec, cmd=cmd, parameters=parameters))
 
 
-def add_arguments(parser: argparse.ArgumentParser):
+def add_arguments(parser: cli.LuxosParserBase) -> None:
 
     def add_miners_arguments(group):
         group.add_argument("--range_start", help="IP start range")

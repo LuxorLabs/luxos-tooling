@@ -99,11 +99,11 @@ import sys
 import time
 import types
 from pathlib import Path
-from typing import Callable
+from typing import Any, Callable
 
 from .. import text
 from . import flags
-from .shared import ArgsCallback, LuxosParserBase
+from .shared import LuxosParserBase
 
 
 class MyHandler(logging.StreamHandler):
@@ -152,14 +152,8 @@ class LuxosParser(LuxosParserBase):
         super().__init__(modules, *args, **kwargs)
 
         # we're adding the -v|-q flags, to control the logging level
-        self._add_callbacks(flags.add_arguments_logging(self))
-        self._add_callbacks(flags.add_argumens_config(self))
-
-    def _add_callbacks(self, callbacks: list[ArgsCallback] | ArgsCallback):
-        if isinstance(callbacks, (list, tuple, set)):
-            self.callbacks.extend(callbacks)
-        else:
-            self.callbacks.append(callbacks)
+        flags.add_arguments_logging(self)
+        flags.add_arguments_config(self)
 
     def error(self, message: str):
         raise AbortWrongArgumentError(message)
@@ -199,9 +193,8 @@ class LuxosParser(LuxosParserBase):
 @contextlib.contextmanager
 def setup(
     function: Callable,
-    add_arguments: Callable[
-        [argparse.ArgumentParser], ArgsCallback | list[ArgsCallback] | None
-    ]
+    add_arguments: Callable[[LuxosParserBase], None]
+    | Callable[[argparse.ArgumentParser], None]
     | None = None,
     process_args: (
         Callable[[argparse.Namespace], argparse.Namespace | None] | None
@@ -271,9 +264,9 @@ def setup(
 
 
 def cli(
-    add_arguments: Callable[
-        [argparse.ArgumentParser], ArgsCallback | list[ArgsCallback] | None
-    ]
+    # add_arguments: Callable[[LuxosParserBase | argparse.ArgumentParser], Any]
+    add_arguments: Callable[[LuxosParserBase], Any]
+    | Callable[[argparse.ArgumentParser], Any]
     | None = None,
     process_args: (
         Callable[[argparse.Namespace], argparse.Namespace | None] | None
