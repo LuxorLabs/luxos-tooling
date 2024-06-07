@@ -16,6 +16,9 @@ pytestmark = pytest.mark.manual
 
 def test_rexec_parameters():
     assert aapi._rexec_parameters(None) == []
+    assert aapi._rexec_parameters(0) == ["0"]
+    assert aapi._rexec_parameters([0]) == ["0"]
+    assert aapi._rexec_parameters(["0"]) == ["0"]
     assert aapi._rexec_parameters("hello") == ["hello"]
     assert aapi._rexec_parameters(["hello", "world"]) == ["hello", "world"]
     assert aapi._rexec_parameters(["hello", 1]) == ["hello", "1"]

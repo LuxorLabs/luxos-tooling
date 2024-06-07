@@ -240,7 +240,9 @@ def _rexec_parameters(
                 value = "false"
             data.append(f"{key}={value}")
         parameters = data
-    parameters = ([parameters] if isinstance(parameters, str) else parameters) or []
+    parameters = (
+        [parameters] if isinstance(parameters, (int, float, str)) else parameters
+    ) or []
     parameters = [str(param) for param in parameters]
     return parameters
 
