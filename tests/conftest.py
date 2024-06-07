@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import contextlib
 import dataclasses as dc
+import os
 import subprocess
 import sys
 import time
@@ -125,6 +126,14 @@ def echopool(resolver, tmp_path, request):
         yield pool
     finally:
         pool.shutdown()
+
+
+@pytest.fixture(scope="function")
+def miner_host_port() -> tuple[str, int]:
+    if not (minerd := os.getenv("LUXOS_TEST_MINER")):
+        raise pytest.skip("no environmevt variable LUXOS_TEST_MINER set")
+    host, _, port = minerd.partition(":")
+    return (host, int(port or 4028))
 
 
 def pytest_addoption(parser):

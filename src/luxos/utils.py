@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import functools
+import traceback
 from typing import Any, Callable
 
 import luxos.misc
@@ -12,13 +13,22 @@ from luxos.asyncops import rexec  # noqa: F401
 # we bring here functions from other modules
 from luxos.exceptions import MinerConnectionError
 from luxos.ips import load_ips_from_csv  # noqa: F401
-
-# TODO prepare for refactoring using example in
-#      tests.test_asyncops.test_bridge_execute_command
 from luxos.scripts.luxos import execute_command  # noqa: F401
 
 
 class LuxosLaunchError(MinerConnectionError):
+    def __init__(self, tback: str, host: str, port: int, *args, **kwargs):
+        self.tback = tback
+        super().__init__(host, port, *args, **kwargs)
+
+    def __str__(self):
+        from .text import indent
+
+        msg = indent(str(self.tback), "| ")
+        return f"{self.address}: \n{msg}"
+
+
+class LuxosLaunchTimeoutError(LuxosLaunchError, asyncio.TimeoutError):
     pass
 
 
@@ -68,8 +78,12 @@ async def launch(
         async def _fn(host: str, port: int):
             try:
                 return await fn(host, port)
+            except asyncio.TimeoutError as exc:
+                tback = "".join(traceback.format_exc())
+                raise LuxosLaunchTimeoutError(tback, host, port) from exc
             except Exception as exc:
-                raise LuxosLaunchError(host, port) from exc
+                tback = "".join(traceback.format_exc())
+                raise LuxosLaunchError(tback, host, port) from exc
 
         return _fn
 

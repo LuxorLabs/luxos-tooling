@@ -6,7 +6,7 @@ from luxos import text
 try:
     import rich
 except ModuleNotFoundError:
-    rich = None  # type: ignore
+    rich = None
 
 
 def test_indent():

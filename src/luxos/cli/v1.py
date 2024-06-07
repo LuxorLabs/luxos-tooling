@@ -94,23 +94,16 @@ import argparse
 import contextlib
 import functools
 import inspect
-import logging
 import logging.handlers
 import sys
 import time
+import types
 from pathlib import Path
 from typing import Any, Callable
 
-from . import flags  # noqa: F401
-
-# SPECIAL MODULE LEVEL VARIABLES
-MODULE_VARIABLES = {
-    "LOGGING_CONFIG": None,  # logging config dict
-    # (passed to logging.basicConfig(**LOGGING_CONFIG))
-    "CONFIGPATH": Path("config.yaml"),  # config default path
-}
-
-log = logging.getLogger(__name__)
+from .. import text
+from . import flags
+from .shared import LuxosParserBase
 
 
 class MyHandler(logging.StreamHandler):
@@ -119,12 +112,17 @@ class MyHandler(logging.StreamHandler):
         return super().emit(record)
 
 
+# SPECIAL MODULE LEVEL VARIABLES
 LOGGING_CONFIG = {
     "format": "%(asctime)s [%(shortname)s] %(name)s: %(message)s",
     "handlers": [
         MyHandler(),
     ],
 }
+CONFIGPATH = Path("config.yaml")
+
+
+log = logging.getLogger(__name__)
 
 
 class CliBaseError(Exception):
@@ -135,32 +133,8 @@ class AbortCliError(CliBaseError):
     pass
 
 
-class AbortWrongArgument(CliBaseError):
+class AbortWrongArgumentError(CliBaseError):
     pass
-
-
-def setup_logging(config: dict[str, Any], count: int) -> None:
-    levelmap = [
-        logging.WARNING,
-        logging.INFO,
-        logging.DEBUG,
-    ]
-    n = len(levelmap)
-
-    # awlays start from info level
-    level = logging.INFO
-
-    # we can set the default start log level in LOGGING_CONFIG
-    if config.get("level", None) is not None:
-        level = config["level"]
-
-    # we control if we go verbose or quite here
-    index = levelmap.index(level) + count
-    config["level"] = levelmap[max(min(index, n - 1), 0)]
-
-    config2 = LOGGING_CONFIG.copy()
-    config2.update(config)
-    logging.basicConfig(**config2)  # type: ignore
 
 
 def log_sys_info():
@@ -173,67 +147,130 @@ def log_sys_info():
     log.debug("version: %s", sys.version)
 
 
-class LuxosParser(argparse.ArgumentParser):
-    def __init__(self, module_variables, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+ArgumentParser = LuxosParserBase
 
-        self.module_variables = module_variables or {}
+
+class LuxosParser(LuxosParserBase):
+    def __init__(self, modules: list[types.ModuleType], *args, **kwargs):
+        super().__init__(modules, *args, **kwargs)
 
         # we're adding the -v|-q flags, to control the logging level
-        self.add_argument(
-            "-v", "--verbose", action="count", help="report verbose logging"
-        )
-        self.add_argument("-q", "--quiet", action="count", help="report quiet logging")
-
-        # we add the -c|--config flag to point to a config file
-        configpath = (
-            self.module_variables.get("CONFIGPATH") or MODULE_VARIABLES["CONFIGPATH"]
-        )
-        if configpath:
-            configpath = Path(configpath).expanduser().absolute()
-            if configpath.is_relative_to(Path.cwd()):
-                configpath = configpath.relative_to(Path.cwd())
-
-        self.add_argument(
-            "-c",
-            "--config",
-            default=configpath,
-            type=Path,
-            help="path to a config file",
-        )
+        flags.add_arguments_logging(self)
+        flags.add_arguments_config(self)
 
     def error(self, message: str):
-        raise AbortWrongArgument(message)
+        raise AbortWrongArgumentError(message)
 
     def parse_args(self, args=None, namespace=None):
         options = super().parse_args(args, namespace)
 
+        # reserver attributes
+        for reserved in [
+            "modules",
+            "error",
+        ]:
+            if not hasattr(options, reserved):
+                continue
+            raise RuntimeError(f"cannot add an argument with dest='{reserved}'")
         options.error = self.error
+        options.modules = self.modules
 
-        # setup the logging
-        config = {}
-        if value := self.module_variables.get("LOGGING_CONFIG"):
-            config = value.copy()
+        for callback in self.callbacks:
+            if not callback:
+                continue
+            options = callback(options) or options
 
-        count = (options.verbose or 0) - (options.quiet or 0)
-        setup_logging(config, count)
         log_sys_info()
         return options
 
     @classmethod
-    def get_parser(cls, module_variables, **kwargs):
+    def get_parser(cls, modules: list[types.ModuleType], **kwargs):
         class Formatter(
             argparse.ArgumentDefaultsHelpFormatter, argparse.RawTextHelpFormatter
         ):
             pass
 
-        return cls(
-            module_variables=module_variables, formatter_class=Formatter, **kwargs
-        )
+        return cls(modules, formatter_class=Formatter, **kwargs)
+
+
+@contextlib.contextmanager
+def setup(
+    function: Callable,
+    add_arguments: Callable[[LuxosParserBase], None]
+    | Callable[[argparse.ArgumentParser], None]
+    | None = None,
+    process_args: (
+        Callable[[argparse.Namespace], argparse.Namespace | None] | None
+    ) = None,
+):
+    sig = inspect.signature(function)
+    module = inspect.getmodule(function)
+
+    if "args" in sig.parameters and "parser" in sig.parameters:
+        raise RuntimeError("cannot use args and parser at the same time")
+
+    description, _, epilog = (
+        (function.__doc__ or module.__doc__ or "").strip().partition("\n")
+    )
+    epilog = text.md(f"# {description}\n{epilog}")
+    kwargs = {}
+    modules = [
+        sys.modules[__name__],
+    ]
+    if module:
+        modules.append(module)
+    parser = LuxosParser.get_parser(modules, description=description, epilog=epilog)
+    if add_arguments and (callbacks := add_arguments(parser)):
+        if isinstance(callbacks, list):
+            parser.callbacks.extend(callbacks)
+        else:
+            parser.callbacks.append(callbacks)
+
+    if "parser" in sig.parameters:
+        kwargs["parser"] = parser
+
+    t0 = time.monotonic()
+    success = "completed"
+    errormsg = ""
+    show_timing = True
+    try:
+        if "parser" not in sig.parameters:
+            args = parser.parse_args()
+            if process_args:
+                args = process_args(args) or args
+
+            if "args" in sig.parameters:
+                kwargs["args"] = args
+        yield sig.bind(**kwargs)
+    except AbortCliError as exc:
+        show_timing = False
+        if exc.args:
+            print(str(exc), file=sys.stderr)
+        sys.exit(2)
+    except AbortWrongArgumentError as exc:
+        show_timing = False
+        parser.print_usage(sys.stderr)
+        print(f"{parser.prog}: error: {exc.args[0]}", file=sys.stderr)
+        sys.exit(2)
+    except SystemExit as exc:
+        show_timing = False
+        sys.exit(exc.code)
+    except Exception:
+        log.exception("un-handled exception")
+        success = "failed"
+    finally:
+        if show_timing:
+            delta = round(time.monotonic() - t0, 2)
+            log.info("task %s in %.2fs", success, delta)
+    if errormsg:
+        parser.error(errormsg)
 
 
 def cli(
-    add_arguments: Callable[[argparse.ArgumentParser], None] | None = None,
+    # add_arguments: Callable[[LuxosParserBase | argparse.ArgumentParser], Any]
+    add_arguments: Callable[[LuxosParserBase], Any]
+    | Callable[[argparse.ArgumentParser], Any]
+    | None = None,
     process_args: (
         Callable[[argparse.Namespace], argparse.Namespace | None] | None
     ) = None,
@@ -241,80 +278,21 @@ def cli(
     def _cli1(function):
         module = inspect.getmodule(function)
 
-        @contextlib.contextmanager
-        def setup():
-            sig = inspect.signature(function)
-
-            module_variables = MODULE_VARIABLES.copy()
-            for name in list(module_variables):
-                module_variables[name] = getattr(module, name, None)
-
-            if "args" in sig.parameters and "parser" in sig.parameters:
-                raise RuntimeError("cannot use args and parser at the same time")
-
-            description, _, epilog = (
-                (function.__doc__ or module.__doc__ or "").strip().partition("\n")
-            )
-            kwargs = {}
-            parser = LuxosParser.get_parser(
-                module_variables, description=description, epilog=epilog
-            )
-            if add_arguments:
-                add_arguments(parser)
-
-            if "parser" in sig.parameters:
-                kwargs["parser"] = parser
-
-            t0 = time.monotonic()
-            success = "completed"
-            errormsg = ""
-            show_timing = True
-            try:
-                if "parser" not in sig.parameters:
-                    args = parser.parse_args()
-                    if process_args:
-                        args = process_args(args) or args
-                    if "args" in sig.parameters:
-                        kwargs["args"] = args
-                yield sig.bind(**kwargs)
-            except AbortCliError as exc:
-                show_timing = False
-                if exc.args:
-                    print(str(exc), file=sys.stderr)
-                sys.exit(2)
-            except AbortWrongArgument as exc:
-                show_timing = False
-                parser.print_usage(sys.stderr)
-                print(f"{parser.prog}: error: {exc.args[0]}", file=sys.stderr)
-                sys.exit(2)
-            except SystemExit as exc:
-                show_timing = False
-                sys.exit(exc.code)
-            except Exception:
-                log.exception("un-handled exception")
-                success = "failed"
-            finally:
-                if show_timing:
-                    delta = round(time.monotonic() - t0, 2)
-                    log.info("task %s in %.2fs", success, delta)
-            if errormsg:
-                parser.error(errormsg)
-
         if inspect.iscoroutinefunction(function):
 
             @functools.wraps(function)
             async def _cli2(*args, **kwargs):
-                with setup() as ba:
+                with setup(function, add_arguments, process_args) as ba:
                     return await function(*ba.args, **ba.kwargs)
 
         else:
 
             @functools.wraps(function)
             def _cli2(*args, **kwargs):
-                with setup() as ba:
+                with setup(function, add_arguments, process_args) as ba:
                     return function(*ba.args, **ba.kwargs)
 
-        _cli2.attributes = {  # type: ignore[attr-defined]
+        _cli2.attributes = {
             "doc": function.__doc__ or module.__doc__ or "",
         }
         return _cli2

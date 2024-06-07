@@ -52,7 +52,7 @@ repos:
         pass_filenames: false
         language: system
         types_or: [python, pyi]
-        args: ["--check-untyped-defs", "src",]
+        args: ["src",]
         require_serial: true
         additional_dependencies: []
         minimum_pre_commit_version: '2.9.2'

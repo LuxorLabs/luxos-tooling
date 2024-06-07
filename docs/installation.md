@@ -24,7 +24,7 @@ Head to [python](https://www.python.org/downloads) and download the
 most recent installer following the on-screen instructions.
 :::
 :::{tab} Mac OS native
-MacOS comes pre-installed with python (3.9 under /usr/bin/python), which is supported .. just.
+MacOS comes pre-installed with python (3.9 under /usr/bin/python), which is supported.. just.
 
 You'd better off installing an updated version from [python](https://www.python.org/downloads),
 and follow the instructions.
@@ -76,14 +76,17 @@ Python 3.12.3
 :::
 
 
-## Managing a virtual environment
+## Virtual environments
 
-A **virtual environment** is a filesystem directory holding executable, libraries and all sort of artifatcs
-brough in using a **package** installed by a **package manager**.
+A **virtual environment** is a filesystem directory holding executable, libraries and 
+all sort of ancillary files ("*data*"): it is initially created using the python 
+interpreter itself, activated using an **activate** script (that sets the PATH 
+to the directory) and files are installed using a **package manager** that installs
+a **package**.
 
 In case of python:
-- a package manager could be `pip` or `conda`
-- a package can be a python wheel `.whl` file or a conda file (`.conda`)
+- a **package manager** could be `pip` or `conda`
+- a **package** can be a python wheel `.whl` file or a conda file (`.conda`)
  
 In general you can have multiple **virtual environments** with different installed **packages**
 like an *environment* to run tests, another to create documentation and so on.
@@ -93,7 +96,6 @@ The lifecycle of a **virtual environment** is pretty simple once a python interp
 1. **create** a new environment in a directory (this is usually done once per environment)
 2. **activate** the newly create environmen (this step is needed every time you start a new shell process)
 3. install/remove packages using the **package manager**
-
 
 ### Create a new environment
 
