@@ -14,7 +14,9 @@ Please, use the format:
 
 -->
 
-## [Unreleased]
+## [0.1.0]
+
+- cli: added many new flags, including --range and --db
 
 
 ## [0.0.9]
