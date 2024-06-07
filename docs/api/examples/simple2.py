@@ -4,16 +4,14 @@ A script to show how to add and process extra arguments.
 Example:
 
     $> python simple2.py -q
-    ...
-    Got for x='0'
-    ...
+    the args.x is 6
 
-    $> python simple2 -x 3 --range 127.0.0.1-127.0.0.3
-    Got for x='6'
-      127.0.0.1:None
-      127.0.0.2:None
-      127.0.0.3:None
-    INFO:luxos.cli.v1:task completed in 0.00s
+    $> python simple2 -x 3 --range 127.0.0.1-127.0.0.3 --quiet
+    the args.x is 6
+    the args.range is:
+      ('127.0.0.1', None)
+      ('127.0.0.2', None)
+      ('127.0.0.3', None)
 """
 
 import argparse
@@ -26,8 +24,8 @@ log = logging.getLogger(__name__)
 
 
 def add_arguments(
-    parser: argparse.ArgumentParser,
-) -> cli.ArgsCallback | list[cli.ArgsCallback]:
+    parser: cli.ArgumentParser,
+):
     parser.add_argument("-x", type=int, default=0, help="set the x flag")
 
     # we add a --range flag to the script and validate the value
@@ -44,7 +42,9 @@ def add_arguments(
 
     # add a new time flag taking a HH:MM string (validates it)
     parser.add_argument("--time", type=cli.flags.type_hhmm)
-    return [callback, callback2]
+
+    # we add the callbacks, called after the parse_args but before entering the main
+    parser.callbacks.extend([callback, callback2])
 
 
 def process_args(args: argparse.Namespace) -> argparse.Namespace | None:
@@ -59,6 +59,10 @@ def process_args(args: argparse.Namespace) -> argparse.Namespace | None:
 async def main(args: argparse.Namespace):
     log.info("Loading config from %s", args.config)
     print(f"the args.x is {args.x}")
+    if args.range:
+        print("the args.range is:")
+        for address in args.range:
+            print(f"  {address}")
 
     # there many ways to abort a script
     # 1. raising various exceptions

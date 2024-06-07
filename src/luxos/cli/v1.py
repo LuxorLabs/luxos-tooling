@@ -147,6 +147,9 @@ def log_sys_info():
     log.debug("version: %s", sys.version)
 
 
+ArgumentParser = LuxosParserBase
+
+
 class LuxosParser(LuxosParserBase):
     def __init__(self, modules: list[types.ModuleType], *args, **kwargs):
         super().__init__(modules, *args, **kwargs)
