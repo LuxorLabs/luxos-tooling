@@ -5,7 +5,7 @@
 
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
-export PYTHONPATH=$(ROOT_DIR)/../src:$(ROOT_DIR)/src
+export PYTHONPATH=$(ROOT_DIR)/src
 
 
 # self-documentation magic
@@ -53,3 +53,13 @@ clean:  ## cleanup
 .PHONY: clean-all
 clean-all:  ## cleanup
 	rm -rf build .mypy_cache .pytest_cache .ruff_cache .coverage
+
+
+.PHONY: docs
+docs:  ## build documentation
+	@python -m sphinx docs build/docs
+
+
+.PHONY: serve
+serve:  ## start a documentation server with autoreload
+	@python -m sphinx_autobuild docs build\docs
