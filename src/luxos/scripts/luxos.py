@@ -11,17 +11,9 @@ import argparse
 from pathlib import Path
 
 from ..cli import v1 as cli
+from ..syncops import execute_command
 
 log = logging.getLogger(__name__)
-
-
-def execute_command(host: str, port: int, timeout_sec: int, cmd: str, parameters: list, verbose: bool):
-    from ..asyncops import rexec
-    def adapter(awaitable):
-        with contextlib.suppress(asyncio.TimeoutError):
-            loop = asyncio.get_event_loop()
-            return loop.run_until_complete(awaitable)
-    return adapter(rexec(host, port, timeout=timeout_sec, cmd=cmd, parameters=parameters))
 
 
 def add_arguments(parser: cli.LuxosParserBase) -> None:
