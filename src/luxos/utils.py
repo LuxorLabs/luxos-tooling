@@ -11,48 +11,13 @@ import luxos.misc
 from luxos.asyncops import rexec  # noqa: F401
 
 # we bring here functions from other modules
-from luxos.exceptions import MinerConnectionError
-from luxos.ips import load_ips_from_csv  # noqa: F401
-from luxos.scripts.luxos import execute_command  # noqa: F401
-
-
-class LuxosLaunchError(MinerConnectionError):
-    def __init__(self, tback: str, host: str, port: int, *args, **kwargs):
-        self.tback = tback
-        super().__init__(host, port, *args, **kwargs)
-
-    def __str__(self):
-        from .text import indent
-
-        msg = indent(str(self.tback), "| ")
-        return f"{self.address}: \n{msg}"
-
-
-class LuxosLaunchTimeoutError(LuxosLaunchError, asyncio.TimeoutError):
-    pass
-
-
-def ip_ranges(
-    txt: str, rsep: str = "-", gsep: str = ":"
-) -> list[tuple[str, int | None]]:
-    """return a list of ips given a text expression.
-
-    Eg.
-        >>> for ip in ip_ranges("127.0.0.1"):
-        ...     print(ip)
-        127.0.0.1
-
-        >>> for ip in ip_ranges("127.0.0.1-127.0.0.3"):
-        ...     print(ip)
-        127.0.0.1
-        127.0.0.2
-        127.0.0.3
-
-    NOTE: use the `:` (gsep) to separate ips groups, and `-` (rsep) to define a range.
-    """
-    from .ips import iter_ip_ranges
-
-    return list(iter_ip_ranges(txt, rsep=rsep, gsep=gsep))
+from luxos.exceptions import (  # noqa: F401
+    LuxosLaunchError,
+    LuxosLaunchTimeoutError,
+    MinerConnectionError,
+)
+from luxos.ips import ip_ranges, load_ips_from_csv  # noqa: F401
+from luxos.syncops import execute_command  # noqa: F401
 
 
 async def launch(

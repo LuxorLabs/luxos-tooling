@@ -129,6 +129,27 @@ def iter_ip_ranges(
             cur += 1
 
 
+def ip_ranges(
+    txt: str, rsep: str = "-", gsep: str = ":"
+) -> list[tuple[str, int | None]]:
+    """return a list of ips given a text expression.
+
+    Eg.
+        >>> for ip in ip_ranges("127.0.0.1"):
+        ...     print(ip)
+        127.0.0.1
+
+        >>> for ip in ip_ranges("127.0.0.1-127.0.0.3"):
+        ...     print(ip)
+        127.0.0.1
+        127.0.0.2
+        127.0.0.3
+
+    NOTE: use the `:` (gsep) to separate ips groups, and `-` (rsep) to define a range.
+    """
+    return list(iter_ip_ranges(txt, rsep=rsep, gsep=gsep))
+
+
 def load_ips_from_csv(path: Path | str, port: int = 4028) -> list[tuple[str, int]]:
     """loads ip addresses from a csv file
 
