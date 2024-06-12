@@ -9,7 +9,7 @@ from typing import Any
 from luxos.api import logon_required
 
 from .asyncops import TIMEOUT, parameters_to_list, validate_message
-from .exceptions import MinerCommandSessionAlreadyActive
+from .exceptions import MinerCommandSessionAlreadyActive, MinerConnectionError
 
 log = logging.getLogger(__name__)
 
@@ -207,20 +207,26 @@ def execute_command(
     return res
 
 
-def execute(
+def rexec(
     host: str,
     port: int,
     cmd: str,
     parameters: str | list[Any] | dict[str, Any] | None = None,
     timeout: float | None = None,
-):
+    retry: int | None = None,
+    retry_delay: float | None = None,
+) -> dict[str, Any] | None:
+    if retry or retry_delay:
+        raise NotImplementedError("cannot use rexec in suncops with retry!")
     return execute_command(host, port, timeout, cmd, parameters)
 
 
 @contextlib.contextmanager
 def with_atm(host, port, enabled: bool, timeout: float | None = None):
-    res = execute(host, port, "atm", timeout=timeout)
+    res = rexec(host, port, "atm", timeout=timeout)
+    if not res:
+        raise MinerConnectionError(host, port, "cannot check atm")
     current = validate_message(host, port, res, "ATM")[0]["Enabled"]
-    execute(host, port, "atmset", {"enabled": enabled}, timeout=timeout)
+    rexec(host, port, "atmset", {"enabled": enabled}, timeout=timeout)
     yield current
-    execute(host, port, "atmset", {"enabled": current}, timeout=timeout)
+    rexec(host, port, "atmset", {"enabled": current}, timeout=timeout)

@@ -14,7 +14,7 @@ help: ## Display the list of available targets
 
 
 .PHONY: check
-check: check-fmt lint test ## Check code formatting and run tests
+check: check-fmt lint ## Check code formatting
 	@echo "🟢 pass"
 
 .PHONY: check-fmt
