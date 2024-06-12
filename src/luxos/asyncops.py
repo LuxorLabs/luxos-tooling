@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import functools
 import json
 import logging
@@ -126,9 +127,9 @@ def validate_message(
     port: int,
     res: dict[str, Any],
     extrakey: str | None = None,
-    minfields: None | int = None,
-    maxfields: None | int = None,
-) -> dict[str, Any]:
+    minfields: None | int = 1,
+    maxfields: None | int = 1,
+) -> Any:
     # all miner message comes with a STATUS
     for key in ["STATUS", "id", *([extrakey] if extrakey else [])]:
         if key in res:
@@ -142,9 +143,9 @@ def validate_message(
 
     n = len(res[extrakey])
     msg = None
-    if minfields and (n < minfields):
+    if (minfields is not None) and (n < minfields):
         msg = f"found {n} fields for {extrakey} invalid: " f"{n} <= {minfields}"
-    elif maxfields and (n > maxfields):
+    elif (maxfields is not None) and (n > maxfields):
         msg = f"found {n} fields for {extrakey} invalid: " f"{n} >= {maxfields}"
     if msg is None:
         return res[extrakey]
@@ -152,7 +153,7 @@ def validate_message(
 
 
 @wrapped
-async def logon(host: str, port: int, timeout: float | None = 3) -> str:
+async def logon(host: str, port: int, timeout: float | None = None) -> str:
     timeout = TIMEOUT if timeout is None else timeout
     res = await roundtrip(host, port, {"command": "logon"}, timeout=timeout)
 
@@ -166,7 +167,7 @@ async def logon(host: str, port: int, timeout: float | None = 3) -> str:
         )
     sessions = validate_message(host, port, res, "SESSION", 1, 1)
 
-    session = sessions[0]  # type: ignore
+    session = sessions[0]
 
     if "SessionID" not in session:
         raise exceptions.MinerCommandSessionAlreadyActive(
@@ -177,7 +178,7 @@ async def logon(host: str, port: int, timeout: float | None = 3) -> str:
 
 @wrapped
 async def logoff(
-    host: str, port: int, sid: str, timeout: float | None = 3
+    host: str, port: int, sid: str, timeout: float | None = None
 ) -> dict[str, Any]:
     timeout = TIMEOUT if timeout is None else timeout
     return await roundtrip(
@@ -185,48 +186,7 @@ async def logoff(
     )
 
 
-@wrapped
-async def execute_command(
-    host: str,
-    port: int,
-    timeout_sec: float | None,
-    cmd: str,
-    parameters: list[str] | None = None,
-    verbose: bool = False,
-    asjson: bool | None = True,
-    add_address: bool = False,
-) -> tuple[tuple[str, int], dict[str, Any]] | dict[str, Any]:
-    timeout = TIMEOUT if timeout_sec is None else timeout_sec
-    parameters = parameters or []
-
-    sid = None
-    if api.logon_required(cmd):
-        sid = await logon(host, port)
-        parameters = [sid, *parameters]
-        log.debug("session id requested & obtained for %s:%i (%s)", host, port, sid)
-    else:
-        log.debug("no logon required for command '%s' on %s:%i", cmd, host, port)
-
-    try:
-        packet = {"command": cmd}
-        if parameters:
-            packet["parameter"] = ",".join(parameters)
-        log.debug(
-            "executing command '%s' on '%s:%i' with parameters: %s",
-            cmd,
-            host,
-            port,
-            packet.get("parameter", ""),
-        )
-        ret = await roundtrip(host, port, packet, timeout=timeout, asjson=asjson)
-        log.debug("received from %s:%s: %s", host, port, str(ret))
-        return ((host, port), ret) if add_address else ret
-    finally:
-        if sid:
-            await logoff(host, port, sid)
-
-
-def _rexec_parameters(
+def parameters_to_list(
     parameters: str | list[Any] | dict[str, Any] | None = None,
 ) -> list[str]:
     if isinstance(parameters, dict):
@@ -256,9 +216,7 @@ async def rexec(
     retry: int | None = None,
     retry_delay: float | None = None,
 ) -> dict[str, Any] | None:
-    from . import api
-
-    parameters = _rexec_parameters(parameters)
+    parameters = parameters_to_list(parameters)
 
     timeout = TIMEOUT if timeout is None else timeout
     retry = RETRIES if retry is None else retry
@@ -328,3 +286,14 @@ async def rexec(
         await logoff(host, port, sid)
     if isinstance(failure, Exception):
         raise failure
+
+
+@contextlib.asynccontextmanager
+async def with_atm(host, port, enabled: bool, timeout: float | None = None):
+    res = await rexec(host, port, "atm", timeout=timeout)
+    if not res:
+        raise exceptions.MinerConnectionError(host, port, "cannot check atm")
+    current = validate_message(host, port, res, "ATM")[0]["Enabled"]
+    await rexec(host, port, "atmset", {"enabled": enabled}, timeout=timeout)
+    yield current
+    await rexec(host, port, "atmset", {"enabled": current}, timeout=timeout)
