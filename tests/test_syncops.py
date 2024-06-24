@@ -39,7 +39,7 @@ def test_miner_double_logon_cycle(miner_host_port):
 def test_miner_version(miner_host_port):
     host, port = miner_host_port
 
-    res = syncops.rexec_command(host, port, None, "version")
+    res = syncops.rexec(host, port, "version")
     assert "VERSION" in res
     assert len(res["VERSION"]) == 1
     assert "API" in res["VERSION"][0]
