@@ -20,14 +20,3 @@ def logon_required(cmd: str, commands_list=COMMANDS) -> bool | None:
         return None
 
     return COMMANDS[cmd]["logon_required"]
-
-
-# TODO timeouts should be float | None
-# TODO prepare for refactoring using example in
-#      tests.test_asyncops.test_bridge_execute_command
-def execute_command(
-    host: str, port: int, timeout: int, cmd: str, params: list[str], verbose: bool
-):
-    from .scripts import luxos
-
-    return luxos.execute_command(host, port, timeout, cmd, params, verbose)
