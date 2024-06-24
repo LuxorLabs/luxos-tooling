@@ -142,6 +142,11 @@ def validate_message(
     if not extrakey:
         return res
 
+    if not res["STATUS"] or not res["STATUS"][0].get("STATUS") == "S":
+        raise exceptions.MinerCommandMalformedMessageError(
+            host, port, "no status information in message", res
+        )
+
     # TODO if minfield is 0, there might not be extrakey
     if minfields == 0 and extrakey not in res:
         return []
