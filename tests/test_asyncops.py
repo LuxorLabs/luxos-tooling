@@ -26,60 +26,48 @@ def test_parameters_to_list():
 
 
 def test_validate_message():
+    # TODO add more cases
+    # 1. when res is not present and limit is 0,None
+    # 2. check limits like None/value value/None None/None
+
+    # Avoid to repeat the same code over and over
+    def validate(res, extrakey=None, minfields=1, maxfields=1):
+        return aapi.validate_message("a-host", 0, res, extrakey, minfields, maxfields)
+
+    res = {}
+    pytest.raises(exceptions.MinerCommandMalformedMessageError, validate, res)
+
+    res = {"STATUS": 1, "id": 2}
+    assert validate(res)
+    assert validate(res, "A-MISSING-KEY", 0, None) == []
+    assert validate(res, "A-MISSING-KEY", None, None) == []
+
     pytest.raises(
-        exceptions.MinerCommandMalformedMessageError, aapi.validate_message, "a", 0, {}
+        exceptions.MinerCommandMalformedMessageError, validate, res, "A-MISSING-KEY"
     )
-    host, port = "a", 0
-
-    assert aapi.validate_message(host, port, {"STATUS": 1, "id": 2})
-
     pytest.raises(
         exceptions.MinerCommandMalformedMessageError,
-        aapi.validate_message,
-        host,
-        port,
-        {
-            "STATUS": 1,
-            "id": 2,
-        },
-        "wooow",
+        validate,
+        res,
+        "A-MISSING-KEY",
+        1,
+        None,
     )
 
-    assert aapi.validate_message(
-        host, port, {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", 2, 2
-    )
+    res = {"STATUS": 1, "id": 2, "KEY": [1, 2, 3]}
+    assert validate(res)
+    assert validate(res, "KEY", 0, None) == [1, 2, 3]
+    assert validate(res, "KEY", None, None) == [1, 2, 3]
+    assert validate(res, "KEY", None, 5) == [1, 2, 3]
+    assert validate(res, "KEY", 1, 5) == [1, 2, 3]
 
     with pytest.raises(exceptions.MinerCommandMalformedMessageError) as excinfo:
-        aapi.validate_message(
-            host, port, {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", minfields=9
-        )
-    assert excinfo.value.args[2] == "found 2 fields for wooow invalid: 2 <= 9"
+        validate(res, "KEY", 4, None)
+    assert excinfo.value.args[2] == "found too few items for 'KEY'  (3 < 4)"
 
     with pytest.raises(exceptions.MinerCommandMalformedMessageError) as excinfo:
-        aapi.validate_message(
-            host, port, {"STATUS": 1, "id": 2, "wooow": [1, 2]}, "wooow", maxfields=1
-        )
-    assert excinfo.value.args[2] == "found 2 fields for wooow invalid: 2 >= 1"
-
-    with pytest.raises(exceptions.MinerCommandMalformedMessageError) as excinfo:
-        aapi.validate_message(
-            host,
-            port,
-            {"STATUS": 1, "id": 2, "wooow": [1, 2]},
-            "wooow",
-            minfields=9,
-            maxfields=10,
-        )
-    assert excinfo.value.args[2] == "found 2 fields for wooow invalid: 2 <= 9"
-
-    assert aapi.validate_message(
-        host,
-        port,
-        {"STATUS": 1, "id": 2, "wooow": [1, 2]},
-        "wooow",
-        minfields=2,
-        maxfields=10,
-    )
+        validate(res, "KEY", 1, 2)
+    assert excinfo.value.args[2] == "found too many items for 'KEY'  (3 > 2)"
 
 
 @pytest.mark.asyncio
