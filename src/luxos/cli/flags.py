@@ -27,14 +27,19 @@ def type_range(txt: str) -> Sequence[tuple[str, int | None]]:
 
         Alternatively you can pass a @filename to read data from a csv file
     """
-    from luxos.ips import iter_ip_ranges, load_ips_from_csv, load_ips_from_yaml
+    from luxos.ips import (
+        DataParsingError,
+        iter_ip_ranges,
+        load_ips_from_csv,
+        load_ips_from_yaml,
+    )
 
     path = None
     if txt.startswith("@") and not (path := Path(txt[1:])).exists():
         raise argparse.ArgumentTypeError(f"file not found {path}")
 
     if path:
-        with contextlib.suppress(RuntimeError):
+        with contextlib.suppress(RuntimeError, DataParsingError):
             return load_ips_from_yaml(path)
 
     try:
@@ -221,5 +226,33 @@ def add_arguments_database(parser: LuxosParserBase):
             url = make_url(args.engine)
             engine = create_engine(url)
         args.engine = engine or create_engine(f"sqlite:///{args.engine}", echo=False)
+
+    parser.callbacks.append(callback)
+
+
+def add_arguments_new_miners_ips(parser: LuxosParserBase):
+    group = parser.add_argument_group("Miners", "miners list or range")
+    group.add_argument(
+        "--range",
+        action="append",
+        dest="addresses",
+        help="IPs range or @file",
+        type=type_range,
+    )
+    group.add_argument(
+        "--port", dest="port", help="miners' default port", type=int, default=4028
+    )
+
+    def callback(args: argparse.Namespace):
+        addresses = []
+        if args.addresses:
+            addresses.extend(
+                [
+                    (host, port or args.port)
+                    for group in args.addresses
+                    for host, port in group
+                ]
+            )
+        args.addresses = addresses
 
     parser.callbacks.append(callback)

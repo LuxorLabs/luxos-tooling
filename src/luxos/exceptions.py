@@ -48,3 +48,7 @@ class LuxosLaunchError(MinerConnectionError):
 
 class LuxosLaunchTimeoutError(LuxosLaunchError, asyncio.TimeoutError):
     pass
+
+
+class AddressParsingError(LuxosBaseException):
+    pass

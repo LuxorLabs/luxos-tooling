@@ -5,6 +5,36 @@ import pytest
 from luxos import ips
 
 
+def test_parse_expr():
+    assert ips.parse_expr("127.0.0.1") == ("127.0.0.1", None, None)
+    assert ips.parse_expr("127.0.0.1:1234") == ("127.0.0.1", None, 1234)
+    assert ips.parse_expr("127.0.0.1:1234:127.0.0.3") == (
+        "127.0.0.1",
+        "127.0.0.3",
+        1234,
+    )
+    assert ips.parse_expr("127.0.0.1:1234-127.0.0.3") == (
+        "127.0.0.1",
+        "127.0.0.3",
+        1234,
+    )
+    assert ips.parse_expr("127.0.0.1:1234-127.0.0.3:1234") == (
+        "127.0.0.1",
+        "127.0.0.3",
+        1234,
+    )
+    assert ips.parse_expr("127.0.0.1-127.0.0.3:1234") == (
+        "127.0.0.1",
+        "127.0.0.3",
+        1234,
+    )
+
+    pytest.raises(ips.AddressParsingError, ips.parse_expr, "hostname")
+    pytest.raises(
+        ips.AddressParsingError, ips.parse_expr, "127.0.0.1:9999-127.0.0.3:1234"
+    )
+
+
 def test_splitip():
     assert ips.splitip("123.1.2.3") == ("123.1.2.3", None)
     assert ips.splitip("123.1.2.3:123") == ("123.1.2.3", 123)
@@ -51,7 +81,9 @@ def test_iter_ip_ranges():
 
     _ = set(ips.iter_ip_ranges("127.0.0.1:8080:127.0.0.3:8080"))
     pytest.raises(
-        RuntimeError, set, ips.iter_ip_ranges("127.0.0.1:8080:127.0.0.3:8081")
+        ips.AddressParsingError,
+        set,
+        ips.iter_ip_ranges("127.0.0.1:8080:127.0.0.3:8081"),
     )
 
     assert set(ips.iter_ip_ranges("127.0.0.1:1234 - 127.0.0.3, 127.0.0.15:999")) == {
