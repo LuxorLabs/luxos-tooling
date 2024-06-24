@@ -37,7 +37,7 @@ def test_validate_message():
     res = {}
     pytest.raises(exceptions.MinerCommandMalformedMessageError, validate, res)
 
-    res = {"STATUS": 1, "id": 2}
+    res = {"STATUS": [{"STATUS": "S"}], "id": 2}
     assert validate(res)
     assert validate(res, "A-MISSING-KEY", 0, None) == []
     assert validate(res, "A-MISSING-KEY", None, None) == []
@@ -54,7 +54,7 @@ def test_validate_message():
         None,
     )
 
-    res = {"STATUS": 1, "id": 2, "KEY": [1, 2, 3]}
+    res = {"STATUS": [{"STATUS": "S"}], "id": 2, "KEY": [1, 2, 3]}
     assert validate(res)
     assert validate(res, "KEY", 0, None) == [1, 2, 3]
     assert validate(res, "KEY", None, None) == [1, 2, 3]
