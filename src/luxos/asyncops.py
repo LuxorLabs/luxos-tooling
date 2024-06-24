@@ -131,22 +131,46 @@ def validate_message(
     maxfields: None | int = 1,
 ) -> Any:
     # all miner message comes with a STATUS
-    for key in ["STATUS", "id", *([extrakey] if extrakey else [])]:
+    for key in ["STATUS", "id"]:
         if key in res:
             continue
         raise exceptions.MinerCommandMalformedMessageError(
-            host, port, f"missing {key} from logon message", res
+            host, port, f"missing {key} from message STATUS", res
         )
 
-    if not extrakey or not (minfields or maxfields):
+    # no further validation here
+    if not extrakey:
         return res
+
+    # TODO if minfield is 0, there might not be extrakey
+    if minfields == 0 and extrakey not in res:
+        return []
+
+    if extrakey not in res:
+        if not minfields:
+            return []
+        raise exceptions.MinerCommandMalformedMessageError(
+            host, port, f"missing {extrakey} from message", res
+        )
 
     n = len(res[extrakey])
     msg = None
+
+    cond = ""
+    if minfields is not None and maxfields is None:
+        cond = f" ({n} < {minfields})"
+    elif minfields is None and maxfields is not None:
+        cond = f" ({n} > {maxfields})"
+    elif minfields is not None and maxfields is not None:
+        if n > maxfields:
+            cond = f" ({n} > {maxfields})"
+        else:
+            cond = f" ({n} < {minfields})"
+
     if (minfields is not None) and (n < minfields):
-        msg = f"found {n} fields for {extrakey} invalid: " f"{n} <= {minfields}"
+        msg = f"found too few items for '{extrakey}' {cond}"
     elif (maxfields is not None) and (n > maxfields):
-        msg = f"found {n} fields for {extrakey} invalid: " f"{n} >= {maxfields}"
+        msg = f"found too many items for '{extrakey}' {cond}"
     if msg is None:
         return res[extrakey]
     raise exceptions.MinerCommandMalformedMessageError(host, port, msg, res)
@@ -187,7 +211,7 @@ async def logoff(
 
 
 def parameters_to_list(
-    parameters: str | list[Any] | dict[str, Any] | None = None,
+    parameters: str | int | float | bool | list[Any] | dict[str, Any] | None = None,
 ) -> list[str]:
     if isinstance(parameters, dict):
         data = []
@@ -211,7 +235,7 @@ async def rexec(
     host: str,
     port: int,
     cmd: str,
-    parameters: str | list[Any] | dict[str, Any] | None = None,
+    parameters: str | int | float | bool | list[Any] | dict[str, Any] | None = None,
     timeout: float | None = None,
     retry: int | None = None,
     retry_delay: float | None = None,
@@ -295,5 +319,6 @@ async def with_atm(host, port, enabled: bool, timeout: float | None = None):
         raise exceptions.MinerConnectionError(host, port, "cannot check atm")
     current = validate_message(host, port, res, "ATM")[0]["Enabled"]
     await rexec(host, port, "atmset", {"enabled": enabled}, timeout=timeout)
+    # TODO
     yield current
     await rexec(host, port, "atmset", {"enabled": current}, timeout=timeout)
