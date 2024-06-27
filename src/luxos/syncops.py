@@ -1,17 +1,294 @@
 from __future__ import annotations
 
 import contextlib
+import functools
 import json
 import logging
 import socket
+import time
 from typing import Any
 
 from luxos.api import logon_required
 
-from .asyncops import TIMEOUT, parameters_to_list, validate_message
+from . import exceptions
+from .asyncops import (
+    RETRIES,
+    RETRIES_DELAY,
+    TIMEOUT,
+    parameters_to_list,
+    validate_message,
+)
 from .exceptions import MinerCommandSessionAlreadyActive, MinerConnectionError
 
 log = logging.getLogger(__name__)
+
+
+def wrapped(function):
+    """wraps a function acting on a host and re-raise with internal exceptions
+
+    This re-raise exceptions so they all derive from MinerConnectionError, eg:
+    @wrapped
+    def somcode(host: str, port: int, ...):
+        ...
+
+    try:
+        await somecode()
+    except MinerConnectionError as e:  <- this will catch all exceptions!
+        e.address
+        raise MyNewExecption() from e  <- this will re-raise
+    """
+
+    @functools.wraps(function)
+    def _function(host: str, port: int, *args, **kwargs):
+        try:
+            return function(host, port, *args, **kwargs)
+        except TimeoutError as e:
+            # we augment underlying TimeOuts
+            raise exceptions.MinerCommandTimeoutError(host, port) from e
+        except exceptions.MinerConnectionError:
+            raise
+        except Exception as e:
+            # we augment any other exception with (host, port) info
+            log.exception("internal error")
+            raise exceptions.MinerConnectionError(host, port, "internal error") from e
+
+    return _function
+
+
+def retryfn(
+    timeout: float, retry: int, retry_delay: float, fn, host, port, *args, **kwargs
+):
+    """will retry fn calls up to timeout of up to number retry"""
+    last_exception = None
+    count = retry
+    t0 = time.monotonic()
+    while True:
+        if retry > 0 and count <= 0:
+            break
+        if timeout and (time.monotonic() - t0) >= timeout:
+            break
+
+        try:
+            return fn(*args, **kwargs)
+        except Exception as e:
+            last_exception = e
+        log.debug("failed to retrieve result for '%s'", fn.__name__)
+
+        if retry > 0:
+            count -= 1
+        if retry and retry_delay:
+            time.sleep(retry_delay)
+
+    if last_exception is not None:
+        raise exceptions.MinerCommandTimeoutError(host, port) from last_exception
+
+
+def _roundtrip(
+    host: str, port: int, cmd: bytes | str, timeout: float | None = None
+) -> str:
+    """simple asyncio socket based send/receive function
+
+    Example:
+        print(_roundtrip(host, port, "version"))
+        -> (str) "{'STATUS': [{'Code': 22, 'Description'...."
+    """
+    timeout = TIMEOUT if timeout is None else timeout
+    # Create a socket connection to the server
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        # set timeout
+        if timeout:
+            sock.settimeout(timeout)
+
+        # Connect to the server
+        sock.connect((host, port))
+        log.debug("connecting to %s:%i", host, port)
+        # Send the command to the server
+        sock.sendall(cmd.encode() if isinstance(cmd, str) else cmd)
+
+        # Receive the response from the server
+        response = []
+        # Read one byte at a time so we can wait for the null terminator.
+        # this is to avoid waiting for the timeout as we don't know how long
+        # the response will be and socket.recv() will block until reading
+        # the specified number of bytes.
+        while data := sock.recv(2**3):
+            response.append(data)
+
+        result = "".join(block.decode() for block in response)
+        log.debug("received: %s", result)
+        return result
+
+
+def roundtrip(
+    host: str,
+    port: int,
+    cmd: bytes | str | dict[str, Any],
+    asjson: bool | None = True,
+    timeout: float | None = None,
+    retry: int | None = 0,
+    retry_delay: float | None = None,
+):
+    """utility wrapper around _roundrip
+
+    Example:
+        print(await roundtrip(host, port, {"version"}))
+        -> (json) {'STATUS': [{'Code': 22, 'Description': 'LUXminer 20 ...
+        print(await roundtrip(host, port, "version"))
+        -> (str) "{'STATUS': [{'Code': 22, 'Description': 'LUXminer 20 ..
+    """
+    timeout = TIMEOUT if timeout is None else timeout
+    retry = RETRIES if retry is None else retry
+    retry_delay = RETRIES_DELAY if retry_delay is None else retry_delay
+
+    if not isinstance(cmd, (bytes, str)):
+        cmd = json.dumps(cmd, indent=2, sort_keys=True)
+        if asjson is None:
+            asjson = True
+
+    last_exception = None
+    count = retry
+    t0 = time.monotonic()
+    while True:
+        if retry > 0 and count <= 0:
+            break
+        if timeout and (time.monotonic() - t0) >= timeout:
+            break
+
+        try:
+            res = _roundtrip(host, port, cmd, timeout)
+            if asjson:
+                return json.loads(res)
+            else:
+                return res
+        except Exception as e:
+            last_exception = e
+        log.debug("failed to retrieve result for '%s'", cmd)
+
+        if retry > 0:
+            count -= 1
+        if retry and retry_delay:
+            time.sleep(retry_delay)
+
+    if last_exception is not None:
+        raise exceptions.MinerCommandTimeoutError(host, port) from last_exception
+
+
+@wrapped
+def logon(host: str, port: int, timeout: float | None = None) -> str:
+    timeout = TIMEOUT if timeout is None else timeout
+    res = roundtrip(host, port, {"command": "logon"}, timeout=timeout)
+
+    # when we first logon, we'll receive a token (session_id)
+    #   [STATUS][SessionID]
+    # on subsequent logon, we receive a
+    #   [STATUS][Msg] == "Another session is active" ([STATUS][Code] 402)
+    if "SESSION" not in res and res.get("STATUS", [{}])[0].get("Code") == 402:
+        raise exceptions.MinerCommandSessionAlreadyActive(
+            host, port, "connection active", res
+        )
+    sessions = validate_message(host, port, res, "SESSION", 1, 1)
+
+    session = sessions[0]
+
+    if "SessionID" not in session:
+        raise exceptions.MinerCommandSessionAlreadyActive(
+            host, port, "no SessionID in data", res
+        )
+    return str(session["SessionID"])
+
+
+@wrapped
+def logoff(
+    host: str, port: int, sid: str, timeout: float | None = None
+) -> dict[str, Any]:
+    timeout = TIMEOUT if timeout is None else timeout
+    return roundtrip(
+        host, port, {"command": "logoff", "parameter": sid}, timeout=timeout
+    )
+
+
+def rexec(
+    host: str,
+    port: int,
+    cmd: str,
+    parameters: str | int | float | bool | list[Any] | dict[str, Any] | None = None,
+    timeout: float | None = None,
+    retry: int | None = None,
+    retry_delay: float | None = None,
+) -> dict[str, Any] | None:
+    parameters = parameters_to_list(parameters)
+
+    timeout = TIMEOUT if timeout is None else timeout
+    retry = RETRIES if retry is None else retry
+    retry_delay = RETRIES_DELAY if retry_delay is None else retry_delay
+
+    # if cmd is logon/logoff we dealt with it differently
+    if cmd in {"logon", "logoff"}:
+        failure = None
+        for i in range(retry or 1):
+            try:
+                if cmd == "logon":
+                    return {"sid": logon(host, port, timeout)}
+                else:
+                    return logoff(host, port, parameters[0])
+            except Exception as exc:
+                failure = exc
+            if retry and (i < retry) and retry_delay:
+                time.sleep(retry_delay)
+        if isinstance(failure, Exception):
+            raise failure
+
+    failure = None
+    sid = ""
+    for i in range(retry + 1):
+        if not logon_required(cmd):
+            log.debug("no logon required for command '%s' on %s:%i", cmd, host, port)
+            break
+        try:
+            sid = logon(host, port, timeout)
+            parameters = [sid, *parameters]
+            log.debug("session id requested & obtained for %s:%i (%s)", host, port, sid)
+            break
+        except Exception as exc:
+            failure = exc
+        if retry and (i < retry) and retry_delay:
+            time.sleep(retry_delay)
+
+    if isinstance(failure, Exception):
+        raise failure
+
+    packet = {"command": cmd}
+    if parameters:
+        packet["parameter"] = ",".join(parameters)
+    log.debug(
+        "executing command '%s' on '%s:%i' with parameters: %s",
+        cmd,
+        host,
+        port,
+        packet.get("parameter", ""),
+    )
+
+    failure = None
+    for i in range(retry + 1):
+        try:
+            ret = roundtrip(host, port, packet, timeout=timeout)
+            log.debug("received from %s:%s: %s", host, port, str(ret))
+            if sid:
+                logoff(host, port, sid)
+            return ret
+        except Exception as exc:
+            failure = exc
+        if retry and (i < retry) and retry_delay:
+            log.debug("failed attempt %i (out of %i)", i + 1, retry)
+            time.sleep(retry_delay)
+
+    if sid:
+        logoff(host, port, sid)
+    if isinstance(failure, Exception):
+        raise failure
+
+
+# !!! LEGACY CODE BELOW !!!
 
 
 # internal_send_cgminer_command sends a command to the
@@ -135,7 +412,7 @@ def get_str_field(struct: dict[str, Any], name: str) -> str:
     return s
 
 
-def logon(host: str, port: int, timeout: float | None = None) -> str:
+def __logon(host: str, port: int, timeout: float | None = None) -> str:
     # Send 'logon' command to cgminer and get the response
     timeout = TIMEOUT if timeout is None else timeout
     res = send_cgminer_simple_command(host, port, "logon", timeout)
@@ -146,7 +423,7 @@ def logon(host: str, port: int, timeout: float | None = None) -> str:
     return str(session["SessionID"])
 
 
-def logoff(
+def __logoff(
     host: str, port: int, sid: str, timeout: float | None = None
 ) -> dict[str, Any]:
     timeout = TIMEOUT if timeout is None else timeout
@@ -180,7 +457,7 @@ def execute_command(
 
     if logon_req:
         # Get a SessionID
-        sid = logon(host, port, timeout_sec)
+        sid = __logon(host, port, timeout_sec)
         # Add the SessionID to the parameters list at the left.
         parameters = add_session_id_parameter(sid, parameters)
 
@@ -202,12 +479,12 @@ def execute_command(
 
     # Log off to terminate the session
     if logon_req:
-        logoff(host, port, sid, timeout_sec)
+        __logoff(host, port, sid, timeout_sec)
 
     return res
 
 
-def rexec(
+def __rexec(
     host: str,
     port: int,
     cmd: str,

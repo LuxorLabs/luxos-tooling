@@ -54,7 +54,7 @@ async def _roundtrip(
     """simple asyncio socket based send/receive function
 
     Example:
-        print(await _roundtrip(host, port, version))
+        print(await _roundtrip(host, port, "version"))
         -> (str) "{'STATUS': [{'Code': 22, 'Description'...."
     """
     reader, writer = await asyncio.wait_for(
