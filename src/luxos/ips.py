@@ -40,6 +40,7 @@ def parse_expr(txt: str) -> None | tuple[str, str | None, int | None]:
         "sep": re.compile(":"),
         "div": re.compile("-"),
         "port": re.compile(r"(?P<port>\d+)"),
+        "address": re.compile(r"(?P<address>[^:]+)"),
     }
 
     txt2 = txt.replace(" ", "")
@@ -71,9 +72,9 @@ def parse_expr(txt: str) -> None | tuple[str, str | None, int | None]:
             return True
 
         start = end = port = None
-        if match(syntax, ["ip"]):
+        if match(syntax, [{"ip", "address"}]):
             start = items[0][1]
-        elif match(syntax, ["ip", "sep", "port"]):
+        elif match(syntax, [{"ip", "address"}, "sep", "port"]):
             start = items[0][1]
             port = int(items[2][1])
         elif match(syntax, ["ip", {"sep", "div"}, "ip"]):
@@ -94,6 +95,8 @@ def parse_expr(txt: str) -> None | tuple[str, str | None, int | None]:
             port1 = int(items[6][1])
             if port != port1:
                 raise AddressParsingError(f"ports mismatch {port} != {port1}")
+        else:
+            raise AddressParsingError(f"cannot parse '{txt}': {syntax=}")
         return start, end, port
 
     syntax = [item[0] for item in items]
@@ -196,6 +199,9 @@ def load_ips_from_csv(
     for line in Path(path).read_text().split("\n"):
         line = line.partition("#")[0]
         if not line.strip():
+            continue
+        # for excel, an exception
+        if line.strip().lower() == "hostname":
             continue
         for host, port2 in iter_ip_ranges(line, strict=strict):
             result.append((host, port2 or port))

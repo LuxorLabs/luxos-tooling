@@ -14,4 +14,9 @@ hostname
 # form no. 4 a range and a port
   127.0.0.5-127.0.0.7:9999
 
+# ok, we use addresses
 
+somehost
+another.host
+
+  one.more:12345
