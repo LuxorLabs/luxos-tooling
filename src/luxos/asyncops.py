@@ -182,19 +182,63 @@ def validate_message(
 
 
 def validate(
-    host: str,
-    port: int,
     res: dict[str, Any],
     extrakey: str | None = None,
     minfields: None | int = 1,
     maxfields: None | int = 1,
 ) -> Any:
-    res = validate_message(host, port, res, extrakey, minfields, maxfields)
-    if res["STATUS"][0]["STATUS"] != "S":
-        raise exceptions.MinerCommandFailedError(host, port, "failure in STATUS", res)
+    # all miner message comes with a STATUS
+    for key in ["STATUS", "id"]:
+        if key in res:
+            continue
+        raise exceptions.MinerMessageMalformedError(
+            f"missing {key} from message STATUS", res
+        )
 
-    if extrakey and isinstance(res, dict) and extrakey in res:
-        return res[extrakey]
+    # no further validation here
+    if not extrakey:
+        return res
+
+    if (status := res["STATUS"][0].get("STATUS")) != "S":
+        raise exceptions.MinerMessageError(
+            f"wrong status '{status}' in message (expected S)", res
+        )
+    # ok, when there aren't pools, the POOLS command
+    # doesn't add a 'POOLS': [] item
+    if extrakey not in res and not minfields:
+        return None
+
+    if extrakey not in res:
+        raise exceptions.MinerMessageInvalidError(
+            f"missing {extrakey} from message", res
+        )
+
+    values = res[extrakey]
+    n = len(values)
+    msg = None
+
+    cond = ""
+    if minfields is not None and maxfields is None:
+        cond = f" ({n} < {minfields})"
+    elif minfields is None and maxfields is not None:
+        cond = f" ({n} > {maxfields})"
+    elif minfields is not None and maxfields is not None:
+        if n > maxfields:
+            cond = f" ({n} > {maxfields})"
+        else:
+            cond = f" ({n} < {minfields})"
+
+    if (minfields is not None) and (n < minfields):
+        msg = f"found too few items for '{extrakey}' {cond}"
+    elif (maxfields is not None) and (n > maxfields):
+        msg = f"found too many items for '{extrakey}' {cond}"
+    if msg is not None:
+        raise exceptions.MinerMessageInvalidError(msg, res)
+
+    if isinstance(values, list):
+        if minfields == 1 and (minfields == maxfields):
+            return values[0]
+        return values
     return res
 
 
