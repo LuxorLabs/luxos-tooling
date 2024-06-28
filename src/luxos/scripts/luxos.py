@@ -116,7 +116,7 @@ async def main(args: argparse.Namespace):
     await async_luxos.run(
         args.addresses,
         cmd=args.cmd, params=args.parameters,
-        batchsize=args.batchsize, delay=2.0, details=args.details
+        batchsize=args.batchsize, delay=2.0, details=args.details or "all"
     )
 
 

@@ -12,8 +12,7 @@ Eg.
 from luxos import asyncops
 async def main(host: str, port: int):
     res = await asyncops.rexec(host, port, "version")
-    version = asyncops.validate_message(host, port, res, "VERSION")[0]
-    return version
+    return asyncops.validate(host, port, res, "VERSION")[0]
 
 # in the cli
 $> luxos-run --range 127.0.0.1 my-script.py --json
