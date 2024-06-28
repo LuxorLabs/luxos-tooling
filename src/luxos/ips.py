@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 from typing import Generator
 
-from .exceptions import LuxosBaseException
+from .exceptions import AddressParsingError, LuxosBaseException
 
 
 class DataParsingError(LuxosBaseException):
@@ -21,12 +21,26 @@ def splitip(txt: str) -> tuple[str, int | None]:
     return match["ip"], int(match["port"]) if match["port"] is not None else None
 
 
-def _parse_expr(txt: str) -> None | tuple[str, str, int | None]:
+def parse_expr(txt: str) -> None | tuple[str, str | None, int | None]:
+    """parse text into a (start, end, port) tuple.
+
+    Parses a text in these forms:
+        <ip>
+        <ip>:port
+        <startip>:<endip>
+        <startip>:<port>:<endip>
+    Eg.
+        >>> parse_expr("127.0.0.1")
+        ("127.0.0.1", None, None)
+        >>> ips.parse_expr("127.0.0.1:1234:127.0.0.3")
+        ("127.0.0.1", "127.0.0.3", 1234)
+    """
     tokens = {
         "ip": re.compile(r"(?P<ip>\d{1,3}([.]\d{1,3}){3})"),
         "sep": re.compile(":"),
         "div": re.compile("-"),
         "port": re.compile(r"(?P<port>\d+)"),
+        "address": re.compile(r"(?P<address>[^:]+)"),
     }
 
     txt2 = txt.replace(" ", "")
@@ -40,10 +54,10 @@ def _parse_expr(txt: str) -> None | tuple[str, str, int | None]:
                 txt2 = txt2[j:]
                 break
         else:
-            raise RuntimeError(f"cannot parse text '{txt}'")
+            raise AddressParsingError(f"cannot parse text '{txt}'")
 
     if len(items) == 0:
-        return None
+        raise AddressParsingError(f"cannot parse '{txt}'")
 
     def matcher(syntax):
         def match(left, right):
@@ -58,9 +72,9 @@ def _parse_expr(txt: str) -> None | tuple[str, str, int | None]:
             return True
 
         start = end = port = None
-        if match(syntax, ["ip"]):
+        if match(syntax, [{"ip", "address"}]):
             start = items[0][1]
-        elif match(syntax, ["ip", "sep", "port"]):
+        elif match(syntax, [{"ip", "address"}, "sep", "port"]):
             start = items[0][1]
             port = int(items[2][1])
         elif match(syntax, ["ip", {"sep", "div"}, "ip"]):
@@ -80,7 +94,9 @@ def _parse_expr(txt: str) -> None | tuple[str, str, int | None]:
             port = int(items[2][1])
             port1 = int(items[6][1])
             if port != port1:
-                raise RuntimeError(f"ports mismatch {port} != {port1}")
+                raise AddressParsingError(f"ports mismatch {port} != {port1}")
+        else:
+            raise AddressParsingError(f"cannot parse '{txt}': {syntax=}")
         return start, end, port
 
     syntax = [item[0] for item in items]
@@ -88,7 +104,7 @@ def _parse_expr(txt: str) -> None | tuple[str, str, int | None]:
 
 
 def iter_ip_ranges(
-    txt: str, port: int | None = None, rsep: str = "-", gsep: str = ","
+    txt: str, port: int | None = None, gsep: str = ",", strict: bool = True
 ) -> Generator[tuple[str, int | None], None, None]:
     """iterate over ip ranges.
 
@@ -113,7 +129,12 @@ def iter_ip_ranges(
     ```
     """
     for segment in txt.replace(" ", "").split(gsep):
-        if not (found := _parse_expr(segment)):
+        try:
+            if not (found := parse_expr(segment)):
+                continue
+        except AddressParsingError:
+            if strict:
+                raise
             continue
         start, end, theport = found
         if start is None and end is None:
@@ -130,7 +151,7 @@ def iter_ip_ranges(
 
 
 def ip_ranges(
-    txt: str, rsep: str = "-", gsep: str = ":"
+    txt: str, gsep: str = ":", strict: bool = True
 ) -> list[tuple[str, int | None]]:
     """return a list of ips given a text expression.
 
@@ -147,10 +168,12 @@ def ip_ranges(
 
     NOTE: use the `:` (gsep) to separate ips groups, and `-` (rsep) to define a range.
     """
-    return list(iter_ip_ranges(txt, rsep=rsep, gsep=gsep))
+    return list(iter_ip_ranges(txt, gsep=gsep, strict=strict))
 
 
-def load_ips_from_csv(path: Path | str, port: int = 4028) -> list[tuple[str, int]]:
+def load_ips_from_csv(
+    path: Path | str, port: int = 4028, strict: bool = False
+) -> list[tuple[str, int]]:
     """loads ip addresses from a csv file
 
     Example:
@@ -177,7 +200,10 @@ def load_ips_from_csv(path: Path | str, port: int = 4028) -> list[tuple[str, int
         line = line.partition("#")[0]
         if not line.strip():
             continue
-        for host, port2 in iter_ip_ranges(line):
+        # for excel, an exception
+        if line.strip().lower() == "hostname":
+            continue
+        for host, port2 in iter_ip_ranges(line, strict=strict):
             result.append((host, port2 or port))
     return result
 

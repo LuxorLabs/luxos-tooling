@@ -16,6 +16,38 @@ For a quick example how to control miners using the luxos api 👉 [here](#usage
 
 If you're developing a script, you might want to leverage the luxos cli package 👉 [here](docs/api/cli.md).
 
+## Quick scripting examples
+
+### launch a single command
+This will launch the version command on a single miner, returning the json output:
+```shell
+luxos --range 127.0.0.1 --cmd version
+```
+You can pass a "range" of ips:
+```shell
+luxos --range 127.0.0.1:127.0.0.4 --cmd version
+```
+Or you can save them in a csv file:
+```shell
+luxos --range @miners.csv --cmd version
+```
+
+### launch a script on multiple miner
+The `luxos-run` allow to "*run*" a script on miners:
+
+```shell
+luxos-run --range 127.0.0.1 my-script.py
+```
+(note the syntax is similar to luxos)
+
+The `my-script.py` file look like:
+```python
+from luxos import asyncops
+async def main(host: str, port: int):
+    res = await asyncops.rexec(host, port, "version")
+    return asyncops.validate(host, port, res, "VERSION")[0]
+```
+
 
 ## Installation
 
@@ -52,44 +84,30 @@ See files under the docs/folder.
 ## Examples
 This is a curated list of examples.
 
-### The LuxOS package - luxos
-
-This package offers a convenient way to interact with LuxOS through a command-line interface (CLI) or as Python packages for more advanced integrations.
-
-#### Usage (cli)
-
-The luxos wheel package comes with a luxos comand line script:
-
-This will reboot all miners in the `miner.csv` file list:
-```bash
-   $> luxos --ipfile miners.csv --cmd rebootdevice --timeout 2 --verbose
-   (same as)
-   $> python -m luxos --ipfile miners.csv --cmd rebootdevice --timeout 2 --verbose
-```
-
-There's an `async` version that can work better on multiple miners, just use the `--async` flag:
-```bash
-   $> luxos --ipfile miners.csv --cmd version --timeout 2 --async --all
-   > 10.206.1.153:4028
-   | {
-   |   "STATUS": [
-   |     {
-   |       "Code": 22,
-   |       "Description": "LUXminer 2024.5.1.155432-f2badc0f",
-```
-
-
-#### Usage (api)
+### Usage (api)
 
 You can use the python api to perform the commands instead the CLI.
 
-This is way to get version data from a miner:
+This is way to get version data from a miner (async version):
 ```python
 
-   >>> from luxos.api import execute_command
-   >>> execute_command("127.0.0.1", 4028, 2, "version", "", False)
+   >>> from luxos.asyncops import rexec, validate
+   >>> res = await rexec("127.0.0.1", 4028, "version")
    {'STATUS': [{'Code': 22, 'Description': 'LUXminer ...
-   ```
+   >>> validate(res, "VERSION")
+   {'API': '3.7', ...
+```
+
+There's a syncronous version, with identical calling conventions:
+```python
+
+   >>> from luxos.syncops import rexec, validate
+   >>> res = rexec("127.0.0.1", 4028, "version")
+   {'STATUS': [{'Code': 22, 'Description': 'LUXminer ...
+   >>> validate(res, "VERSION")
+   {'API': '3.7', ...
+```
+
 
 Alternatively, you can use the module `utils`, where there are support functions for one-shot command execution:
 

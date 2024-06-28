@@ -54,7 +54,7 @@ async def _roundtrip(
     """simple asyncio socket based send/receive function
 
     Example:
-        print(await _roundtrip(host, port, version))
+        print(await _roundtrip(host, port, "version"))
         -> (str) "{'STATUS': [{'Code': 22, 'Description'...."
     """
     reader, writer = await asyncio.wait_for(
@@ -142,6 +142,11 @@ def validate_message(
     if not extrakey:
         return res
 
+    if not res["STATUS"] or not res["STATUS"][0].get("STATUS") == "S":
+        raise exceptions.MinerCommandMalformedMessageError(
+            host, port, "no status information in message", res
+        )
+
     # TODO if minfield is 0, there might not be extrakey
     if minfields == 0 and extrakey not in res:
         return []
@@ -172,8 +177,69 @@ def validate_message(
     elif (maxfields is not None) and (n > maxfields):
         msg = f"found too many items for '{extrakey}' {cond}"
     if msg is None:
-        return res[extrakey]
+        return res
     raise exceptions.MinerCommandMalformedMessageError(host, port, msg, res)
+
+
+def validate(
+    res: dict[str, Any],
+    extrakey: str | None = None,
+    minfields: None | int = 1,
+    maxfields: None | int = 1,
+) -> Any:
+    # all miner message comes with a STATUS
+    for key in ["STATUS", "id"]:
+        if key in res:
+            continue
+        raise exceptions.MinerMessageMalformedError(
+            f"missing {key} from message STATUS", res
+        )
+
+    # no further validation here
+    if not extrakey:
+        return res
+
+    if (status := res["STATUS"][0].get("STATUS")) != "S":
+        raise exceptions.MinerMessageError(
+            f"wrong status '{status}' in message (expected S)", res
+        )
+    # ok, when there aren't pools, the POOLS command
+    # doesn't add a 'POOLS': [] item
+    if extrakey not in res and not minfields:
+        return None
+
+    if extrakey not in res:
+        raise exceptions.MinerMessageInvalidError(
+            f"missing {extrakey} from message", res
+        )
+
+    values = res[extrakey]
+    n = len(values)
+    msg = None
+
+    cond = ""
+    if minfields is not None and maxfields is None:
+        cond = f" ({n} < {minfields})"
+    elif minfields is None and maxfields is not None:
+        cond = f" ({n} > {maxfields})"
+    elif minfields is not None and maxfields is not None:
+        if n > maxfields:
+            cond = f" ({n} > {maxfields})"
+        else:
+            cond = f" ({n} < {minfields})"
+
+    if (minfields is not None) and (n < minfields):
+        msg = f"found too few items for '{extrakey}' {cond}"
+    elif (maxfields is not None) and (n > maxfields):
+        msg = f"found too many items for '{extrakey}' {cond}"
+    if msg is not None:
+        raise exceptions.MinerMessageInvalidError(msg, res)
+
+    if isinstance(values, list):
+        if minfields == 1 and (minfields == maxfields):
+            return values[0]
+        return values
+    return res
 
 
 @wrapped
@@ -189,7 +255,7 @@ async def logon(host: str, port: int, timeout: float | None = None) -> str:
         raise exceptions.MinerCommandSessionAlreadyActive(
             host, port, "connection active", res
         )
-    sessions = validate_message(host, port, res, "SESSION", 1, 1)
+    sessions = validate_message(host, port, res, "SESSION", 1, 1)["SESSION"]
 
     session = sessions[0]
 
@@ -317,7 +383,7 @@ async def with_atm(host, port, enabled: bool, timeout: float | None = None):
     res = await rexec(host, port, "atm", timeout=timeout)
     if not res:
         raise exceptions.MinerConnectionError(host, port, "cannot check atm")
-    current = validate_message(host, port, res, "ATM")[0]["Enabled"]
+    current = validate_message(host, port, res, "ATM")["ATM"][0]["Enabled"]
     await rexec(host, port, "atmset", {"enabled": enabled}, timeout=timeout)
     # TODO
     yield current

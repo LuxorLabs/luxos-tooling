@@ -5,13 +5,11 @@ defined on the command line (--range/--range_start/--range-end) or in a file (ya
 """
 from __future__ import annotations
 import asyncio
-import contextlib
 import logging
 import argparse
 from pathlib import Path
 
 from ..cli import v1 as cli
-from ..syncops import execute_command
 
 log = logging.getLogger(__name__)
 
@@ -21,8 +19,8 @@ def add_arguments(parser: cli.LuxosParserBase) -> None:
     def add_miners_arguments(group):
         group.add_argument("--range_start", help="IP start range")
         group.add_argument("--range_end", help="IP end range")
-        group.add_argument("--ipfile", default=Path("ips.csv"), type=Path,
-            help="File name to store IP addresses"
+        group.add_argument("--ipfile", type=Path,
+            help="File name to store IP addresses (csv)"
         )
 
         group.add_argument("--range", action="append", dest="addresses",
@@ -81,8 +79,11 @@ def process_args(args: argparse.Namespace):
         elif args.range_end:
             args.error("--range_end requires --range_start")
 
-        if args.ipfile.exists():
-            args.addresses.extend(load_ips_from_csv(args.ipfile))
+        if args.ipfile:
+            if args.ipfile.exists():
+                args.addresses.extend(load_ips_from_csv(args.ipfile))
+            else:
+                args.error(f"file not found {args.ipfile}")
 
         args.addresses = [
             (host, port or args.luxos_port)
@@ -91,7 +92,7 @@ def process_args(args: argparse.Namespace):
 
     process_addresses()
     if not args.addresses:
-        args.error("need one of the miners group flags (eg. --range_{start|end}/--range")
+        args.error("need a miners flag (eg. --range_{start|end}/--range/--ipfile)")
 
     lparameters : list[str] = []
     dparameters : dict[str, str] = {}
@@ -115,7 +116,7 @@ async def main(args: argparse.Namespace):
     await async_luxos.run(
         args.addresses,
         cmd=args.cmd, params=args.parameters,
-        batchsize=args.batchsize, delay=2.0, details=args.details
+        batchsize=args.batchsize, delay=2.0, details=args.details or "all"
     )
 
 

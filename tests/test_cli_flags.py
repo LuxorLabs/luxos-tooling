@@ -15,6 +15,13 @@ def test_type_range(resolver):
         ("127.0.0.3", None),
     ]
 
+    assert flags.type_range("a.host") == [
+        ("a.host", None),
+    ]
+    assert flags.type_range("a.host:111") == [
+        ("a.host", 111),
+    ]
+
     # many ways to express the same range
     fmts = [
         "127.0.0.1:1234-127.0.0.2",
@@ -31,6 +38,7 @@ def test_type_range(resolver):
         ]
 
     pytest.raises(argparse.ArgumentTypeError, flags.type_range, "12")
+    pytest.raises(argparse.ArgumentTypeError, flags.type_range, "a.host:another.host")
 
 
 def test_type_hhmm():

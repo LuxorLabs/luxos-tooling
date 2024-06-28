@@ -5,6 +5,26 @@ class LuxosBaseException(Exception):
     pass
 
 
+# for all broken messages coming back from miners
+class MinerMessageReplyError(LuxosBaseException):
+    pass
+
+
+# messages missing the STATUS/id field
+class MinerMessageMalformedError(MinerMessageReplyError):
+    pass
+
+
+# messages with a STATUS = 'E'
+class MinerMessageError(MinerMessageReplyError):
+    pass
+
+
+# message reply format invalid
+class MinerMessageInvalidError(MinerMessageReplyError):
+    pass
+
+
 class MinerConnectionError(LuxosBaseException):
     def __init__(self, host: str, port: int, *args, **kwargs):
         super().__init__(host, port, *args, **kwargs)
@@ -34,6 +54,10 @@ class MinerCommandMalformedMessageError(MinerConnectionError):
     pass
 
 
+class MinerCommandFailedError(MinerConnectionError):
+    pass
+
+
 class LuxosLaunchError(MinerConnectionError):
     def __init__(self, tback: str, host: str, port: int, *args, **kwargs):
         self.tback = tback
@@ -47,4 +71,8 @@ class LuxosLaunchError(MinerConnectionError):
 
 
 class LuxosLaunchTimeoutError(LuxosLaunchError, asyncio.TimeoutError):
+    pass
+
+
+class AddressParsingError(LuxosBaseException):
     pass

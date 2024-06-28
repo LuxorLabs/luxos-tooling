@@ -136,6 +136,16 @@ def miner_host_port() -> tuple[str, int]:
     return (host, int(port or 4028))
 
 
+@pytest.fixture(scope="function")
+def host(miner_host_port):
+    return miner_host_port[0]
+
+
+@pytest.fixture(scope="function")
+def port(miner_host_port):
+    return miner_host_port[1]
+
+
 def pytest_addoption(parser):
     parser.addoption(
         "--manual",
