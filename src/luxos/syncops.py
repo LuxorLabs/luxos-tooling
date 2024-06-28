@@ -16,6 +16,7 @@ from .asyncops import (
     RETRIES_DELAY,
     TIMEOUT,
     parameters_to_list,
+    validate,  # noqa: F401
     validate_message,
 )
 from .exceptions import MinerCommandSessionAlreadyActive, MinerConnectionError
@@ -188,7 +189,7 @@ def logon(host: str, port: int, timeout: float | None = None) -> str:
         )
     sessions = validate_message(host, port, res, "SESSION", 1, 1)
 
-    session = sessions[0]
+    session = sessions["SESSION"][0]
 
     if "SessionID" not in session:
         raise exceptions.MinerCommandSessionAlreadyActive(
@@ -503,7 +504,7 @@ def with_atm(host, port, enabled: bool, timeout: float | None = None):
     res = rexec(host, port, "atm", timeout=timeout)
     if not res:
         raise MinerConnectionError(host, port, "cannot check atm")
-    current = validate_message(host, port, res, "ATM")[0]["Enabled"]
+    current = validate_message(host, port, res, "ATM")["ATM"][0]["Enabled"]
     rexec(host, port, "atmset", {"enabled": enabled}, timeout=timeout)
     yield current
     rexec(host, port, "atmset", {"enabled": current}, timeout=timeout)

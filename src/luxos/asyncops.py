@@ -177,8 +177,25 @@ def validate_message(
     elif (maxfields is not None) and (n > maxfields):
         msg = f"found too many items for '{extrakey}' {cond}"
     if msg is None:
-        return res[extrakey]
+        return res
     raise exceptions.MinerCommandMalformedMessageError(host, port, msg, res)
+
+
+def validate(
+    host: str,
+    port: int,
+    res: dict[str, Any],
+    extrakey: str | None = None,
+    minfields: None | int = 1,
+    maxfields: None | int = 1,
+) -> Any:
+    res = validate_message(host, port, res, extrakey, minfields, maxfields)
+    if res["STATUS"][0]["STATUS"] != "S":
+        raise exceptions.MinerCommandFailedError(host, port, "failure in STATUS", res)
+
+    if extrakey and isinstance(res, dict) and extrakey in res:
+        return res[extrakey]
+    return res
 
 
 @wrapped
@@ -194,7 +211,7 @@ async def logon(host: str, port: int, timeout: float | None = None) -> str:
         raise exceptions.MinerCommandSessionAlreadyActive(
             host, port, "connection active", res
         )
-    sessions = validate_message(host, port, res, "SESSION", 1, 1)
+    sessions = validate_message(host, port, res, "SESSION", 1, 1)["SESSION"]
 
     session = sessions[0]
 
@@ -322,7 +339,7 @@ async def with_atm(host, port, enabled: bool, timeout: float | None = None):
     res = await rexec(host, port, "atm", timeout=timeout)
     if not res:
         raise exceptions.MinerConnectionError(host, port, "cannot check atm")
-    current = validate_message(host, port, res, "ATM")[0]["Enabled"]
+    current = validate_message(host, port, res, "ATM")["ATM"][0]["Enabled"]
     await rexec(host, port, "atmset", {"enabled": enabled}, timeout=timeout)
     # TODO
     yield current
