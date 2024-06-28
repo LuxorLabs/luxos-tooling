@@ -56,10 +56,10 @@ def test_validate_message():
 
     res = {"STATUS": [{"STATUS": "S"}], "id": 2, "KEY": [1, 2, 3]}
     assert validate(res)
-    assert validate(res, "KEY", 0, None) == [1, 2, 3]
-    assert validate(res, "KEY", None, None) == [1, 2, 3]
-    assert validate(res, "KEY", None, 5) == [1, 2, 3]
-    assert validate(res, "KEY", 1, 5) == [1, 2, 3]
+    assert validate(res, "KEY", 0, None)["KEY"] == [1, 2, 3]
+    assert validate(res, "KEY", None, None)["KEY"] == [1, 2, 3]
+    assert validate(res, "KEY", None, 5)["KEY"] == [1, 2, 3]
+    assert validate(res, "KEY", 1, 5)["KEY"] == [1, 2, 3]
 
     with pytest.raises(exceptions.MinerCommandMalformedMessageError) as excinfo:
         validate(res, "KEY", 4, None)
@@ -100,6 +100,7 @@ async def test_private_roundtrip_many_listeners(echopool):
 @pytest.mark.asyncio
 async def test_miner_logon_logoff_cycle(miner_host_port):
     host, port = miner_host_port
+    await aapi.rexec(host, port, "kill")
 
     sid = None
     try:
@@ -114,6 +115,8 @@ async def test_miner_logon_logoff_cycle(miner_host_port):
 @pytest.mark.asyncio
 async def test_miner_double_logon_cycle(miner_host_port):
     host, port = miner_host_port
+
+    await aapi.rexec(host, port, "kill")
 
     sid = await aapi.logon(host, port)
     try:

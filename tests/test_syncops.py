@@ -10,7 +10,7 @@ pytestmark = pytest.mark.manual
 def test__roundtrip(host, port):
     pytest.raises(ConnectionRefusedError, syncops._roundtrip, host, port + 1, "version")
     res = syncops._roundtrip(host, port, "version")
-    assert res.startswith("STATUS=")
+    assert res.startswith("STATUS=S")
 
 
 def test_roundtrip(host, port):
@@ -24,11 +24,14 @@ def test_roundtrip(host, port):
     )
 
     res = syncops.roundtrip(host, port, "version", asjson=False)
-    assert res.startswith("STATUS=")
+    assert res.startswith("STATUS=S")
 
 
 def test_miner_logon_logoff_cycle(miner_host_port):
     host, port = miner_host_port
+
+    res = syncops.roundtrip(host, port, "kill", asjson=False)
+    assert res.startswith("STATUS=S")
 
     sid = None
     try:
@@ -42,6 +45,9 @@ def test_miner_logon_logoff_cycle(miner_host_port):
 
 def test_miner_double_logon_cycle(miner_host_port):
     host, port = miner_host_port
+
+    res = syncops.roundtrip(host, port, "kill", asjson=False)
+    assert res.startswith("STATUS=S")
 
     sid = syncops.logon(host, port)
     try:
@@ -139,7 +145,7 @@ def test_atm_flip(miner_host_port):
 
     def getatm():
         res = syncops.rexec(host, port, "atm")
-        return syncops.validate_message(host, port, res, "ATM")[0]["Enabled"]
+        return syncops.validate_message(host, port, res, "ATM")["ATM"][0]["Enabled"]
 
     # current status
     status = getatm()
