@@ -34,6 +34,10 @@ class MinerCommandMalformedMessageError(MinerConnectionError):
     pass
 
 
+class MinerCommandFailedError(MinerConnectionError):
+    pass
+
+
 class LuxosLaunchError(MinerConnectionError):
     def __init__(self, tback: str, host: str, port: int, *args, **kwargs):
         self.tback = tback
