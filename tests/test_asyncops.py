@@ -99,9 +99,11 @@ def test_validate_with_extrakey_check_many_results(resolver):
         exceptions.MinerMessageInvalidError, aapi.validate, res, "GROUPS", 1, 2
     )
     pytest.raises(
-        exceptions.MinerMessageInvalidError, aapi.validate, res, "GROUPS", 1, 4
+        exceptions.MinerMessageInvalidError, aapi.validate, res, "GROUPS", 1, 3
     )
-    groups = aapi.validate(res, "GROUPS", 1, None)
+    groups = aapi.validate(res, "GROUPS", 1, 4)
+    groups1 = aapi.validate(res, "GROUPS", 1, None)
+    assert groups == groups1
     assert isinstance(groups, list) and len(groups) == 4
     assert groups[3]["GROUP"] == 3 and groups[3]["Name"] == "test-group2"
     pytest.raises(
