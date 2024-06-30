@@ -58,21 +58,5 @@ class MinerCommandFailedError(MinerConnectionError):
     pass
 
 
-class LuxosLaunchError(MinerConnectionError):
-    def __init__(self, tback: str, host: str, port: int, *args, **kwargs):
-        self.tback = tback
-        super().__init__(host, port, *args, **kwargs)
-
-    def __str__(self):
-        from .text import indent
-
-        msg = indent(str(self.tback), "| ")
-        return f"{self.address}: \n{msg}"
-
-
-class LuxosLaunchTimeoutError(LuxosLaunchError, asyncio.TimeoutError):
-    pass
-
-
 class AddressParsingError(LuxosBaseException):
     pass

@@ -6,81 +6,94 @@ import asyncio
 import dataclasses as dc
 import functools
 import traceback
-from typing import Any, Callable
+from typing import Any, Awaitable, Callable
 
 import luxos.misc
 from luxos.asyncops import rexec  # noqa: F401
 
 # we bring here functions from other modules
-from luxos.exceptions import (  # noqa: F401
-    LuxosLaunchError,
-    LuxosLaunchTimeoutError,
-    MinerConnectionError,
-)
+from luxos.exceptions import MinerCommandTimeoutError
 from luxos.ips import ip_ranges, load_ips_from_csv  # noqa: F401
 from luxos.syncops import execute_command  # noqa: F401
 
+# + LuxosLaunchBaseResult
+#    + LuxosLaunchResult
+#    + LuxosLaunchError
+#       + LuxosLaunchTimeoutError
+
 
 @dc.dataclass
-class LuxosLaunchResult:
+class LuxosLaunchBaseResult:
     host: str
     port: int
-    data: Any
 
     @property
     def address(self):
         return f"{self.host}:{self.port}"
 
 
+@dc.dataclass
+class LuxosLaunchResult(LuxosLaunchBaseResult):
+    data: Any = None
+
+
+@dc.dataclass
+class LuxosLaunchError(LuxosLaunchBaseResult):
+    traceback: str | None = None
+    brief: str = ""
+
+
+@dc.dataclass
+class LuxosLaunchTimeoutError(LuxosLaunchError, asyncio.TimeoutError):
+    pass
+
+
 async def launch(
-    addresses: list[tuple[str, int]], call: Callable[[str, int], Any], *args, **kwargs
-) -> Any:
+    addresses: list[tuple[str, int]],
+    function: Callable[[str, int], Awaitable[Any]],
+    batch: int = 0,
+    asobj: bool = False,
+) -> list[LuxosLaunchError | LuxosLaunchTimeoutError | Any]:
     """launch an async function on a list of (host, port) miners
 
-    Special kwargs:
-        - batch: execute operation in group of batch tasks (rate limiting)
-        - naked: do not wrap the call, so is up to you catching exceptions
-        - raw: do not wrap the result in
-    Eg.
-        async printme(host, port, value):
-            print(await rexec(host, port, "version"))
-        asyncio.run(launch([("127.0.0.1", 4028)], printme, value=11, batch=10))
-    """
+    Arguments:
+        batch: limit the number of concurrent calls
+        asobj: if True all results will be instances subclasses
+               of LuxosLaunchBaseResult
 
-    # a naked options, wraps the 'call' and re-raise exceptions as LuxosLaunchError
-    naked = kwargs.pop("naked") if "naked" in kwargs else None
-    raw = kwargs.pop("raw") if "raw" in kwargs else True
+    Eg.
+        async printme(host, port):
+            print(await rexec(host, port, "version"))
+        addresses = load_ips_from_csv("miners.csv")
+        asyncio.run(launch(addresses, printme))
+    """
 
     def wraps(fn):
         @functools.wraps(fn)
         async def _fn(host: str, port: int):
+            out = None
             try:
                 data = await fn(host, port)
-                return data if raw else LuxosLaunchResult(host, port, data)
-            except asyncio.TimeoutError as exc:
+                out = LuxosLaunchResult(host, port, data) if asobj else data
+            except (asyncio.TimeoutError, MinerCommandTimeoutError) as exc:
                 tback = "".join(traceback.format_exc())
-                raise LuxosLaunchTimeoutError(tback, host, port) from exc
+                brief = repr(exc.__context__ or exc.__cause__)
+                out = LuxosLaunchTimeoutError(host, port, traceback=tback, brief=brief)
             except Exception as exc:
                 tback = "".join(traceback.format_exc())
-                raise LuxosLaunchError(tback, host, port) from exc
+                brief = repr(exc.__context__ or exc.__cause__)
+                out = LuxosLaunchError(host, port, traceback=tback, brief=brief)
+            return out
 
         return _fn
 
-    n = int(kwargs.pop("batch") or 0) if "batch" in kwargs else None
-    if n and n < 0:
-        raise RuntimeError(
-            f"cannot pass the 'batch' keyword argument with a value < 0: batch={n}"
-        )
-    if not naked:
-        call = wraps(call)
-
-    if n:
+    call = wraps(function)
+    if batch:
         result = []
-        for subaddresses in luxos.misc.batched(addresses, n):
-            tasks = [call(*address, *args, **kwargs) for address in subaddresses]
-            for task in await asyncio.gather(*tasks, return_exceptions=True):
-                result.append(task)
+        for subaddresses in luxos.misc.batched(addresses, batch):
+            tasks = [call(*address) for address in subaddresses]
+            result.extend(await asyncio.gather(*tasks, return_exceptions=True))
         return result
     else:
-        tasks = [call(*address, *args, **kwargs) for address in addresses]
+        tasks = [call(*address) for address in addresses]
         return await asyncio.gather(*tasks, return_exceptions=True)
