@@ -62,4 +62,4 @@ docs:  ## build documentation
 
 .PHONY: serve
 serve:  ## start a documentation server with autoreload
-	@python -m sphinx_autobuild docs build\docs
+	@python -m sphinx_autobuild docs build/docs
