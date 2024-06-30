@@ -184,9 +184,12 @@ def validate_message(
 def validate(
     res: dict[str, Any],
     extrakey: str | None = None,
-    minfields: None | int = 1,
-    maxfields: None | int = 1,
+    minfields: None | int = None,
+    maxfields: None | int = None,
 ) -> Any:
+    if minfields is not None and maxfields is not None:
+        if minfields > maxfields:
+            raise RuntimeError(f"invalid arguments: {minfields=} > {maxfields=}")
     # all miner message comes with a STATUS
     for key in ["STATUS", "id"]:
         if key in res:
@@ -214,6 +217,11 @@ def validate(
         )
 
     values = res[extrakey]
+    if not isinstance(values, list):
+        raise exceptions.MinerMessageMalformedError(
+            f"message reply doesn't containa list in '{extrakey}'", res
+        )
+
     n = len(values)
     msg = None
 
@@ -236,10 +244,10 @@ def validate(
         raise exceptions.MinerMessageInvalidError(msg, res)
 
     if isinstance(values, list):
-        if minfields == 1 and (minfields == maxfields):
+        ones = (len(values), minfields, maxfields)
+        if ones == (1, 1, 1):
             return values[0]
-        return values
-    return res
+    return values
 
 
 @wrapped
