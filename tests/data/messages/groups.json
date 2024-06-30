@@ -1,0 +1,34 @@
+{
+  "GROUPS": [
+    {
+      "GROUP": 0,
+      "Name": "default",
+      "Quota": 1.0
+    },
+    {
+      "GROUP": 1,
+      "Name": "test-group1",
+      "Quota": 1.0
+    },
+    {
+      "GROUP": 2,
+      "Name": "test-group1",
+      "Quota": 1.0
+    },
+    {
+      "GROUP": 3,
+      "Name": "test-group2",
+      "Quota": 1.0
+    }
+  ],
+  "STATUS": [
+    {
+      "Code": 324,
+      "Description": "LUXminer",
+      "Msg": "List groups",
+      "STATUS": "S",
+      "When": 1520678846
+    }
+  ],
+  "id": 1
+}
