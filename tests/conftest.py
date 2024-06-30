@@ -3,12 +3,14 @@ from __future__ import annotations
 
 import contextlib
 import dataclasses as dc
+import json
 import os
 import subprocess
 import sys
 import time
 import types
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -38,6 +40,13 @@ def resolver(request):
                 if candidate.exists():
                     return candidate
             raise FileNotFoundError(f"cannot find {path}", candidates)
+
+        def load(self, path: Path, mode: str | None = None) -> Any:
+            source = self.lookup(path)
+            mode = mode or source.suffix.strip(".")
+            if mode == "json":
+                return json.loads(source.read_text())
+            raise RuntimeError(f"mode '{mode}' not supported")
 
     yield Resolver(DATADIR, request.module.__name__)
 
