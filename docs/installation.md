@@ -7,16 +7,16 @@ $> pip install luxos
 ```
 :::
 
-
 These are detailed end-to-end instructions how to:
-- install a python interpreter
-- create a *virtual* envioronment
-- install luxos
+- install a python interpreter (usually done once per python release, eg. 3.10.1, 3.12.1 etc.)
+- create as many *virtual* environment **venv** needed (this is done once per new environment)
+- install luxos package in a **venv**
 
 
 ## Install a python interpreter
 
-Here there are many choices, depending on the platform.
+This step is done usually once per new python release, and it can be done by 
+an administrator (in which case the install might be read-only to the user).
 
 ::::{tabs}
 :::{tab} Windows

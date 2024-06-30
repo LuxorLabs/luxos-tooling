@@ -9,7 +9,7 @@ import traceback
 from typing import Any, Awaitable, Callable
 
 import luxos.misc
-from luxos.asyncops import rexec  # noqa: F401
+from luxos.asyncops import rexec, validate  # noqa: F401
 
 # we bring here functions from other modules
 from luxos.exceptions import MinerCommandTimeoutError
