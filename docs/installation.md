@@ -110,7 +110,7 @@ $> python3 -m venv $(pwd)/venv
 :::
 :::{tab} Windows
 This will create a new venv directory in the current working dir:
-``` cmd
+```bat
 $> python3 -m venv %CD%\venv
 ```
 :::
@@ -128,7 +128,7 @@ $> source $(pwd)/venv/bin/activate
 ```
 :::
 :::{tab} Windows
-``` cmd
+```bat
 $> %CD%\venv\Scripts\activate.bat
 ```
 :::

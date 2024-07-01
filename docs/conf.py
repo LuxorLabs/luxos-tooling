@@ -14,6 +14,7 @@ author = "A. Cavallo"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
+    "sphinx.ext.autodoc",
     "myst_parser",
     "sphinx_tabs.tabs",
     "sphinx_design",
