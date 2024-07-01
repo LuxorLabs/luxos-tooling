@@ -117,14 +117,12 @@ async def test_launch_with_exceptions(miner_host_port):
     async def broken(host, port):
         return (await utils.rexec(host, port, "config"))["CONFIG"][0]["ProfilXe"]
 
-    result = (await utils.launch([(host, port)], broken))[0]
-    assert isinstance(result, utils.MinerConnectionError)
+    result = (await utils.launch([(host, port)], broken, asobj=True))[0]
+    assert isinstance(result, utils.LuxosLaunchBaseResult)
     assert isinstance(result, utils.LuxosLaunchError)
-    assert isinstance(result, Exception)
-    assert "KeyError: 'ProfilXe'" in str(result)
+    assert "KeyError: 'ProfilXe'" in result.traceback
 
     result = (await utils.launch([(host, port + 1)], broken))[0]
-    assert isinstance(result, utils.MinerConnectionError)
     assert isinstance(result, utils.LuxosLaunchTimeoutError)
     assert isinstance(result, asyncio.TimeoutError)
-    assert "ConnectionRefusedError" in str(result)
+    assert "ConnectionRefusedError" in str(result.traceback)

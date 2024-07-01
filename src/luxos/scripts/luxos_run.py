@@ -29,7 +29,7 @@ import logging
 import pickle
 from pathlib import Path
 
-from luxos import misc, utils
+from luxos import misc, text, utils
 
 from ..cli import v1 as cli
 
@@ -40,6 +40,8 @@ def add_arguments(parser: cli.LuxosParserBase) -> None:
     cli.flags.add_arguments_new_miners_ips(parser)
     cli.flags.add_arguments_rexec(parser)
     parser.add_argument("script", type=Path, help="python script to run")
+    parser.add_argument("-n", "--batch", type=int, help="limit parallel executions")
+
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--json", action="store_true", help="json output")
     group.add_argument("--pickle", type=Path, help="pickle output")
@@ -59,11 +61,23 @@ async def main(args: argparse.Namespace):
         args.error(f"no entry point main in {args.script}")
 
     result = {}
-    for data in await utils.launch(args.addresses, module.main, raw=False):
+    for data in await utils.launch(
+        args.addresses, module.main, batch=args.batch, asobj=True
+    ):
         if isinstance(data, utils.LuxosLaunchTimeoutError):
-            log.warning("timeout error connecting to %s", data.address)
+            log.warning(
+                "failed connection to %s: %s\n%s",
+                data.address,
+                data.brief,
+                text.indent(data.traceback or "", "| "),
+            )
         elif isinstance(data, utils.LuxosLaunchError):
-            log.warning("failed to fetch data from %s: \n%s", data.address, data.tback)
+            log.warning(
+                "insternal error from %s: %s\n%s",
+                data.address,
+                data.brief,
+                text.indent(data.traceback or "", "| "),
+            )
         else:
             result[data.address] = data.data
 

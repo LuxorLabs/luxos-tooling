@@ -1,0 +1,22 @@
+{
+  "ATM": [
+    {
+      "Enabled": false,
+      "MaxProfile": "580MHz",
+      "MinProfile": "",
+      "PostRampMinutes": 1,
+      "StartupMinutes": 1,
+      "TempWindow": 3.0
+    }
+  ],
+  "STATUS": [
+    {
+      "Code": 339,
+      "Description": "LUXminer",
+      "Msg": "ATM configuration values",
+      "STATUS": "S",
+      "When": 1520679001
+    }
+  ],
+  "id": 1
+}
