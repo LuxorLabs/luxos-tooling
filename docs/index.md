@@ -131,7 +131,7 @@ The `rexec` function allows to send a command to a miner and return the response
 ```python
    
     from luxos import utils
-    res = utils.asyncio.run(utils.rexec("10.206.0.157", 4028, "version"))
+    res = utils.asyncio.run(utils.rexec("127.0.0.1", 4028, "version"))
     # this is the validate helper
     print(utils.validate(res, "VERSION", 1, 1))
 ```
@@ -174,5 +174,3 @@ asyncio.run(utils.launch(addresses, task, batch=4))
 # a one liner
 asyncio.run(utils.launch(addresses, lambda h, p: utils.rexec(h, p, "version"), batch=None))
 ```
-
-

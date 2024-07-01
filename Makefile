@@ -67,4 +67,4 @@ serve:  ## start a documentation server with autoreload
 
 .PHONY: publish
 publish:  ## publish pages to github
-	@python support/publish.py --commit build/gh-pages
+	@python support/publish.py --commit build/gh-pages && rm -rf build/gh-pages
