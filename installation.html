@@ -317,7 +317,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-a-python-interpreter">Install a python interpreter</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#managing-a-virtual-environment">Managing a virtual environment</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#virtual-environments">Virtual environments</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-new-environment">Create a new environment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#activate-the-environment">Activate the environment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uisng-the-newly-creating-environemn">Uisng the newly creating environemn</a></li>
@@ -345,17 +345,18 @@ document.write(`
 </div>
 <p>These are detailed end-to-end instructions how to:</p>
 <ul class="simple">
-<li><p>install a python interpreter</p></li>
-<li><p>create a <em>virtual</em> envioronment</p></li>
-<li><p>install luxos</p></li>
+<li><p>install a python interpreter (usually done once per python release, eg. 3.10.1, 3.12.1 etc.)</p></li>
+<li><p>create as many <em>virtual</em> environment <strong>venv</strong> needed (this is done once per new environment)</p></li>
+<li><p>install luxos package in a <strong>venv</strong></p></li>
 </ul>
 <section id="install-a-python-interpreter">
 <h2>Install a python interpreter<a class="headerlink" href="#install-a-python-interpreter" title="Link to this heading">#</a></h2>
-<p>Here there are many choices, depending on the platform.</p>
+<p>This step is done usually once per new python release, and it can be done by
+an administrator (in which case the install might be read-only to the user).</p>
 <div class="sphinx-tabs docutils container">
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Windows</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Mac OS native</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">Mac OS brew</button><button aria-controls="panel-0-0-3" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-3" name="0-3" role="tab" tabindex="-1">Linux</button><button aria-controls="panel-0-0-4" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-4" name="0-4" role="tab" tabindex="-1">Conda</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>Head to <a class="reference external" href="https://www.python.org/downloads">python</a> and download the
 most recent installer following the on-screen instructions.</p>
-</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>MacOS comes pre-installed with python (3.9 under /usr/bin/python), which is supported .. just.</p>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>MacOS comes pre-installed with python (3.9 under /usr/bin/python), which is supported.. just.</p>
 <p>You’d better off installing an updated version from <a class="reference external" href="https://www.python.org/downloads">python</a>,
 and follow the instructions.</p>
 </div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><p><a class="reference external" href="https://brew.sh">Brew</a> is a very popular tool to install packages, including python. Once brew is setup
@@ -389,14 +390,17 @@ Python<span class="w"> </span><span class="m">3</span>.12.3
 </div>
 </div>
 </section>
-<section id="managing-a-virtual-environment">
-<h2>Managing a virtual environment<a class="headerlink" href="#managing-a-virtual-environment" title="Link to this heading">#</a></h2>
-<p>A <strong>virtual environment</strong> is a filesystem directory holding executable, libraries and all sort of artifatcs
-brough in using a <strong>package</strong> installed by a <strong>package manager</strong>.</p>
+<section id="virtual-environments">
+<h2>Virtual environments<a class="headerlink" href="#virtual-environments" title="Link to this heading">#</a></h2>
+<p>A <strong>virtual environment</strong> is a filesystem directory holding executable, libraries and
+all sort of ancillary files (”<em>data</em>”): it is initially created using the python
+interpreter itself, activated using an <strong>activate</strong> script (that sets the PATH
+to the directory) and files are installed using a <strong>package manager</strong> that installs
+a <strong>package</strong>.</p>
 <p>In case of python:</p>
 <ul class="simple">
-<li><p>a package manager could be <code class="docutils literal notranslate"><span class="pre">pip</span></code> or <code class="docutils literal notranslate"><span class="pre">conda</span></code></p></li>
-<li><p>a package can be a python wheel <code class="docutils literal notranslate"><span class="pre">.whl</span></code> file or a conda file (<code class="docutils literal notranslate"><span class="pre">.conda</span></code>)</p></li>
+<li><p>a <strong>package manager</strong> could be <code class="docutils literal notranslate"><span class="pre">pip</span></code> or <code class="docutils literal notranslate"><span class="pre">conda</span></code></p></li>
+<li><p>a <strong>package</strong> can be a python wheel <code class="docutils literal notranslate"><span class="pre">.whl</span></code> file or a conda file (<code class="docutils literal notranslate"><span class="pre">.conda</span></code>)</p></li>
 </ul>
 <p>In general you can have multiple <strong>virtual environments</strong> with different installed <strong>packages</strong>
 like an <em>environment</em> to run tests, another to create documentation and so on.</p>
@@ -415,7 +419,7 @@ like an <em>environment</em> to run tests, another to create documentation and s
 </pre></div>
 </div>
 </div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><p>This will create a new venv directory in the current working dir:</p>
-<div class="highlight-cmd notranslate"><div class="highlight"><pre><span></span>$&gt; python3 -m venv %CD%\venv
+<div class="highlight-bat notranslate"><div class="highlight"><pre><span></span>$<span class="p">&gt;</span> python3 -m venv <span class="nv">%CD%</span>\venv
 </pre></div>
 </div>
 </div></div>
@@ -429,7 +433,7 @@ to be done in order to set the correct environmnetal variables as <code class="d
 <div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">*NIX</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">Windows</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/venv/bin/activate
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div class="highlight-cmd notranslate"><div class="highlight"><pre><span></span>$&gt; %CD%\venv\Scripts\activate.bat
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div class="highlight-bat notranslate"><div class="highlight"><pre><span></span>$<span class="p">&gt;</span> <span class="nv">%CD%</span>\venv\Scripts\activate.bat
 </pre></div>
 </div>
 </div></div>
@@ -505,7 +509,7 @@ the packages in such environment: changes will happen only in the environment di
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-a-python-interpreter">Install a python interpreter</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#managing-a-virtual-environment">Managing a virtual environment</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#virtual-environments">Virtual environments</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-new-environment">Create a new environment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#activate-the-environment">Activate the environment</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uisng-the-newly-creating-environemn">Uisng the newly creating environemn</a></li>

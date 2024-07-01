@@ -316,8 +316,27 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-cli-v1-module">luxos.cli.v1 module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.cli.v1">luxos.cli.v1 module</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">}</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.AbortCliError"><code class="docutils literal notranslate"><span class="pre">AbortCliError</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.AbortWrongArgumentError"><code class="docutils literal notranslate"><span class="pre">AbortWrongArgumentError</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.CliBaseError"><code class="docutils literal notranslate"><span class="pre">CliBaseError</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.LuxosParser"><code class="docutils literal notranslate"><span class="pre">LuxosParser</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.LuxosParser.error"><code class="docutils literal notranslate"><span class="pre">LuxosParser.error()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.LuxosParser.get_parser"><code class="docutils literal notranslate"><span class="pre">LuxosParser.get_parser()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.LuxosParser.parse_args"><code class="docutils literal notranslate"><span class="pre">LuxosParser.parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.MyHandler"><code class="docutils literal notranslate"><span class="pre">MyHandler</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.MyHandler.emit"><code class="docutils literal notranslate"><span class="pre">MyHandler.emit()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.cli"><code class="docutils literal notranslate"><span class="pre">cli()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.log_sys_info"><code class="docutils literal notranslate"><span class="pre">log_sys_info()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.setup"><code class="docutils literal notranslate"><span class="pre">setup()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.cli">Module contents</a></li>
 </ul>
             </nav>
         </div>
@@ -334,11 +353,162 @@ document.write(`
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
 </section>
-<section id="luxos-cli-v1-module">
-<h2>luxos.cli.v1 module<a class="headerlink" href="#luxos-cli-v1-module" title="Link to this heading">#</a></h2>
+<section id="module-luxos.cli.v1">
+<span id="luxos-cli-v1-module"></span><h2>luxos.cli.v1 module<a class="headerlink" href="#module-luxos.cli.v1" title="Link to this heading">#</a></h2>
+<p>cli utilities</p>
+<p>This is the v1.cli decorator to help writing cli scripts with a consistent
+interface.</p>
+<p>A simple v1 script will always have:
+* <cite>-v/–verbose | -q/–quiet</cite> flags to increase the logging verbosity level
+* <cite>-c/–config</cite> to pass a config file (default to config.yaml)</p>
+<p>A <cite>sample.py</cite> script with default sensible and consistent interface:</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+import argparse
+import luxos.cli.v1 as cli
+import logging</p>
+<p>log = logging.getLogger(__name__)</p>
+<p>&#64;cli.cli()
+def main(args: argparse.Namespace):</p>
+<blockquote>
+<div><p>log.debug(“a debug message, need to use -v|–verbose to display it”)
+log.info(“an info message, you can silence it with -q|–quiet”)
+log.warning(“a warning!”)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>if __name__ == “__main__”:</dt><dd><p>main()</p>
+</dd>
+</dl>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<p>### Advanced usages</p>
+<p>#### changing the default config file</p>
+<p>In the <cite>sample.py</cite> file, just add:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">CONFIGPATH</span> <span class="pre">=</span> <span class="pre">&quot;my.config.file.yaml&quot;</span>
+<span class="pre">`</span></code></p>
+<p><cite>CONFIGPATH</cite> is part of the module level “magic” variables.</p>
+<p>Another one is <cite>LOGGING_CONFIG</cite> (not recommended!):
+<a href="#id7"><span class="problematic" id="id8">``</span></a>`
+LOGGING_CONFIG = {</p>
+<blockquote>
+<div><p>‘level’: logging.INFO,
+‘format’: “%(asctime)s:%(name)s:[%(levelname)s] %(message)s”,
+‘handlers’: [</p>
+<blockquote>
+<div><p>logging.StreamHandler(),
+logging.FileHandler(“LuxOS-LoadControl.log”)</p>
+</div></blockquote>
+<p>],</p>
+</div></blockquote>
+<section id="id9">
+<h3>}<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<p>The <cite>LOGGING_CONFIG</cite> is a dictionary feed into <cite>logging.basicConfig(**LOGGING_CONFIG)</cite>.</p>
+<p>#### add and process new extra arguments</p>
+<p>in the <cite>sample.py</cite> file:</p>
+<p><a href="#id10"><span class="problematic" id="id11">``</span></a>`
+def add_arguments(parser: argparse.ArgumentParser) -&gt; None:</p>
+<blockquote>
+<div><p>… adds as many args needed</p>
+</div></blockquote>
+<dl class="simple">
+<dt>def process_args(args: argparse.Namespace) -&gt; argparse.Namespace | None:</dt><dd><p>… you can manipulate args in place, changing its attributes in place
+… if you return a new Namespace instance then it will be fee to main below</p>
+</dd>
+</dl>
+<p>&#64;cli.cli(add_arguments, process_args)
+def main(args: argparse.Namespace):</p>
+<blockquote>
+<div><p>… args is the Namespace instance returned by process_args if defined,
+… or the default processed one of process_args is not provided</p>
+</div></blockquote>
+<p><a href="#id12"><span class="problematic" id="id13">``</span></a><a href="#id14"><span class="problematic" id="id15">`</span></a></p>
+<p>#### escape hatch to handle all the parsing/processing</p>
+<p><a href="#id16"><span class="problematic" id="id17">``</span></a><a href="#id18"><span class="problematic" id="id19">`</span></a></p>
+<p>&#64;cli.cli()
+def main(parser: argparse.ArgumentParser):</p>
+<blockquote>
+<div><p>… you can use directly the parser here</p>
+</div></blockquote>
+<p><a href="#id20"><span class="problematic" id="id21">``</span></a><a href="#id22"><span class="problematic" id="id23">`</span></a></p>
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="luxos.cli.v1.AbortCliError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.cli.v1.</span></span><span class="sig-name descname"><span class="pre">AbortCliError</span></span><a class="headerlink" href="#luxos.cli.v1.AbortCliError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luxos.cli.v1.CliBaseError" title="luxos.cli.v1.CliBaseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">CliBaseError</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="luxos.cli.v1.AbortWrongArgumentError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.cli.v1.</span></span><span class="sig-name descname"><span class="pre">AbortWrongArgumentError</span></span><a class="headerlink" href="#luxos.cli.v1.AbortWrongArgumentError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luxos.cli.v1.CliBaseError" title="luxos.cli.v1.CliBaseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">CliBaseError</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="luxos.cli.v1.CliBaseError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.cli.v1.</span></span><span class="sig-name descname"><span class="pre">CliBaseError</span></span><a class="headerlink" href="#luxos.cli.v1.CliBaseError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="luxos.cli.v1.LuxosParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.cli.v1.</span></span><span class="sig-name descname"><span class="pre">LuxosParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ModuleType</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.cli.v1.LuxosParser" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">LuxosParserBase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="luxos.cli.v1.LuxosParser.error">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.cli.v1.LuxosParser.error" title="Link to this definition">#</a></dt>
+<dd><p>Prints a usage message incorporating the message to stderr and
+exits.</p>
+<p>If you override this in a subclass, it should not return – it
+should either exit or raise an exception.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="luxos.cli.v1.LuxosParser.get_parser">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ModuleType</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.cli.v1.LuxosParser.get_parser" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="luxos.cli.v1.LuxosParser.parse_args">
+<span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.cli.v1.LuxosParser.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="luxos.cli.v1.MyHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.cli.v1.</span></span><span class="sig-name descname"><span class="pre">MyHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.cli.v1.MyHandler" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">StreamHandler</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="luxos.cli.v1.MyHandler.emit">
+<span class="sig-name descname"><span class="pre">emit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.cli.v1.MyHandler.emit" title="Link to this definition">#</a></dt>
+<dd><p>Emit a record.</p>
+<p>If a formatter is specified, it is used to format the record.
+The record is then written to the stream with a trailing newline.  If
+exception information is present, it is formatted using
+traceback.print_exception and appended to the stream.  If the stream
+has an ‘encoding’ attribute, it is used to determine how to do the
+output to the stream.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="luxos.cli.v1.cli">
+<span class="sig-prename descclassname"><span class="pre">luxos.cli.v1.</span></span><span class="sig-name descname"><span class="pre">cli</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">add_arguments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">LuxosParserBase</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">ArgumentParser</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Namespace</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Namespace</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.cli.v1.cli" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="luxos.cli.v1.log_sys_info">
+<span class="sig-prename descclassname"><span class="pre">luxos.cli.v1.</span></span><span class="sig-name descname"><span class="pre">log_sys_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luxos.cli.v1.log_sys_info" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="luxos.cli.v1.setup">
+<span class="sig-prename descclassname"><span class="pre">luxos.cli.v1.</span></span><span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_arguments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">LuxosParserBase</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">ArgumentParser</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Namespace</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Namespace</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.cli.v1.setup" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-luxos.cli">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-luxos.cli" title="Link to this heading">#</a></h2>
 </section>
 </section>
 
@@ -388,8 +558,27 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-cli-v1-module">luxos.cli.v1 module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.cli.v1">luxos.cli.v1 module</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">}</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.AbortCliError"><code class="docutils literal notranslate"><span class="pre">AbortCliError</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.AbortWrongArgumentError"><code class="docutils literal notranslate"><span class="pre">AbortWrongArgumentError</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.CliBaseError"><code class="docutils literal notranslate"><span class="pre">CliBaseError</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.LuxosParser"><code class="docutils literal notranslate"><span class="pre">LuxosParser</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.LuxosParser.error"><code class="docutils literal notranslate"><span class="pre">LuxosParser.error()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.LuxosParser.get_parser"><code class="docutils literal notranslate"><span class="pre">LuxosParser.get_parser()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.LuxosParser.parse_args"><code class="docutils literal notranslate"><span class="pre">LuxosParser.parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.MyHandler"><code class="docutils literal notranslate"><span class="pre">MyHandler</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.MyHandler.emit"><code class="docutils literal notranslate"><span class="pre">MyHandler.emit()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.cli"><code class="docutils literal notranslate"><span class="pre">cli()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.log_sys_info"><code class="docutils literal notranslate"><span class="pre">log_sys_info()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.cli.v1.setup"><code class="docutils literal notranslate"><span class="pre">setup()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.cli">Module contents</a></li>
 </ul>
   </nav></div>
 

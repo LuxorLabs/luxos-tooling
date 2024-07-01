@@ -319,8 +319,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intro">Intro</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install">Install</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick start</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-comman-line-tool-luxos">Using the comman line tool <code class="docutils literal notranslate"><span class="pre">luxos</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-python-api">Using the python api</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-luxos-command-line-tool">Using the <code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-luxos-run-command-line-tool">Using the <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-python-api">The python api</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rexec-function">the rexec function</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#launch">launch</a></li>
 </ul>
 </li>
@@ -347,10 +349,11 @@ document.write(`
 <h1>Welcome to Luxos tooling<a class="headerlink" href="#welcome-to-luxos-tooling" title="Link to this heading">#</a></h1>
 <section id="intro">
 <h2>Intro<a class="headerlink" href="#intro" title="Link to this heading">#</a></h2>
-<p>The luxos tooling provides:</p>
+<p>The luxos python package provides:</p>
 <ol class="arabic simple">
+<li><p>A simple script <code class="docutils literal notranslate"><span class="pre">luxos</span></code>, allowing to run a single command on miners</p></li>
+<li><p>A script <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> able to run scriptlets on miners</p></li>
 <li><p>A consistent API to access miners functionality through the the luxos python package (eg. <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">luxos</span></code>)</p></li>
-<li><p>A bunch of utility cli scripts to help everyday maintenance (<code class="docutils literal notranslate"><span class="pre">luxos</span></code> and <code class="docutils literal notranslate"><span class="pre">health-checker</span></code> at the moment)</p></li>
 </ol>
 </section>
 <section id="install">
@@ -370,70 +373,120 @@ $&gt;<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </
 </section>
 <section id="quick-start">
 <h2>Quick start<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h2>
-<section id="using-the-comman-line-tool-luxos">
-<h3>Using the comman line tool <code class="docutils literal notranslate"><span class="pre">luxos</span></code><a class="headerlink" href="#using-the-comman-line-tool-luxos" title="Link to this heading">#</a></h3>
-<p>The <a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package comes with a
-command line script called <code class="docutils literal notranslate"><span class="pre">luxos</span></code>: it can issue a command (with parameters) to a list of miners’ ips
+<section id="using-the-luxos-command-line-tool">
+<h3>Using the <code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool<a class="headerlink" href="#using-the-luxos-command-line-tool" title="Link to this heading">#</a></h3>
+<p>The <a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package comes with a command line script
+called <code class="docutils literal notranslate"><span class="pre">luxos</span></code>: it can issue a command (with parameters) to a list of miners’ ips
 in a csv file.</p>
 <p>This will enquire a list of miners for their version:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">   </span>$&gt;<span class="w"> </span>luxos<span class="w"> </span>--ipfile<span class="w"> </span>miners.csv<span class="w"> </span>--timeout<span class="w"> </span><span class="m">2</span><span class="w"> </span>--async<span class="w"> </span>--all<span class="w"> </span>--cmd<span class="w"> </span>version
-<span class="w">   </span>&gt;<span class="w"> </span><span class="m">10</span>.206.1.153:4028
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">   </span>$&gt;<span class="w"> </span>luxos<span class="w"> </span>--ipfile<span class="w"> </span>miners.csv<span class="w"> </span>--timeout<span class="w"> </span><span class="m">2</span><span class="w"> </span>--quiet<span class="w"> </span>--cmd<span class="w"> </span>version
+<span class="w">   </span>&gt;<span class="w"> </span><span class="m">10</span>.206.1.152:4028
 <span class="w">   </span><span class="p">|</span><span class="w"> </span><span class="o">{</span>
 <span class="w">   </span><span class="p">|</span><span class="w">   </span><span class="s2">&quot;STATUS&quot;</span>:<span class="w"> </span><span class="o">[</span>
 <span class="w">   </span><span class="p">|</span><span class="w">     </span><span class="o">{</span>
 <span class="w">   </span><span class="p">|</span><span class="w">       </span><span class="s2">&quot;Code&quot;</span>:<span class="w"> </span><span class="m">22</span>,
-<span class="w">   </span><span class="p">|</span><span class="w">       </span><span class="s2">&quot;Description&quot;</span>:<span class="w"> </span><span class="s2">&quot;LUXminer 2024.5.1.155432-f2badc0f&quot;</span>,
+<span class="w">   </span><span class="p">|</span><span class="w">       </span><span class="s2">&quot;Description&quot;</span>:<span class="w"> </span><span class="s2">&quot;LUXminer 2024.6.18.181313-3afaf1f&quot;</span>,
+<span class="w">   </span><span class="p">|</span><span class="w">       </span><span class="s2">&quot;Msg&quot;</span>:<span class="w"> </span><span class="s2">&quot;LUXminer versions&quot;</span>,<span class="w">  </span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>NOTE</strong></p>
+<ol class="arabic simple">
+<li><p>instead <code class="docutils literal notranslate"><span class="pre">--ipfile</span></code> you can also use the <code class="docutils literal notranslate"><span class="pre">--range</span></code> flag: it can
+take addresses like <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code>, ranges as <code class="docutils literal notranslate"><span class="pre">127.0.0.1-127.0.0.5</span></code> or filenames
+as <code class="docutils literal notranslate"><span class="pre">&#64;miners.csv</span></code>.</p></li>
+<li><p>you can use the <code class="docutils literal notranslate"><span class="pre">--json</span></code> to save the results in json format (to stdout).</p></li>
+</ol>
+</div></blockquote>
+</section>
+<section id="using-the-luxos-run-command-line-tool">
+<h3>Using the <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool<a class="headerlink" href="#using-the-luxos-run-command-line-tool" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> allows to run as <strong>scriptlet</strong> (a small python script) targeting miners:
+a scriptlet usually can contain some logic and or longer commands.</p>
+<p><strong>hello-world.py</strong> scriplet:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">luxos</span> <span class="kn">import</span> <span class="n">asyncops</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="c1"># async sending to the miner the version command</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncops</span><span class="o">.</span><span class="n">rexec</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">)</span>
+
+    <span class="c1"># validate will check the message is correct and return the result</span>
+    <span class="k">return</span> <span class="n">asyncops</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s2">&quot;VERSION&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Running the <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> will execute the scriptlet aggregating the results in
+a dictionary with key set to the miner address:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">   </span>$&gt;<span class="w"> </span>luxos-run<span class="w"> </span>--range<span class="w"> </span>@miners.csv<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>hello-world.py
+<span class="w">   </span><span class="o">{</span>
+<span class="w">     </span><span class="s2">&quot;10.206.1.152:4028&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">       </span><span class="s2">&quot;API&quot;</span>:<span class="w"> </span><span class="s2">&quot;3.7&quot;</span>,
+<span class="w">       </span><span class="s2">&quot;CompileTime&quot;</span>:<span class="w"> </span><span class="s2">&quot;Tue Jun 18 18:19:10 UTC 2024&quot;</span>,
+<span class="w">       </span><span class="s2">&quot;LUXminer&quot;</span>:<span class="w"> </span><span class="s2">&quot;2024.6.18.181313-3afaf1f&quot;</span>,
+<span class="w">       </span><span class="s2">&quot;Miner&quot;</span>:<span class="w"> </span><span class="s2">&quot;2024.6.18.181313&quot;</span>,
+<span class="w">       </span><span class="s2">&quot;Type&quot;</span>:<span class="w"> </span><span class="s2">&quot;Antminer S19 XP&quot;</span>
+<span class="w">     </span><span class="o">}</span>,
+<span class="w">     </span><span class="s2">&quot;10.206.1.153:4028&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">       </span><span class="s2">&quot;API&quot;</span>:<span class="w"> </span><span class="s2">&quot;3.7&quot;</span>,
+<span class="w">     </span>...
 </pre></div>
 </div>
 </section>
-<section id="using-the-python-api">
-<h3>Using the python api<a class="headerlink" href="#using-the-python-api" title="Link to this heading">#</a></h3>
+<section id="the-python-api">
+<h3>The python api<a class="headerlink" href="#the-python-api" title="Link to this heading">#</a></h3>
 <p><a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package comes with an API to support
-miners operations.</p>
-<p>This is way to get version data from a single miner using the API:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
-   <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">luxos.utils</span> <span class="kn">import</span> <span class="n">execute_command</span>
-   <span class="o">&gt;&gt;&gt;</span> <span class="n">execute_command</span><span class="p">(</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="mi">4028</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-   <span class="p">{</span><span class="s1">&#39;STATUS&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;Code&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">:</span> <span class="s1">&#39;LUXminer ...</span>
+miners operations. The main fuctions are stored in the <code class="docutils literal notranslate"><span class="pre">luxos.util</span></code> module for
+convenience and they are:</p>
+<ul class="simple">
+<li><p><strong>rexec</strong> - an async function to send a single command to a miner and return</p></li>
+<li><p><strong>launch</strong> - an async function to bacth execute a callbe targeting miners</p></li>
+<li><p><strong>load_ips_from_csv</strong> - to load miners addresses from a csv file</p></li>
+</ul>
+<section id="the-rexec-function">
+<h4>the rexec function<a class="headerlink" href="#the-rexec-function" title="Link to this heading">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">rexec</span></code> function allows to send a command to a miner and return the response:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   
+    <span class="kn">from</span> <span class="nn">luxos</span> <span class="kn">import</span> <span class="n">utils</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">rexec</span><span class="p">(</span><span class="s2">&quot;10.206.0.157&quot;</span><span class="p">,</span> <span class="mi">4028</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">))</span>
+    <span class="c1"># this is the validate helper</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s2">&quot;VERSION&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>There’s also an async version:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
-   <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">luxos</span> <span class="kn">import</span> <span class="n">utils</span>
-   <span class="o">&gt;&gt;&gt;</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">rexec</span><span class="p">(</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="mi">4028</span><span class="p">,</span> <span class="s2">&quot;vesion&quot;</span><span class="p">))</span>
-   <span class="p">{</span><span class="s1">&#39;STATUS&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;Code&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">:</span> <span class="s1">&#39;LUXminer ...</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">rexec</span></code> takes care of formatting the parameters also, the full signature is:</p>
+<p>The full signature for <code class="docutils literal notranslate"><span class="pre">rexec</span></code> takes care of formatting the parameters, the full signature is:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rexec</span><span class="p">(</span>
     <span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">4028</span><span class="p">,</span> 
     <span class="n">cmd</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">timeout</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">retry</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">retry_delay</span><span class="o">=</span><span class="mf">3.</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">parameters</span></code> can be a string, a list of any type (it will be converted into a str) or a dictionary (same conversion to string will apply).  <code class="docutils literal notranslate"><span class="pre">timeout</span></code> is the timeout for a call <code class="docutils literal notranslate"><span class="pre">retry</span></code> is the number of try before giving up <code class="docutils literal notranslate"><span class="pre">retry_delay</span></code> controls the delay between retry.</p>
+<p><code class="docutils literal notranslate"><span class="pre">parameters</span></code> can be a string, a list of any type (it will be converted into a str)
+or a dictionary (same conversion to string will apply).</p>
+<p><code class="docutils literal notranslate"><span class="pre">timeout</span></code> is the timeout for a call <code class="docutils literal notranslate"><span class="pre">retry</span></code> is the number of try
+before giving up <code class="docutils literal notranslate"><span class="pre">retry_delay</span></code> controls the delay between retry.</p>
+<blockquote>
+<div><p><strong>NOTE</strong> <code class="docutils literal notranslate"><span class="pre">rexec</span></code> is an async function,
+but there’s a sync version under <code class="docutils literal notranslate"><span class="pre">luxos.syncops.rexec</span></code>.</p>
+</div></blockquote>
+</section>
 <section id="launch">
 <h4>launch<a class="headerlink" href="#launch" title="Link to this heading">#</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">luxos.utils.lauch</span></code> allows to rexec commands to a list of miners stored in a csv file.
 This all-in-one function, allows batched operations on a set of miners, taking care of all details.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
-   <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">luxos</span> <span class="kn">import</span> <span class="n">utils</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">luxos</span> <span class="kn">import</span> <span class="n">utils</span>
 
-   <span class="c1"># load miners addresses from miners.csv</span>
-   <span class="o">&gt;&gt;&gt;</span> <span class="n">miners</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_ips_from_csv</span><span class="p">(</span><span class="s2">&quot;miners.csv&quot;</span><span class="p">)</span>
-
-
-   <span class="c1"># define a task with (host, port) signature, acting on a miner</span>
-   <span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">task</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-   <span class="o">...</span>   <span class="k">return</span> <span class="k">await</span> <span class="n">utils</span><span class="o">.</span><span class="n">rexec</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">)</span>
+<span class="c1"># load miners addresses from miners.csv</span>
+<span class="n">addresses</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_ips_from_csv</span><span class="p">(</span><span class="s2">&quot;miners.csv&quot;</span><span class="p">)</span>
 
 
-   <span class="c1"># execute task across all miners, batched will limit execution rate</span>
-   <span class="o">&gt;&gt;&gt;</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">addresses</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
-   <span class="p">[{</span><span class="s1">&#39;STATUS&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;Code&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">:</span> <span class="s1">&#39;LUXmin ....</span>
+<span class="c1"># define a task with (host, port) signature, acting on a miner</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">task</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">utils</span><span class="o">.</span><span class="n">rexec</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">)</span>
 
-   <span class="c1"># the one-liner for the version command</span>
-   <span class="o">&gt;&gt;&gt;</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">addresses</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">rexec</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
+<span class="c1"># execute task across all miners, batch will limit execution rate to 4</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">addresses</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># a one liner</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">addresses</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">rexec</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">),</span> <span class="n">batch</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
 </pre></div>
 </div>
 </section>
@@ -480,8 +533,10 @@ This all-in-one function, allows batched operations on a set of miners, taking c
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intro">Intro</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install">Install</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick start</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-comman-line-tool-luxos">Using the comman line tool <code class="docutils literal notranslate"><span class="pre">luxos</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-python-api">Using the python api</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-luxos-command-line-tool">Using the <code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-luxos-run-command-line-tool">Using the <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-python-api">The python api</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rexec-function">the rexec function</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#launch">launch</a></li>
 </ul>
 </li>
