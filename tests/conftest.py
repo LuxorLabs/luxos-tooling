@@ -46,6 +46,8 @@ def resolver(request):
             mode = mode or source.suffix.strip(".")
             if mode == "json":
                 return json.loads(source.read_text())
+            elif mode == "raw":
+                return source.read_text()
             raise RuntimeError(f"mode '{mode}' not supported")
 
     yield Resolver(DATADIR, request.module.__name__)
@@ -77,7 +79,7 @@ def echopool(resolver, tmp_path, request):
 
     Note:
         set the environemnt variable to a miner to test against it,
-        eg. export LUXOS_TEST_MINER=1.2.3.4:99999
+        eg. export MINER=1.2.3.4:99999
 
         minerd has only two methods, .server_address and .load!
     """
@@ -139,8 +141,8 @@ def echopool(resolver, tmp_path, request):
 
 @pytest.fixture(scope="function")
 def miner_host_port() -> tuple[str, int]:
-    if not (minerd := os.getenv("LUXOS_TEST_MINER")):
-        raise pytest.skip("no environmevt variable LUXOS_TEST_MINER set")
+    if not (minerd := os.getenv("MINER")):
+        raise pytest.skip("no environmevt variable MINER set")
     host, _, port = minerd.partition(":")
     return (host, int(port or 4028))
 

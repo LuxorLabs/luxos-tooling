@@ -315,7 +315,7 @@ async def test_bridge_execute_command(miner_host_port):
 
     port += 1
     pytest.raises(
-        ConnectionRefusedError,
+        exceptions.MinerCommandTimeoutError,
         execute_command,
         host,
         port,
