@@ -196,9 +196,11 @@ class LuxosParser(LuxosParserBase):
 @contextlib.contextmanager
 def setup(
     function: Callable,
-    add_arguments: Callable[[LuxosParserBase], None]
-    | Callable[[argparse.ArgumentParser], None]
-    | None = None,
+    add_arguments: (
+        Callable[[LuxosParserBase], None]
+        | Callable[[argparse.ArgumentParser], None]
+        | None
+    ) = None,
     process_args: (
         Callable[[argparse.Namespace], argparse.Namespace | None] | None
     ) = None,
@@ -268,9 +270,11 @@ def setup(
 
 def cli(
     # add_arguments: Callable[[LuxosParserBase | argparse.ArgumentParser], Any]
-    add_arguments: Callable[[LuxosParserBase], Any]
-    | Callable[[argparse.ArgumentParser], Any]
-    | None = None,
+    add_arguments: (
+        Callable[[LuxosParserBase], Any]
+        | Callable[[argparse.ArgumentParser], Any]
+        | None
+    ) = None,
     process_args: (
         Callable[[argparse.Namespace], argparse.Namespace | None] | None
     ) = None,
