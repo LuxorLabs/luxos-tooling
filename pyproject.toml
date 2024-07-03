@@ -37,6 +37,7 @@ dependencies = [
 [project.urls]
 Source = "https://github.com/LuxorLabs/firmware-biz-tools"
 Issues = "https://github.com/LuxorLabs/firmware-biz-tools/issues"
+Documentation = "https://luxorlabs.github.io/luxos-tooling"
 
 [project.scripts]
 luxos = "luxos.scripts.luxos:run"
