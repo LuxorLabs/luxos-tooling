@@ -46,7 +46,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/luxos';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="luxos.cli package" href="luxos.cli.html" />
+    <link rel="next" title="luxos.ips" href="luxos.ips.html" />
     <link rel="prev" title="luxos.utils" href="utils.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -160,11 +160,15 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples / Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">luxos.api.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">luxos.utils</a></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="luxos.cli.html">luxos.cli package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.scripts.html">luxos.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="luxos.ips.html">luxos.ips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="luxos.asyncops.html">luxos.asyncops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="luxos.cli.html">luxos.cli</a></li>
+<li class="toctree-l2"><a class="reference internal" href="luxos.scripts.html">luxos.scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="luxos.exceptions.html">luxos.exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -316,63 +320,6 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.api">luxos.api module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.api.logon_required"><code class="docutils literal notranslate"><span class="pre">logon_required()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.asyncops">luxos.asyncops module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.logoff"><code class="docutils literal notranslate"><span class="pre">logoff()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.logon"><code class="docutils literal notranslate"><span class="pre">logon()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.parameters_to_list"><code class="docutils literal notranslate"><span class="pre">parameters_to_list()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.rexec"><code class="docutils literal notranslate"><span class="pre">rexec()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.roundtrip"><code class="docutils literal notranslate"><span class="pre">roundtrip()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.validate_message"><code class="docutils literal notranslate"><span class="pre">validate_message()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.with_atm"><code class="docutils literal notranslate"><span class="pre">with_atm()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.wrapped"><code class="docutils literal notranslate"><span class="pre">wrapped()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.exceptions">luxos.exceptions module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.AddressParsingError"><code class="docutils literal notranslate"><span class="pre">AddressParsingError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.LuxosBaseException"><code class="docutils literal notranslate"><span class="pre">LuxosBaseException</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerCommandFailedError"><code class="docutils literal notranslate"><span class="pre">MinerCommandFailedError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerCommandMalformedMessageError"><code class="docutils literal notranslate"><span class="pre">MinerCommandMalformedMessageError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerCommandSessionAlreadyActive"><code class="docutils literal notranslate"><span class="pre">MinerCommandSessionAlreadyActive</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerCommandTimeoutError"><code class="docutils literal notranslate"><span class="pre">MinerCommandTimeoutError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerConnectionError"><code class="docutils literal notranslate"><span class="pre">MinerConnectionError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerMessageError"><code class="docutils literal notranslate"><span class="pre">MinerMessageError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerMessageInvalidError"><code class="docutils literal notranslate"><span class="pre">MinerMessageInvalidError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerMessageMalformedError"><code class="docutils literal notranslate"><span class="pre">MinerMessageMalformedError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerMessageReplyError"><code class="docutils literal notranslate"><span class="pre">MinerMessageReplyError</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.misc">luxos.misc module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.misc.iter_ip_ranges"><code class="docutils literal notranslate"><span class="pre">iter_ip_ranges()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.misc.loadmod"><code class="docutils literal notranslate"><span class="pre">loadmod()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.utils">luxos.utils module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchBaseResult"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchBaseResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchBaseResult.address"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchBaseResult.address</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchBaseResult.host"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchBaseResult.host</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchBaseResult.port"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchBaseResult.port</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchError"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchError</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchError.brief"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchError.brief</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchError.traceback"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchError.traceback</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchResult"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchResult.data"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchResult.data</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchTimeoutError"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchTimeoutError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.launch"><code class="docutils literal notranslate"><span class="pre">launch()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos">Module contents</a></li>
 </ul>
             </nav>
         </div>
@@ -390,314 +337,13 @@ document.write(`
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="luxos.cli.html">luxos.cli package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="luxos.cli.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.cli.html#module-luxos.cli.v1">luxos.cli.v1 module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="luxos.cli.html#id9">}</a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.AbortCliError"><code class="docutils literal notranslate"><span class="pre">AbortCliError</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.AbortWrongArgumentError"><code class="docutils literal notranslate"><span class="pre">AbortWrongArgumentError</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.CliBaseError"><code class="docutils literal notranslate"><span class="pre">CliBaseError</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.LuxosParser"><code class="docutils literal notranslate"><span class="pre">LuxosParser</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.LuxosParser.error"><code class="docutils literal notranslate"><span class="pre">LuxosParser.error()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.LuxosParser.get_parser"><code class="docutils literal notranslate"><span class="pre">LuxosParser.get_parser()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.LuxosParser.parse_args"><code class="docutils literal notranslate"><span class="pre">LuxosParser.parse_args()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.MyHandler"><code class="docutils literal notranslate"><span class="pre">MyHandler</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.MyHandler.emit"><code class="docutils literal notranslate"><span class="pre">MyHandler.emit()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.cli"><code class="docutils literal notranslate"><span class="pre">cli()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.log_sys_info"><code class="docutils literal notranslate"><span class="pre">log_sys_info()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.cli.html#luxos.cli.v1.setup"><code class="docutils literal notranslate"><span class="pre">setup()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.cli.html#module-luxos.cli">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="luxos.scripts.html">luxos.scripts package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="luxos.scripts.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.scripts.html#module-luxos.scripts.async_luxos">luxos.scripts.async_luxos module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.async_luxos.Result"><code class="docutils literal notranslate"><span class="pre">Result</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.async_luxos.Result.host"><code class="docutils literal notranslate"><span class="pre">Result.host</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.async_luxos.Result.port"><code class="docutils literal notranslate"><span class="pre">Result.port</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.async_luxos.Result.tback"><code class="docutils literal notranslate"><span class="pre">Result.tback</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.async_luxos.Result.value"><code class="docutils literal notranslate"><span class="pre">Result.value</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.async_luxos.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.async_luxos.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.async_luxos.wrapper"><code class="docutils literal notranslate"><span class="pre">wrapper()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.scripts.html#luxos-scripts-health-checker-module">luxos.scripts.health_checker module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.scripts.html#module-luxos.scripts.luxos">luxos.scripts.luxos module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.luxos.add_arguments"><code class="docutils literal notranslate"><span class="pre">add_arguments()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.luxos.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.luxos.process_args"><code class="docutils literal notranslate"><span class="pre">process_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.scripts.html#luxos.scripts.luxos.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.scripts.html#module-luxos.scripts">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="luxos.ips.html">luxos.ips</a></li>
+<li class="toctree-l1"><a class="reference internal" href="luxos.asyncops.html">luxos.asyncops</a></li>
+<li class="toctree-l1"><a class="reference internal" href="luxos.cli.html">luxos.cli</a></li>
+<li class="toctree-l1"><a class="reference internal" href="luxos.scripts.html">luxos.scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="luxos.exceptions.html">luxos.exceptions</a></li>
 </ul>
 </div>
-</section>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
-</section>
-<section id="module-luxos.api">
-<span id="luxos-api-module"></span><h2>luxos.api module<a class="headerlink" href="#module-luxos.api" title="Link to this heading">#</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.api.logon_required">
-<span class="sig-prename descclassname"><span class="pre">luxos.api.</span></span><span class="sig-name descname"><span class="pre">logon_required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">commands_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'addgroup':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'addpool':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'asc':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'asccount':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'atm':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'atmset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'autotunerget':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'autotunerset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'check':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'coin':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'config':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'curtail':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'devdetails':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'devs':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'disableboard':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'disablepool':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'edevs':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'enableboard':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'enablepool':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'estats':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'fans':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'fanset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'frequencyget':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'frequencyset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'frequencystop':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'groupquota':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'healthchipget':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'healthchipset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'healthctrl':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'healthctrlset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'immersionswitch':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'kill':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'lcd':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'limits':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'logoff':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'logon':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'logset':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'netset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'poolopts':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'pooloptsset':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'pools':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'power':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'profileget':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'profilenew':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'profilerem':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'profilerestore':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'profiles':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'profileset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'reboot':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'rebootdevice':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'removegroup':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'removepool':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'resetconfig':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'resetminer':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'session':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'stats':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'summary':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'switchpool':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'tempctrl':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'tempctrlset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'temps':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'tempsensor':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'tempsensorset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'tunerstatus':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'tunerswitch':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'uninstallluxos':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'updaterun':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'updateset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True},</span> <span class="pre">'version':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'voltageget':</span> <span class="pre">{'logon_required':</span> <span class="pre">False},</span> <span class="pre">'voltageset':</span> <span class="pre">{'logon_required':</span> <span class="pre">True}}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#luxos.api.logon_required" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</section>
-<section id="module-luxos.asyncops">
-<span id="luxos-asyncops-module"></span><h2>luxos.asyncops module<a class="headerlink" href="#module-luxos.asyncops" title="Link to this heading">#</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.asyncops.logoff">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.asyncops.</span></span><span class="sig-name descname"><span class="pre">logoff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#luxos.asyncops.logoff" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.asyncops.logon">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.asyncops.</span></span><span class="sig-name descname"><span class="pre">logon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#luxos.asyncops.logon" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.asyncops.parameters_to_list">
-<span class="sig-prename descclassname"><span class="pre">luxos.asyncops.</span></span><span class="sig-name descname"><span class="pre">parameters_to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#luxos.asyncops.parameters_to_list" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.asyncops.rexec">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.asyncops.</span></span><span class="sig-name descname"><span class="pre">rexec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#luxos.asyncops.rexec" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.asyncops.roundtrip">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.asyncops.</span></span><span class="sig-name descname"><span class="pre">roundtrip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asjson</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retry_delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.asyncops.roundtrip" title="Link to this definition">#</a></dt>
-<dd><p>utility wrapper around _roundrip</p>
-<dl class="simple">
-<dt>Example:</dt><dd><p>print(await roundtrip(host, port, {“version”}))
--&gt; (json) {‘STATUS’: [{‘Code’: 22, ‘Description’: ‘LUXminer 20 …
-print(await roundtrip(host, port, “version”))
--&gt; (str) “{‘STATUS’: [{‘Code’: 22, ‘Description’: ‘LUXminer 20 ..</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.asyncops.validate">
-<span class="sig-prename descclassname"><span class="pre">luxos.asyncops.</span></span><span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extrakey</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minfields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxfields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#luxos.asyncops.validate" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.asyncops.validate_message">
-<span class="sig-prename descclassname"><span class="pre">luxos.asyncops.</span></span><span class="sig-name descname"><span class="pre">validate_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extrakey</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minfields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxfields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#luxos.asyncops.validate_message" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.asyncops.with_atm">
-<span class="sig-prename descclassname"><span class="pre">luxos.asyncops.</span></span><span class="sig-name descname"><span class="pre">with_atm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.asyncops.with_atm" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.asyncops.wrapped">
-<span class="sig-prename descclassname"><span class="pre">luxos.asyncops.</span></span><span class="sig-name descname"><span class="pre">wrapped</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.asyncops.wrapped" title="Link to this definition">#</a></dt>
-<dd><p>wraps a function acting on a host and re-raise with internal exceptions</p>
-<p>This re-raise exceptions so they all derive from MinerConnectionError, eg:
-&#64;wrapped
-def somcode(host: str, port: int, …):</p>
-<blockquote>
-<div><p>…</p>
-</div></blockquote>
-<dl class="simple">
-<dt>try:</dt><dd><p>await somecode()</p>
-</dd>
-<dt>except MinerConnectionError as e:  &lt;- this will catch all exceptions!</dt><dd><p>e.address
-raise MyNewExecption() from e  &lt;- this will re-raise</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="module-luxos.exceptions">
-<span id="luxos-exceptions-module"></span><h2>luxos.exceptions module<a class="headerlink" href="#module-luxos.exceptions" title="Link to this heading">#</a></h2>
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.exceptions.AddressParsingError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.exceptions.</span></span><span class="sig-name descname"><span class="pre">AddressParsingError</span></span><a class="headerlink" href="#luxos.exceptions.AddressParsingError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.exceptions.LuxosBaseException" title="luxos.exceptions.LuxosBaseException"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuxosBaseException</span></code></a></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.exceptions.LuxosBaseException">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.exceptions.</span></span><span class="sig-name descname"><span class="pre">LuxosBaseException</span></span><a class="headerlink" href="#luxos.exceptions.LuxosBaseException" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.exceptions.MinerCommandFailedError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.exceptions.</span></span><span class="sig-name descname"><span class="pre">MinerCommandFailedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.exceptions.MinerCommandFailedError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.exceptions.MinerConnectionError" title="luxos.exceptions.MinerConnectionError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MinerConnectionError</span></code></a></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.exceptions.MinerCommandMalformedMessageError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.exceptions.</span></span><span class="sig-name descname"><span class="pre">MinerCommandMalformedMessageError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.exceptions.MinerCommandMalformedMessageError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.exceptions.MinerConnectionError" title="luxos.exceptions.MinerConnectionError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MinerConnectionError</span></code></a></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.exceptions.MinerCommandSessionAlreadyActive">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.exceptions.</span></span><span class="sig-name descname"><span class="pre">MinerCommandSessionAlreadyActive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.exceptions.MinerCommandSessionAlreadyActive" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.exceptions.MinerConnectionError" title="luxos.exceptions.MinerConnectionError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MinerConnectionError</span></code></a></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.exceptions.MinerCommandTimeoutError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.exceptions.</span></span><span class="sig-name descname"><span class="pre">MinerCommandTimeoutError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.exceptions.MinerCommandTimeoutError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.exceptions.MinerConnectionError" title="luxos.exceptions.MinerConnectionError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MinerConnectionError</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TimeoutError</span></code></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.exceptions.MinerConnectionError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.exceptions.</span></span><span class="sig-name descname"><span class="pre">MinerConnectionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.exceptions.MinerConnectionError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.exceptions.LuxosBaseException" title="luxos.exceptions.LuxosBaseException"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuxosBaseException</span></code></a></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.exceptions.MinerMessageError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.exceptions.</span></span><span class="sig-name descname"><span class="pre">MinerMessageError</span></span><a class="headerlink" href="#luxos.exceptions.MinerMessageError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.exceptions.MinerMessageReplyError" title="luxos.exceptions.MinerMessageReplyError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MinerMessageReplyError</span></code></a></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.exceptions.MinerMessageInvalidError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.exceptions.</span></span><span class="sig-name descname"><span class="pre">MinerMessageInvalidError</span></span><a class="headerlink" href="#luxos.exceptions.MinerMessageInvalidError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.exceptions.MinerMessageReplyError" title="luxos.exceptions.MinerMessageReplyError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MinerMessageReplyError</span></code></a></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.exceptions.MinerMessageMalformedError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.exceptions.</span></span><span class="sig-name descname"><span class="pre">MinerMessageMalformedError</span></span><a class="headerlink" href="#luxos.exceptions.MinerMessageMalformedError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.exceptions.MinerMessageReplyError" title="luxos.exceptions.MinerMessageReplyError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MinerMessageReplyError</span></code></a></p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.exceptions.MinerMessageReplyError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.exceptions.</span></span><span class="sig-name descname"><span class="pre">MinerMessageReplyError</span></span><a class="headerlink" href="#luxos.exceptions.MinerMessageReplyError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.exceptions.LuxosBaseException" title="luxos.exceptions.LuxosBaseException"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuxosBaseException</span></code></a></p>
-</dd></dl>
-
-</section>
-<section id="module-luxos.misc">
-<span id="luxos-misc-module"></span><h2>luxos.misc module<a class="headerlink" href="#module-luxos.misc" title="Link to this heading">#</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.misc.iter_ip_ranges">
-<span class="sig-prename descclassname"><span class="pre">luxos.misc.</span></span><span class="sig-name descname"><span class="pre">iter_ip_ranges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gsep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">':'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rsep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'-'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#luxos.misc.iter_ip_ranges" title="Link to this definition">#</a></dt>
-<dd><p>iterate over ip ranges</p>
-<dl class="simple">
-<dt>for ip in iter_ip_ranges(“127.0.0.1-127.0.0.3:127.0.0.15”):</dt><dd><p>print(ip)</p>
-</dd>
-</dl>
-<p>127.0.0.1
-127.0.0.2
-127.0.0.3
-127.0.0.15</p>
-<p>NOTE: use the <cite>:</cite> (gsep) to separate ips groups, and <cite>-</cite> (rsep) to define a range.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.misc.loadmod">
-<span class="sig-prename descclassname"><span class="pre">luxos.misc.</span></span><span class="sig-name descname"><span class="pre">loadmod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ModuleType</span></span></span><a class="headerlink" href="#luxos.misc.loadmod" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</section>
-<section id="module-luxos.utils">
-<span id="luxos-utils-module"></span><h2>luxos.utils module<a class="headerlink" href="#module-luxos.utils" title="Link to this heading">#</a></h2>
-<p>user facing functions for normal use</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="luxos.utils.LuxosLaunchBaseResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.utils.</span></span><span class="sig-name descname"><span class="pre">LuxosLaunchBaseResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.utils.LuxosLaunchBaseResult" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py property">
-<dt class="sig sig-object py" id="luxos.utils.LuxosLaunchBaseResult.address">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">address</span></span><a class="headerlink" href="#luxos.utils.LuxosLaunchBaseResult.address" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="luxos.utils.LuxosLaunchBaseResult.host">
-<span class="sig-name descname"><span class="pre">host</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#luxos.utils.LuxosLaunchBaseResult.host" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="luxos.utils.LuxosLaunchBaseResult.port">
-<span class="sig-name descname"><span class="pre">port</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#luxos.utils.LuxosLaunchBaseResult.port" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="luxos.utils.LuxosLaunchError">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.utils.</span></span><span class="sig-name descname"><span class="pre">LuxosLaunchError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str</span> <span class="pre">|</span> <span class="pre">None'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brief</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.utils.LuxosLaunchError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.utils.LuxosLaunchBaseResult" title="luxos.utils.LuxosLaunchBaseResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuxosLaunchBaseResult</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="luxos.utils.LuxosLaunchError.brief">
-<span class="sig-name descname"><span class="pre">brief</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#luxos.utils.LuxosLaunchError.brief" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="luxos.utils.LuxosLaunchError.traceback">
-<span class="sig-name descname"><span class="pre">traceback</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#luxos.utils.LuxosLaunchError.traceback" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="luxos.utils.LuxosLaunchResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.utils.</span></span><span class="sig-name descname"><span class="pre">LuxosLaunchResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'Any'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.utils.LuxosLaunchResult" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.utils.LuxosLaunchBaseResult" title="luxos.utils.LuxosLaunchBaseResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuxosLaunchBaseResult</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="luxos.utils.LuxosLaunchResult.data">
-<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Any</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#luxos.utils.LuxosLaunchResult.data" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="luxos.utils.LuxosLaunchTimeoutError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.utils.</span></span><span class="sig-name descname"><span class="pre">LuxosLaunchTimeoutError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str</span> <span class="pre">|</span> <span class="pre">None'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brief</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.utils.LuxosLaunchTimeoutError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luxos.utils.LuxosLaunchError" title="luxos.utils.LuxosLaunchError"><code class="xref py py-class docutils literal notranslate"><span class="pre">LuxosLaunchError</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TimeoutError</span></code></p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.utils.launch">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.utils.</span></span><span class="sig-name descname"><span class="pre">launch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addresses</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Awaitable</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asobj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#luxos.utils.LuxosLaunchError" title="luxos.utils.LuxosLaunchError"><span class="pre">LuxosLaunchError</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#luxos.utils.LuxosLaunchTimeoutError" title="luxos.utils.LuxosLaunchTimeoutError"><span class="pre">LuxosLaunchTimeoutError</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#luxos.utils.launch" title="Link to this definition">#</a></dt>
-<dd><p>launch an async function on a list of (host, port) miners</p>
-<dl>
-<dt>Arguments:</dt><dd><p>batch: limit the number of concurrent calls
-asobj: if True all results will be instances subclasses</p>
-<blockquote>
-<div><p>of LuxosLaunchBaseResult</p>
-</div></blockquote>
-</dd>
-<dt>Eg.</dt><dd><dl class="simple">
-<dt>async printme(host, port):</dt><dd><p>print(await rexec(host, port, “version”))</p>
-</dd>
-</dl>
-<p>addresses = load_ips_from_csv(“miners.csv”)
-asyncio.run(launch(addresses, printme))</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="module-luxos">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-luxos" title="Link to this heading">#</a></h2>
 </section>
 </section>
 
@@ -722,11 +368,11 @@ asyncio.run(launch(addresses, printme))</p>
       </div>
     </a>
     <a class="right-next"
-       href="luxos.cli.html"
+       href="luxos.ips.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">luxos.cli package</p>
+        <p class="prev-next-title">luxos.ips</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -747,63 +393,6 @@ asyncio.run(launch(addresses, printme))</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.api">luxos.api module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.api.logon_required"><code class="docutils literal notranslate"><span class="pre">logon_required()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.asyncops">luxos.asyncops module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.logoff"><code class="docutils literal notranslate"><span class="pre">logoff()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.logon"><code class="docutils literal notranslate"><span class="pre">logon()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.parameters_to_list"><code class="docutils literal notranslate"><span class="pre">parameters_to_list()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.rexec"><code class="docutils literal notranslate"><span class="pre">rexec()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.roundtrip"><code class="docutils literal notranslate"><span class="pre">roundtrip()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.validate_message"><code class="docutils literal notranslate"><span class="pre">validate_message()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.with_atm"><code class="docutils literal notranslate"><span class="pre">with_atm()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.asyncops.wrapped"><code class="docutils literal notranslate"><span class="pre">wrapped()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.exceptions">luxos.exceptions module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.AddressParsingError"><code class="docutils literal notranslate"><span class="pre">AddressParsingError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.LuxosBaseException"><code class="docutils literal notranslate"><span class="pre">LuxosBaseException</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerCommandFailedError"><code class="docutils literal notranslate"><span class="pre">MinerCommandFailedError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerCommandMalformedMessageError"><code class="docutils literal notranslate"><span class="pre">MinerCommandMalformedMessageError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerCommandSessionAlreadyActive"><code class="docutils literal notranslate"><span class="pre">MinerCommandSessionAlreadyActive</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerCommandTimeoutError"><code class="docutils literal notranslate"><span class="pre">MinerCommandTimeoutError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerConnectionError"><code class="docutils literal notranslate"><span class="pre">MinerConnectionError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerMessageError"><code class="docutils literal notranslate"><span class="pre">MinerMessageError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerMessageInvalidError"><code class="docutils literal notranslate"><span class="pre">MinerMessageInvalidError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerMessageMalformedError"><code class="docutils literal notranslate"><span class="pre">MinerMessageMalformedError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.exceptions.MinerMessageReplyError"><code class="docutils literal notranslate"><span class="pre">MinerMessageReplyError</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.misc">luxos.misc module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.misc.iter_ip_ranges"><code class="docutils literal notranslate"><span class="pre">iter_ip_ranges()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.misc.loadmod"><code class="docutils literal notranslate"><span class="pre">loadmod()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.utils">luxos.utils module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchBaseResult"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchBaseResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchBaseResult.address"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchBaseResult.address</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchBaseResult.host"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchBaseResult.host</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchBaseResult.port"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchBaseResult.port</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchError"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchError</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchError.brief"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchError.brief</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchError.traceback"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchError.traceback</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchResult"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchResult.data"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchResult.data</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.LuxosLaunchTimeoutError"><code class="docutils literal notranslate"><span class="pre">LuxosLaunchTimeoutError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.utils.launch"><code class="docutils literal notranslate"><span class="pre">launch()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos">Module contents</a></li>
 </ul>
   </nav></div>
 

@@ -161,11 +161,15 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="api.html">Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/examples.html">Examples / Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/cli.html">luxos.api.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/utils.html">luxos.utils</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/luxos.cli.html">luxos.cli package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/luxos.scripts.html">luxos.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/luxos.ips.html">luxos.ips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/luxos.asyncops.html">luxos.asyncops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/luxos.cli.html">luxos.cli</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/luxos.scripts.html">luxos.scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/luxos.exceptions.html">luxos.exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -318,14 +322,11 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intro">Intro</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install">Install</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick start</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-luxos-command-line-tool">Using the <code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-luxos-run-command-line-tool">Using the <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-python-api">The python api</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rexec-function">the rexec function</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#launch">launch</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-run-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-python-api">The python api</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rexec-function">the rexec function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#launch">launch</a></li>
 </ul>
 </li>
 </ul>
@@ -349,12 +350,13 @@ document.write(`
 <h1>Welcome to Luxos tooling<a class="headerlink" href="#welcome-to-luxos-tooling" title="Link to this heading">#</a></h1>
 <section id="intro">
 <h2>Intro<a class="headerlink" href="#intro" title="Link to this heading">#</a></h2>
-<p>The luxos python package provides:</p>
+<p>The <a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package provides:</p>
 <ol class="arabic simple">
-<li><p>A simple script <code class="docutils literal notranslate"><span class="pre">luxos</span></code>, allowing to run a single command on miners</p></li>
-<li><p>A script <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> able to run scriptlets on miners</p></li>
-<li><p>A consistent API to access miners functionality through the the luxos python package (eg. <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">luxos</span></code>)</p></li>
+<li><p>A cli script <code class="docutils literal notranslate"><span class="pre">luxos</span></code>, allowing to run a single command on miners</p></li>
+<li><p>A script <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> to run scriptlets on miners in parallel (using asyncio)</p></li>
+<li><p>A consistent API to access miners functionality through the the <code class="docutils literal notranslate"><span class="pre">luxos</span></code> python package</p></li>
 </ol>
+<p>For simple to follow example on how to use the API see <a class="reference internal" href="#api-examples"><span class="xref myst">here</span></a></p>
 </section>
 <section id="install">
 <h2>Install<a class="headerlink" href="#install" title="Link to this heading">#</a></h2>
@@ -371,38 +373,44 @@ $&gt;<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </
 </pre></div>
 </div>
 </section>
-<section id="quick-start">
-<h2>Quick start<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h2>
-<section id="using-the-luxos-command-line-tool">
-<h3>Using the <code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool<a class="headerlink" href="#using-the-luxos-command-line-tool" title="Link to this heading">#</a></h3>
+<section id="luxos-command-line-tool">
+<h2><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool<a class="headerlink" href="#luxos-command-line-tool" title="Link to this heading">#</a></h2>
 <p>The <a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package comes with a command line script
 called <code class="docutils literal notranslate"><span class="pre">luxos</span></code>: it can issue a command (with parameters) to a list of miners’ ips
 in a csv file.</p>
-<p>This will enquire a list of miners for their version:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">   </span>$&gt;<span class="w"> </span>luxos<span class="w"> </span>--ipfile<span class="w"> </span>miners.csv<span class="w"> </span>--timeout<span class="w"> </span><span class="m">2</span><span class="w"> </span>--quiet<span class="w"> </span>--cmd<span class="w"> </span>version
-<span class="w">   </span>&gt;<span class="w"> </span><span class="m">10</span>.206.1.152:4028
-<span class="w">   </span><span class="p">|</span><span class="w"> </span><span class="o">{</span>
-<span class="w">   </span><span class="p">|</span><span class="w">   </span><span class="s2">&quot;STATUS&quot;</span>:<span class="w"> </span><span class="o">[</span>
-<span class="w">   </span><span class="p">|</span><span class="w">     </span><span class="o">{</span>
-<span class="w">   </span><span class="p">|</span><span class="w">       </span><span class="s2">&quot;Code&quot;</span>:<span class="w"> </span><span class="m">22</span>,
-<span class="w">   </span><span class="p">|</span><span class="w">       </span><span class="s2">&quot;Description&quot;</span>:<span class="w"> </span><span class="s2">&quot;LUXminer 2024.6.18.181313-3afaf1f&quot;</span>,
-<span class="w">   </span><span class="p">|</span><span class="w">       </span><span class="s2">&quot;Msg&quot;</span>:<span class="w"> </span><span class="s2">&quot;LUXminer versions&quot;</span>,<span class="w">  </span>
+<p>This will launch the version command on a miner, returning the json output:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>luxos<span class="w"> </span>--range<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>--cmd<span class="w"> </span>version<span class="w"> </span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">--range</span></code> flag can take:</p>
+<ul class="simple">
+<li><p>a single ip address, eg: <code class="docutils literal notranslate"><span class="pre">--range</span> <span class="pre">127.0.0.1</span></code></p></li>
+<li><p>a range like: <code class="docutils literal notranslate"><span class="pre">--range</span> <span class="pre">127.0.0.1-127.0.0.5</span></code></p></li>
+<li><p>or addresses from a file: <code class="docutils literal notranslate"><span class="pre">--range</span> <span class="pre">&#64;miners.csv</span></code>.</p></li>
+</ul>
+<p>Other examples:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># set/unset ATM</span>
+luxos<span class="w"> </span>--range<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>--cmd<span class="w"> </span>atmset<span class="w"> </span>--params<span class="w"> </span><span class="s2">&quot;enabled=true&quot;</span>
+
+<span class="c1"># add a new profile</span>
+luxos<span class="w"> </span>--range<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>--cmd<span class="w"> </span>profilenew<span class="w"> </span>--params<span class="w"> </span><span class="s2">&quot;myprofile,700,14.8&quot;</span>
 </pre></div>
 </div>
 <blockquote>
 <div><p><strong>NOTE</strong></p>
 <ol class="arabic simple">
-<li><p>instead <code class="docutils literal notranslate"><span class="pre">--ipfile</span></code> you can also use the <code class="docutils literal notranslate"><span class="pre">--range</span></code> flag: it can
+<li><p><code class="docutils literal notranslate"><span class="pre">--ipfile</span></code> is an alternative way to load miners from a csv file, it’s the same as <code class="docutils literal notranslate"><span class="pre">--range</span></code> flag: it can
 take addresses like <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code>, ranges as <code class="docutils literal notranslate"><span class="pre">127.0.0.1-127.0.0.5</span></code> or filenames
 as <code class="docutils literal notranslate"><span class="pre">&#64;miners.csv</span></code>.</p></li>
 <li><p>you can use the <code class="docutils literal notranslate"><span class="pre">--json</span></code> to save the results in json format (to stdout).</p></li>
 </ol>
 </div></blockquote>
 </section>
-<section id="using-the-luxos-run-command-line-tool">
-<h3>Using the <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool<a class="headerlink" href="#using-the-luxos-run-command-line-tool" title="Link to this heading">#</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> allows to run as <strong>scriptlet</strong> (a small python script) targeting miners:
-a scriptlet usually can contain some logic and or longer commands.</p>
+<section id="luxos-run-command-line-tool">
+<h2><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool<a class="headerlink" href="#luxos-run-command-line-tool" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> is an alternative to <code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line script,
+allowing to run as <strong>scriptlet</strong> (a small python script) targeting miners:
+a scriptlet usually can contain some logic and or longer commands sequences.</p>
 <p><strong>hello-world.py</strong> scriplet:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">luxos</span> <span class="kn">import</span> <span class="n">asyncops</span>
 
@@ -411,38 +419,36 @@ a scriptlet usually can contain some logic and or longer commands.</p>
     <span class="n">res</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncops</span><span class="o">.</span><span class="n">rexec</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">)</span>
 
     <span class="c1"># validate will check the message is correct and return the result</span>
-    <span class="k">return</span> <span class="n">asyncops</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s2">&quot;VERSION&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">asyncops</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s2">&quot;VERSION&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;miner&quot;</span><span class="p">:</span> <span class="n">version</span><span class="p">[</span><span class="s2">&quot;LUXminer&quot;</span><span class="p">]}</span>
 </pre></div>
 </div>
 <p>Running the <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> will execute the scriptlet aggregating the results in
 a dictionary with key set to the miner address:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">   </span>$&gt;<span class="w"> </span>luxos-run<span class="w"> </span>--range<span class="w"> </span>@miners.csv<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>hello-world.py
-<span class="w">   </span><span class="o">{</span>
-<span class="w">     </span><span class="s2">&quot;10.206.1.152:4028&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<span class="w">       </span><span class="s2">&quot;API&quot;</span>:<span class="w"> </span><span class="s2">&quot;3.7&quot;</span>,
-<span class="w">       </span><span class="s2">&quot;CompileTime&quot;</span>:<span class="w"> </span><span class="s2">&quot;Tue Jun 18 18:19:10 UTC 2024&quot;</span>,
-<span class="w">       </span><span class="s2">&quot;LUXminer&quot;</span>:<span class="w"> </span><span class="s2">&quot;2024.6.18.181313-3afaf1f&quot;</span>,
-<span class="w">       </span><span class="s2">&quot;Miner&quot;</span>:<span class="w"> </span><span class="s2">&quot;2024.6.18.181313&quot;</span>,
-<span class="w">       </span><span class="s2">&quot;Type&quot;</span>:<span class="w"> </span><span class="s2">&quot;Antminer S19 XP&quot;</span>
-<span class="w">     </span><span class="o">}</span>,
-<span class="w">     </span><span class="s2">&quot;10.206.1.153:4028&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<span class="w">       </span><span class="s2">&quot;API&quot;</span>:<span class="w"> </span><span class="s2">&quot;3.7&quot;</span>,
-<span class="w">     </span>...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>luxos-run<span class="w"> </span>--range<span class="w"> </span>@miners.csv<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>hello-world.py
+<span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;127.0.0.1:4028&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;address&quot;</span>:<span class="w"> </span><span class="s2">&quot;127.0.0.1:4028&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;2021.1.12.202305-nnnn&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
 </pre></div>
 </div>
 </section>
 <section id="the-python-api">
-<h3>The python api<a class="headerlink" href="#the-python-api" title="Link to this heading">#</a></h3>
+<h2>The python api<a class="headerlink" href="#the-python-api" title="Link to this heading">#</a></h2>
 <p><a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package comes with an API to support
 miners operations. The main fuctions are stored in the <code class="docutils literal notranslate"><span class="pre">luxos.util</span></code> module for
 convenience and they are:</p>
 <ul class="simple">
-<li><p><strong>rexec</strong> - an async function to send a single command to a miner and return</p></li>
-<li><p><strong>launch</strong> - an async function to bacth execute a callbe targeting miners</p></li>
-<li><p><strong>load_ips_from_csv</strong> - to load miners addresses from a csv file</p></li>
+<li><p><a class="reference internal" href="api/luxos.ips.html#luxos.ips.load_ips_from_csv" title="luxos.ips.load_ips_from_csv"><span class="xref myst py py-func">luxos.util.load_ips_from_csv</span></a> - utility to load miners addresses from a CSV file</p></li>
+<li><p><a class="reference internal" href="api/luxos.asyncops.html#luxos.asyncops.rexec" title="luxos.asyncops.rexec"><span class="xref myst py py-func">luxos.util.rexec</span></a>- an async function to launch commands on a miner</p></li>
+<li><p><strong>luxos.utils.execute_command</strong> - the same as rexec but syncronous</p></li>
+<li><p><strong>luxos.utils.validate</strong> - validate a message from a miner</p></li>
+<li><p><strong>luxos.utils.launch</strong> - run a command on multiple miners</p></li>
 </ul>
 <section id="the-rexec-function">
-<h4>the rexec function<a class="headerlink" href="#the-rexec-function" title="Link to this heading">#</a></h4>
+<h3>the rexec function<a class="headerlink" href="#the-rexec-function" title="Link to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">rexec</span></code> function allows to send a command to a miner and return the response:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   
     <span class="kn">from</span> <span class="nn">luxos</span> <span class="kn">import</span> <span class="n">utils</span>
@@ -468,7 +474,7 @@ but there’s a sync version under <code class="docutils literal notranslate"><s
 </div></blockquote>
 </section>
 <section id="launch">
-<h4>launch<a class="headerlink" href="#launch" title="Link to this heading">#</a></h4>
+<h3>launch<a class="headerlink" href="#launch" title="Link to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">luxos.utils.lauch</span></code> allows to rexec commands to a list of miners stored in a csv file.
 This all-in-one function, allows batched operations on a set of miners, taking care of all details.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
@@ -489,7 +495,6 @@ This all-in-one function, allows batched operations on a set of miners, taking c
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">addresses</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">rexec</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">),</span> <span class="n">batch</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
 </pre></div>
 </div>
-</section>
 </section>
 </section>
 </section>
@@ -532,14 +537,11 @@ This all-in-one function, allows batched operations on a set of miners, taking c
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intro">Intro</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install">Install</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick start</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-luxos-command-line-tool">Using the <code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-luxos-run-command-line-tool">Using the <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-python-api">The python api</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rexec-function">the rexec function</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#launch">launch</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-run-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-python-api">The python api</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rexec-function">the rexec function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#launch">launch</a></li>
 </ul>
 </li>
 </ul>

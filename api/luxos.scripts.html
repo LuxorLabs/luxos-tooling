@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>luxos.scripts package &#8212; luxos  documentation</title>
+    <title>luxos.scripts &#8212; luxos  documentation</title>
   
   
   
@@ -46,7 +46,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/luxos.scripts';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="luxos.cli package" href="luxos.cli.html" />
+    <link rel="next" title="luxos.exceptions" href="luxos.exceptions.html" />
+    <link rel="prev" title="luxos.cli" href="luxos.cli.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -159,11 +160,15 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples / Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">luxos.api.cli</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">luxos.utils</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="luxos.cli.html">luxos.cli package</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">luxos.scripts package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="luxos.ips.html">luxos.ips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="luxos.asyncops.html">luxos.asyncops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="luxos.cli.html">luxos.cli</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">luxos.scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="luxos.exceptions.html">luxos.exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -291,9 +296,7 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
+
 </div></div>
       
     </div>
@@ -304,41 +307,11 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>luxos.scripts package</h1>
+    <h1>luxos.scripts</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.scripts.async_luxos">luxos.scripts.async_luxos module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.Result"><code class="docutils literal notranslate"><span class="pre">Result</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.Result.host"><code class="docutils literal notranslate"><span class="pre">Result.host</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.Result.port"><code class="docutils literal notranslate"><span class="pre">Result.port</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.Result.tback"><code class="docutils literal notranslate"><span class="pre">Result.tback</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.Result.value"><code class="docutils literal notranslate"><span class="pre">Result.value</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.wrapper"><code class="docutils literal notranslate"><span class="pre">wrapper()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-scripts-health-checker-module">luxos.scripts.health_checker module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.scripts.luxos">luxos.scripts.luxos module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.luxos.add_arguments"><code class="docutils literal notranslate"><span class="pre">add_arguments()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.luxos.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.luxos.process_args"><code class="docutils literal notranslate"><span class="pre">process_args()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.luxos.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.scripts">Module contents</a></li>
-</ul>
-            </nav>
         </div>
     </div>
 </div>
@@ -348,87 +321,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="luxos-scripts-package">
-<h1>luxos.scripts package<a class="headerlink" href="#luxos-scripts-package" title="Link to this heading">#</a></h1>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
-</section>
-<section id="module-luxos.scripts.async_luxos">
-<span id="luxos-scripts-async-luxos-module"></span><h2>luxos.scripts.async_luxos module<a class="headerlink" href="#module-luxos.scripts.async_luxos" title="Link to this heading">#</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="luxos.scripts.async_luxos.Result">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.scripts.async_luxos.</span></span><span class="sig-name descname"><span class="pre">Result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'Any'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.scripts.async_luxos.Result" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="luxos.scripts.async_luxos.Result.host">
-<span class="sig-name descname"><span class="pre">host</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#luxos.scripts.async_luxos.Result.host" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="luxos.scripts.async_luxos.Result.port">
-<span class="sig-name descname"><span class="pre">port</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#luxos.scripts.async_luxos.Result.port" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="luxos.scripts.async_luxos.Result.tback">
-<span class="sig-name descname"><span class="pre">tback</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#luxos.scripts.async_luxos.Result.tback" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="luxos.scripts.async_luxos.Result.value">
-<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Any</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#luxos.scripts.async_luxos.Result.value" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.scripts.async_luxos.main">
-<span class="sig-prename descclassname"><span class="pre">luxos.scripts.async_luxos.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#luxos.scripts.async_luxos.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.scripts.async_luxos.run">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.scripts.async_luxos.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipaddresses</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#luxos.scripts.async_luxos.run" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.scripts.async_luxos.wrapper">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.scripts.async_luxos.</span></span><span class="sig-name descname"><span class="pre">wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#luxos.scripts.async_luxos.Result" title="luxos.scripts.async_luxos.Result"><span class="pre">Result</span></a></span></span><a class="headerlink" href="#luxos.scripts.async_luxos.wrapper" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</section>
-<section id="luxos-scripts-health-checker-module">
-<h2>luxos.scripts.health_checker module<a class="headerlink" href="#luxos-scripts-health-checker-module" title="Link to this heading">#</a></h2>
-</section>
-<section id="module-luxos.scripts.luxos">
-<span id="luxos-scripts-luxos-module"></span><h2>luxos.scripts.luxos module<a class="headerlink" href="#module-luxos.scripts.luxos" title="Link to this heading">#</a></h2>
-<p>Script to issue commands to miner(s)</p>
-<p>This tool is designed to issue a simple command (with parameters) to a set of miners
-defined on the command line (–range/–range_start/–range-end) or in a file (yaml/csv).</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.scripts.luxos.add_arguments">
-<span class="sig-prename descclassname"><span class="pre">luxos.scripts.luxos.</span></span><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LuxosParserBase</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#luxos.scripts.luxos.add_arguments" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.scripts.luxos.main">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">luxos.scripts.luxos.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Namespace</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.scripts.luxos.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.scripts.luxos.process_args">
-<span class="sig-prename descclassname"><span class="pre">luxos.scripts.luxos.</span></span><span class="sig-name descname"><span class="pre">process_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Namespace</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#luxos.scripts.luxos.process_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="luxos.scripts.luxos.run">
-<span class="sig-prename descclassname"><span class="pre">luxos.scripts.luxos.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luxos.scripts.luxos.run" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</section>
-<section id="module-luxos.scripts">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-luxos.scripts" title="Link to this heading">#</a></h2>
-</section>
+  <section id="module-luxos.scripts">
+<span id="luxos-scripts"></span><h1>luxos.scripts<a class="headerlink" href="#module-luxos.scripts" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -448,8 +342,17 @@ defined on the command line (–range/–range_start/–range-end) or in a file 
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">luxos.cli package</p>
+        <p class="prev-next-title">luxos.cli</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="luxos.exceptions.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">luxos.exceptions</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -458,42 +361,7 @@ defined on the command line (–range/–range_start/–range-end) or in a file 
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.scripts.async_luxos">luxos.scripts.async_luxos module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.Result"><code class="docutils literal notranslate"><span class="pre">Result</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.Result.host"><code class="docutils literal notranslate"><span class="pre">Result.host</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.Result.port"><code class="docutils literal notranslate"><span class="pre">Result.port</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.Result.tback"><code class="docutils literal notranslate"><span class="pre">Result.tback</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.Result.value"><code class="docutils literal notranslate"><span class="pre">Result.value</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.async_luxos.wrapper"><code class="docutils literal notranslate"><span class="pre">wrapper()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-scripts-health-checker-module">luxos.scripts.health_checker module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.scripts.luxos">luxos.scripts.luxos module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.luxos.add_arguments"><code class="docutils literal notranslate"><span class="pre">add_arguments()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.luxos.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.luxos.process_args"><code class="docutils literal notranslate"><span class="pre">process_args()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos.scripts.luxos.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-luxos.scripts">Module contents</a></li>
-</ul>
-  </nav></div>
-
-</div></div>
+                <div class="bd-sidebar-secondary bd-toc"></div>
               
             
           </div>
