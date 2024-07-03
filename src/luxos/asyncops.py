@@ -341,7 +341,7 @@ async def rexec(
     timeout: float | None = None,
     retry: int | None = None,
     retry_delay: float | None = None,
-) -> dict[str, Any]:
+) -> dict[str, Any] | None:
     """
     Send a command to a host.
 
