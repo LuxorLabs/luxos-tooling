@@ -16,6 +16,7 @@ develop
 
 scripts/luxos.md
 
+
 ```
 
 ```{toctree}
@@ -24,6 +25,7 @@ scripts/luxos.md
 :caption: API
 
 api.md
+api/examples.md
 api/cli.md
 api/utils.md
 api/luxos.rst
@@ -34,12 +36,13 @@ api/luxos.rst
 
 ## Intro
 
-The luxos python package provides:
+The [luxos](https://pypi.org/project/luxos) python package provides:
 
-1. A simple script `luxos`, allowing to run a single command on miners
-2. A script `luxos-run` able to run scriptlets on miners
-3. A consistent API to access miners functionality through the the luxos python package (eg. `import luxos`)
+1. A cli script `luxos`, allowing to run a single command on miners
+2. A script `luxos-run` to run scriptlets on miners in parallel (using asyncio)
+3. A consistent API to access miners functionality through the the `luxos` python package
 
+For simple to follow example on how to use the API see [here](api-examples)
 
 ## Install
 
@@ -57,36 +60,42 @@ $> python -c "import luxos; print(luxos.__version__, luxos.__hash__)"
 0.0.7 27e53c7b37ac1bbb88112f3c931b9cd8f1a74a3a
 ```
 
-## Quick start
-
-### Using the `luxos` command line tool
+## `luxos` command line tool
 
 The [luxos](https://pypi.org/project/luxos) python package comes with a command line script 
 called `luxos`: it can issue a command (with parameters) to a list of miners' ips
 in a csv file.
 
-This will enquire a list of miners for their version:
-```bash
-   $> luxos --ipfile miners.csv --timeout 2 --quiet --cmd version
-   > 10.206.1.152:4028
-   | {
-   |   "STATUS": [
-   |     {
-   |       "Code": 22,
-   |       "Description": "LUXminer 2024.6.18.181313-3afaf1f",
-   |       "Msg": "LUXminer versions",  
+This will launch the version command on a miner, returning the json output:
+```shell
+luxos --range 127.0.0.1 --quiet --json --cmd version 
+```
+The `--range` flag can take:
+* a single ip address, eg: `--range 127.0.0.1`
+* a range like: `--range 127.0.0.1-127.0.0.5` 
+* or addresses from a file: `--range @miners.csv`.
+
+Other examples:
+
+```shell
+# set/unset ATM
+luxos --range 127.0.0.1 --quiet --json --cmd atmset --params "enabled=true"
+
+# add a new profile
+luxos --range 127.0.0.1 --quiet --json --cmd profilenew --params "myprofile,700,14.8"
 ```
 
 > **NOTE** 
-> 1. instead `--ipfile` you can also use the `--range` flag: it can
+> 1. `--ipfile` is an alternative way to load miners from a csv file, it's the same as `--range` flag: it can
 > take addresses like `127.0.0.1`, ranges as `127.0.0.1-127.0.0.5` or filenames
 > as `@miners.csv`.
 > 2. you can use the `--json` to save the results in json format (to stdout).
 
-### Using the `luxos-run` command line tool
+## `luxos-run` command line tool
 
-The `luxos-run` allows to run as **scriptlet** (a small python script) targeting miners:
-a scriptlet usually can contain some logic and or longer commands.
+The `luxos-run` is an alternative to `luxos` command line script, 
+allowing to run as **scriptlet** (a small python script) targeting miners:
+a scriptlet usually can contain some logic and or longer commands sequences.
 
 **hello-world.py** scriplet:
 ```python
@@ -97,34 +106,33 @@ async def main(host: str, port: int):
     res = await asyncops.rexec(host, port, "version")
 
     # validate will check the message is correct and return the result
-    return asyncops.validate(res, "VERSION", 1, 1)
+    version = asyncops.validate(res, "VERSION", 1, 1)
+    return {"address": f"{host}:{port}", "miner": version["LUXminer"]}
 ```
 
 Running the `luxos-run` will execute the scriptlet aggregating the results in
 a dictionary with key set to the miner address:
 ```bash
-   $> luxos-run --range @miners.csv --quiet --json hello-world.py
-   {
-     "10.206.1.152:4028": {
-       "API": "3.7",
-       "CompileTime": "Tue Jun 18 18:19:10 UTC 2024",
-       "LUXminer": "2024.6.18.181313-3afaf1f",
-       "Miner": "2024.6.18.181313",
-       "Type": "Antminer S19 XP"
-     },
-     "10.206.1.153:4028": {
-       "API": "3.7",
-     ...
+luxos-run --range @miners.csv --quiet --json hello-world.py
+{
+  "127.0.0.1:4028": {
+    "address": "127.0.0.1:4028",
+    "version": "2021.1.12.202305-nnnn"
+  }
+}
 ````
 
-### The python api
+## The python api
 
 [luxos](https://pypi.org/project/luxos) python package comes with an API to support 
 miners operations. The main fuctions are stored in the `luxos.util` module for
 convenience and they are:
-- **rexec** - an async function to send a single command to a miner and return
-- **launch** - an async function to bacth execute a callbe targeting miners
-- **load_ips_from_csv** - to load miners addresses from a csv file
+- [luxos.util.load_ips_from_csv](luxos.ips.load_ips_from_csv) - utility to load miners addresses from a CSV file
+- [luxos.util.rexec](luxos.asyncops.rexec)- an async function to launch commands on a miner
+- **luxos.utils.execute_command** - the same as rexec but syncronous
+- **luxos.utils.validate** - validate a message from a miner
+- **luxos.utils.launch** - run a command on multiple miners
+
 
 #### the rexec function
 The `rexec` function allows to send a command to a miner and return the response:

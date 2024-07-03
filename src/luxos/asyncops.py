@@ -11,9 +11,12 @@ from . import api, exceptions
 
 log = logging.getLogger(__name__)
 
-TIMEOUT = 3.0  # default timeout for operations
-RETRIES = 0  # default number (>1) of retry on a failed operation
-RETRIES_DELAY = 1.0  # delay between retry
+#: default timeout (s) for operations
+TIMEOUT = 3.0
+#: default number (>1) of retries on a failed operation
+RETRIES = 0
+#: delay (s) between retries
+RETRIES_DELAY = 1.0
 
 
 def wrapped(function):
@@ -187,6 +190,31 @@ def validate(
     minfields: None | int = None,
     maxfields: None | int = None,
 ) -> Any:
+    """
+    Validate a message returned from a miner.
+
+    Args:
+        res: The dictionary returned from a miner.
+        extrakey: if present it will try to extract it from res.
+        cmd: A string representing the command to execute.
+        minfields: The min length of the field extrakey.
+        maxfields: The max length of the field extrakey.
+
+    Returns:
+        A dictionary containing the response from the execution of the
+        command if extrakey is None, else a dict or a list of items.
+
+    Raises:
+
+        RuntimeError: if minfield > maxfield (internal error).
+        MinerMessageMalformedError: the res dict is missing either
+            'STATUS' or 'id' keys.
+        MinerMessageError: the message is well formed but STATUS is not `S`.
+        MinerMessageMalformedError: the res[extrakey] is not a list
+        MinerMessageInvalidError: the message is missing `extarkey` or
+            the len(res[extrakey]) is not valid.
+    """
+
     if minfields is not None and maxfields is not None:
         if minfields > maxfields:
             raise RuntimeError(f"invalid arguments: {minfields=} > {maxfields=}")
@@ -219,7 +247,7 @@ def validate(
     values = res[extrakey]
     if not isinstance(values, list):
         raise exceptions.MinerMessageMalformedError(
-            f"message reply doesn't containa list in '{extrakey}'", res
+            f"message reply doesn't contain list in '{extrakey}'", res
         )
 
     n = len(values)
@@ -314,6 +342,36 @@ async def rexec(
     retry: int | None = None,
     retry_delay: float | None = None,
 ) -> dict[str, Any] | None:
+    """
+    Send a command to a host.
+
+    Args:
+        host: A string representing the host IP or a name.
+        port: An integer representing the port number to connect to.
+        cmd: A string representing the command to execute.
+        parameters: Any additional parameters for the command.
+        timeout: A float representing the maximum time in seconds to
+            wait for a response before timing out.
+        retry: Optional. An integer representing the number of times
+            to retry the command execution in case of failure.
+        retry_delay: Optional. A float representing the delay in seconds
+            between each retry attempt.
+
+    Returns:
+        A dictionary containing the response from the execution of the command.
+
+    Raises:
+        Any exception that occurs during the execution of the command.
+
+    Notes:
+        If `timeout`/`retry`/`retry_delay` aren't provided (or None),
+        they will default to the module level values
+        (:py:data:`TIMEOUT`, :py:data:`RETRIES`, and :py:data:`RETRIES_DELAY`).
+
+        This function will handle logon/logoff automatically.
+
+    """
+
     parameters = parameters_to_list(parameters)
 
     timeout = TIMEOUT if timeout is None else timeout

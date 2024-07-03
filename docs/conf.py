@@ -15,6 +15,8 @@ author = "A. Cavallo"
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.autosummary",
     "myst_parser",
     "sphinx_tabs.tabs",
     "sphinx_design",

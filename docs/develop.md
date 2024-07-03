@@ -34,28 +34,35 @@ then every time you restart a shell, you need to [Activate the virtual environme
 
 First you need to create a virtual environment and install all dependencies:
 
-=== "Windows"
+::::{tabs}
+:::{tab} Windows
+```shell
+python3 -m venv %CD%\venv
+.\venv\Scripts\activate.bat    
 
-    ```bash
-    $> python3 -m venv %CD%\venv
+pip install -r tests\requirements.txt
+pip install -e .
+```
+:::
+:::{tab} Windows (powershell)
+```shell
+python3 -m venv %CD%\venv
+.\venv\Scripts\activate.ps1
 
-    $> .\venv\Scripts\activate.bat
-    # on powershell
-    $> .\venv\Scripts\activate.ps1
-    
-    $> pip install -r tests\requirements.txt
-    $> pip install -e .
-    ```
+pip install -r tests\requirements.txt
+pip install -e .
+```
+:::
+:::{tab} *NIX
+```bash
+python3 -m venv $(pwd)/venv  
+source ./venv/bin/activate
 
-=== "*NIX"
-  
-    ```bash
-    $> python3 -m venv $(pwd)/venv  
-    $> source ./venv/bin/activate
-    
-    $> pip install -r tests\requirements.txt
-    $> pip install -e .
-    ```
+pip install -r tests\requirements.txt
+pip install -e .
+```
+:::
+:::
 
 ### Setting up the repository
 
