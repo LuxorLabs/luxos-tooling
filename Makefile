@@ -49,10 +49,13 @@ fmt:  ## Format code (ruff check --fix), updating source files
 .PHONY: clean
 clean:  ## cleanup
 	rm -rf build .mypy_cache .pytest_cache .ruff_cache .coverage
+	find . -type d -name __pycache__ -prune -exec rm -rf "{}" \;
+	@echo "cleaned"
+
 
 .PHONY: clean-all
-clean-all:  ## cleanup
-	rm -rf build .mypy_cache .pytest_cache .ruff_cache .coverage
+clean-all:  clean ## deepest cleanup
+	@echo "deeply cleaned"
 
 
 .PHONY: docs
@@ -62,7 +65,7 @@ docs:  ## build documentation
 
 .PHONY: serve
 serve:  ## start a documentation server with autoreload
-	@python -m sphinx_autobuild docs build/docs
+	@python -m sphinx_autobuild --watch src/luxos docs build/docs
 
 
 .PHONY: publish

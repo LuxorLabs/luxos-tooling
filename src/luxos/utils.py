@@ -54,18 +54,28 @@ async def launch(
     batch: int = 0,
     asobj: bool = False,
 ) -> list[LuxosLaunchError | LuxosLaunchTimeoutError | Any]:
-    """launch an async function on a list of (host, port) miners
+    """
+    Launch an async function on a list of (host, port) miners.
+
+    This function takes a list of (host, port) tuples (points) to
+    miners, and for each "point" call `function` on it.
 
     Arguments:
-        batch: limit the number of concurrent calls
+        addresses: list of (host: str, port: int)
+        function: async callable with (host: str, port: int) call signature
+        batch: limit the number of concurrent calls (unlimited by default)
         asobj: if True all results will be instances subclasses
                of LuxosLaunchBaseResult
 
-    Eg.
-        async printme(host, port):
-            print(await rexec(host, port, "version"))
-        addresses = load_ips_from_csv("miners.csv")
-        asyncio.run(launch(addresses, printme))
+    Examples:
+        This will gather the miners versions in a dict::
+
+            async printme(host: str, port: int):
+                res = await rexec(host, port, "version"))
+            addresses = load_ips_from_csv("miners.csv")
+            asyncio.run(launch(addresses, printme))
+
+
     """
 
     def wraps(fn):

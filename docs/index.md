@@ -125,13 +125,13 @@ luxos-run --range @miners.csv --quiet --json hello-world.py
 ## The python api
 
 [luxos](https://pypi.org/project/luxos) python package comes with an API to support 
-miners operations. The main fuctions are stored in the `luxos.util` module for
+miners operations. The main fuctions are stored in the [](luxos.utils) module for
 convenience and they are:
 - [luxos.util.load_ips_from_csv](luxos.ips.load_ips_from_csv) - utility to load miners addresses from a CSV file
-- [luxos.util.rexec](luxos.asyncops.rexec)- an async function to launch commands on a miner
-- **luxos.utils.execute_command** - the same as rexec but syncronous
-- **luxos.utils.validate** - validate a message from a miner
-- **luxos.utils.launch** - run a command on multiple miners
+- [luxos.util.rexec](luxos.asyncops.rexec) - an async function to launch commands on a miner
+- [luxos.util.execute_command](luxos.syncops.execute_command) - the syncronous `rexec` version
+- [luxos.util.validate](luxos.asyncops.validate) - validate a message from a miner
+- [luxos.util.launch](luxos.utils.launch) - run a command on multiple miners
 
 
 #### the rexec function
