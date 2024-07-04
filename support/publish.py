@@ -67,6 +67,7 @@ def main(args):
     cleanup(args.builddir)
     sphinx.cmd.build.main(["docs", str(args.builddir)])
     if args.commit:
+        run(["git", "add", "."], cwd=args.builddir)
         run(
             [
                 "git",
