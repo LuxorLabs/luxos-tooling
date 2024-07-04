@@ -36,7 +36,7 @@ jobs:
 
       - name: Build wheel packages
         run: |
-          python make.pyz beta-build --release -v
+          python support/release.py --release src/luxos/__init__.py
 
       - name: "Publish beta package to pypi"
         uses: pypa/gh-action-pypi-publish@release/v1
