@@ -12,3 +12,4 @@ Subpackages
    luxos.cli
    luxos.scripts
    luxos.exceptions
+   luxos.utils

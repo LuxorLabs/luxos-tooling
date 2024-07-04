@@ -170,6 +170,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.cli.html">luxos.cli</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.scripts.html">luxos.scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.exceptions.html">luxos.exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/luxos.utils.html">luxos.utils</a></li>
 </ul>
 </li>
 </ul>
@@ -438,14 +439,14 @@ a dictionary with key set to the miner address:</p>
 <section id="the-python-api">
 <h2>The python api<a class="headerlink" href="#the-python-api" title="Link to this heading">#</a></h2>
 <p><a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package comes with an API to support
-miners operations. The main fuctions are stored in the <code class="docutils literal notranslate"><span class="pre">luxos.util</span></code> module for
+miners operations. The main fuctions are stored in the <a class="reference internal" href="api/luxos.utils.html#module-luxos.utils" title="luxos.utils"><code class="xref myst py py-mod docutils literal notranslate"><span class="pre">luxos.utils</span></code></a> module for
 convenience and they are:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="api/luxos.ips.html#luxos.ips.load_ips_from_csv" title="luxos.ips.load_ips_from_csv"><span class="xref myst py py-func">luxos.util.load_ips_from_csv</span></a> - utility to load miners addresses from a CSV file</p></li>
-<li><p><a class="reference internal" href="api/luxos.asyncops.html#luxos.asyncops.rexec" title="luxos.asyncops.rexec"><span class="xref myst py py-func">luxos.util.rexec</span></a>- an async function to launch commands on a miner</p></li>
-<li><p><strong>luxos.utils.execute_command</strong> - the same as rexec but syncronous</p></li>
-<li><p><strong>luxos.utils.validate</strong> - validate a message from a miner</p></li>
-<li><p><strong>luxos.utils.launch</strong> - run a command on multiple miners</p></li>
+<li><p><a class="reference internal" href="api/luxos.asyncops.html#luxos.asyncops.rexec" title="luxos.asyncops.rexec"><span class="xref myst py py-func">luxos.util.rexec</span></a> - an async function to launch commands on a miner</p></li>
+<li><p><a class="reference internal" href="#luxos.syncops.execute_command"><span class="xref myst">luxos.util.execute_command</span></a> - the syncronous <code class="docutils literal notranslate"><span class="pre">rexec</span></code> version</p></li>
+<li><p><a class="reference internal" href="api/luxos.asyncops.html#luxos.asyncops.validate" title="luxos.asyncops.validate"><span class="xref myst py py-func">luxos.util.validate</span></a> - validate a message from a miner</p></li>
+<li><p><a class="reference internal" href="api/luxos.utils.html#luxos.utils.launch" title="luxos.utils.launch"><span class="xref myst py py-func">luxos.util.launch</span></a> - run a command on multiple miners</p></li>
 </ul>
 <section id="the-rexec-function">
 <h3>the rexec function<a class="headerlink" href="#the-rexec-function" title="Link to this heading">#</a></h3>
