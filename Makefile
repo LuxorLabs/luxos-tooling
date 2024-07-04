@@ -52,6 +52,7 @@ clean:  ## cleanup
 	find . -type d -name __pycache__ -prune -exec rm -rf "{}" \;
 	@echo "cleaned"
 
+
 .PHONY: clean-all
 clean-all:  clean ## deepest cleanup
 	@echo "deeply cleaned"
@@ -64,6 +65,10 @@ docs:  ## build documentation
 .PHONY: serve
 serve:  ## start a documentation server with autoreload
 	@python -m sphinx_autobuild --watch src/luxos docs build/docs
+<<<<<<< HEAD
+=======
+
+>>>>>>> 79a0e34 (update docs)
 
 .PHONY: publish
 publish:  ## publish pages to github
