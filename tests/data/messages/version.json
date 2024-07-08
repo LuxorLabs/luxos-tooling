@@ -1,0 +1,21 @@
+{
+  "STATUS": [
+    {
+      "Code": 22,
+      "Description": "LUXminer",
+      "Msg": "LUXminer versions",
+      "STATUS": "S",
+      "When": 1520678397
+    }
+  ],
+  "VERSION": [
+    {
+      "API": "3.7",
+      "CompileTime": "Mon Jan 01 00:01:01 UTC 2000",
+      "LUXminer": "2000.1.1.12345-aaabbbc",
+      "Miner": "some id",
+      "Type": "A model"
+    }
+  ],
+  "id": 1
+}

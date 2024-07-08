@@ -3,6 +3,7 @@
 This tool is designed to issue a simple command (with parameters) to a set of miners
 defined on the command line (--range/--range_start/--range-end) or in a file (yaml/csv).
 """
+
 from __future__ import annotations
 import asyncio
 import logging
@@ -19,30 +20,51 @@ def add_arguments(parser: cli.LuxosParserBase) -> None:
     def add_miners_arguments(group):
         group.add_argument("--range_start", help="IP start range")
         group.add_argument("--range_end", help="IP end range")
-        group.add_argument("--ipfile", type=Path,
-            help="File name to store IP addresses (csv)"
+        group.add_argument(
+            "--ipfile", type=Path, help="File name to store IP addresses (csv)"
         )
 
-        group.add_argument("--range", action="append", dest="addresses",
-                           help="IPs range or @file", type=cli.flags.type_range)
+        group.add_argument(
+            "--range",
+            action="append",
+            dest="addresses",
+            help="IPs range or @file",
+            type=cli.flags.type_range,
+        )
 
-        group.add_argument("--luxos-port", dest="luxos_port",
-                           help="miners' default port", type=int, default=4028)
+        group.add_argument(
+            "--luxos-port",
+            dest="luxos_port",
+            help="miners' default port",
+            type=int,
+            default=4028,
+        )
+
     group = parser.add_argument_group("Miners", "miners list or range")
 
     add_miners_arguments(group)
     cli.flags.add_arguments_rexec(parser)
 
-    parser.add_argument("--cmd", "--command", dest="cmd", required=True, help="Command to execute on LuxOS API")
+    parser.add_argument(
+        "--cmd",
+        "--command",
+        dest="cmd",
+        required=True,
+        help="Command to execute on LuxOS API",
+    )
     parser.add_argument(
         "--params",
         dest="parameters",
         action="append",
         help="Parameters for LuxOS API (either str or key=value pair)",
     )
-    parser.add_argument("--batch", dest="batchsize",
-                        type=int, default=100,
-                        help="limit execution to batch miners at time")
+    parser.add_argument(
+        "--batch",
+        dest="batchsize",
+        type=int,
+        default=100,
+        help="limit execution to batch miners at time",
+    )
 
     group1 = parser.add_mutually_exclusive_group()
     group1.add_argument(
@@ -67,13 +89,16 @@ def process_args(args: argparse.Namespace):
 
     def process_addresses():  # yes, it is pretty long
         from luxos.ips import iter_ip_ranges, load_ips_from_csv
+
         args.addresses = [
             address for addresses in (args.addresses or []) for address in addresses
         ]
 
         # old way
         if args.range_start and args.range_end:
-            args.addresses.extend(iter_ip_ranges(f"{args.range_start}-{args.range_end}"))
+            args.addresses.extend(
+                iter_ip_ranges(f"{args.range_start}-{args.range_end}")
+            )
         elif args.range_start:
             args.addresses.append((args.range_start, None))
         elif args.range_end:
@@ -86,16 +111,15 @@ def process_args(args: argparse.Namespace):
                 args.error(f"file not found {args.ipfile}")
 
         args.addresses = [
-            (host, port or args.luxos_port)
-            for host, port in args.addresses
+            (host, port or args.luxos_port) for host, port in args.addresses
         ]
 
     process_addresses()
     if not args.addresses:
         args.error("need a miners flag (eg. --range_{start|end}/--range/--ipfile)")
 
-    lparameters : list[str] = []
-    dparameters : dict[str, str] = {}
+    lparameters: list[str] = []
+    dparameters: dict[str, str] = {}
 
     for param in args.parameters or []:
         if "=" in param:
@@ -113,10 +137,14 @@ def process_args(args: argparse.Namespace):
 @cli.cli(add_arguments=add_arguments, process_args=process_args)
 async def main(args: argparse.Namespace):
     from . import async_luxos
+
     await async_luxos.run(
         args.addresses,
-        cmd=args.cmd, params=args.parameters,
-        batchsize=args.batchsize, delay=2.0, details=args.details or "all"
+        cmd=args.cmd,
+        params=args.parameters,
+        batchsize=args.batchsize,
+        delay=2.0,
+        details=args.details or "all",
     )
 
 

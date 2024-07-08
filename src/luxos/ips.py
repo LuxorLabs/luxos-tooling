@@ -174,25 +174,44 @@ def ip_ranges(
 def load_ips_from_csv(
     path: Path | str, port: int = 4028, strict: bool = False
 ) -> list[tuple[str, int]]:
-    """loads ip addresses from a csv file
+    """
+    Load ip addresses from a csv file.
+
+    Arguments:
+        path: a Path object to load data from (csv-like)
+        port: a fallback port if not defined
+        strict: abort with AddressParsingError if there's a malformed entry
+
+    Raises:
+        AddressParsingError: if strict is set to True and there's a
+            malformed entry in path.
+
+    Notes:
+        The **strict** argument if set to False will ignore malformed
+        lines in csv. If set to True it will raise AddressParsingError on
+        invalid entries.
 
     Example:
-    ```python
+        **foobar.csv** file::
 
-    foobar.csv contains ranges as parsed by iter_ip_ranges
-    127.0.0.1 # a single address
-    127.0.0.2-127.0.0.10
+            # comment (or empty lines) will be ignored
+            127.0.0.1 # a single address
+            127.0.0.2-127.0.0.10 # a range of addresses
 
+            # you can specify a port
+            127.0.0.11:9999
+            127.0.0.12-127.0.0.20:8888
 
-    for ip in load_ips_from_csv("foobar.csv"):
-        print(ip)
+        You can read into a list of (host, port) tuples as::
 
-    (127.0.0.1, 4028)
-    (127.0.0.2, 4028)
-    (127.0.0.3, 4028)
-    ...
-    (127.0.0.10, 4028)
-    ```
+           for ip in load_ips_from_csv("foobar.csv"):
+               print(ip)
+
+           (127.0.0.1, 4028)
+           (127.0.0.2, 4028)
+           (127.0.0.3, 4028)
+           ...
+           (127.0.0.10, 4028)
 
     """
     result = []
@@ -208,8 +227,39 @@ def load_ips_from_csv(
     return result
 
 
-def load_ips_from_yaml(path: Path | str, port: int = 4028) -> list[tuple[str, int]]:
-    """Loads ip addresses from a yaml file"""
+def load_ips_from_yaml(
+    path: Path | str, port: int = 4028, strict: bool = False
+) -> list[tuple[str, int]]:
+    """
+    Load ip addresses from a yaml file.
+
+    Arguments:
+        path: a Path object to load data from (csv-like)
+        port: a fallback port if not defined
+        strict: abort with AddressParsingError if there's a malformed entry
+
+    Raises:
+        AddressParsingError: if strict is set to True and
+            there's a malformed entry in path.
+
+    Notes:
+        The **strict** argument if set to False will ignore malformed
+        lines in csv. If set to True it will raise AddressParsingError on
+        invalid entries.
+
+    Example:
+        **foobar.yaml** file::
+
+            miners:
+                luxos_port: 9999  # default fallback port
+                addresses:
+                    - 127.0.0.1 # a single address
+                    - 127.0.0.2-127.0.0.10 # a range of addresses
+
+                    # you can specify a port
+                    - 127.0.0.11:9999
+                    - 127.0.0.12-127.0.0.20:8888
+    """
     from yaml import safe_load
 
     txt = Path(path).read_text()
@@ -223,7 +273,7 @@ def load_ips_from_yaml(path: Path | str, port: int = 4028) -> list[tuple[str, in
         default_port = miners.get("luxos_port", None)
         result = []
         for address in data["miners"]["addresses"]:
-            for host, thisport in iter_ip_ranges(address):
+            for host, thisport in iter_ip_ranges(address, strict=strict):
                 result.append((host, thisport or default_port or port))
         return result
 

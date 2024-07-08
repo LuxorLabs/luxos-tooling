@@ -447,9 +447,10 @@ def execute_command(
     port: int,
     timeout_sec: int | float | None,
     cmd: str,
-    parameters: str | list[Any] | dict[str, Any] | None = None,
+    parameters: str | int | float | bool | list[Any] | dict[str, Any] | None = None,
     verbose: bool = False,
 ):
+    return rexec(host, port, cmd, parameters, timeout_sec)
     timeout_sec = TIMEOUT if timeout_sec is None else timeout_sec
     # Check if logon is required for the command
     logon_req = logon_required(cmd)
@@ -483,20 +484,6 @@ def execute_command(
         __logoff(host, port, sid, timeout_sec)
 
     return res
-
-
-def __rexec(
-    host: str,
-    port: int,
-    cmd: str,
-    parameters: str | list[Any] | dict[str, Any] | None = None,
-    timeout: float | None = None,
-    retry: int | None = None,
-    retry_delay: float | None = None,
-) -> dict[str, Any] | None:
-    if retry or retry_delay:
-        raise NotImplementedError("cannot use rexec in suncops with retry!")
-    return execute_command(host, port, timeout, cmd, parameters)
 
 
 @contextlib.contextmanager

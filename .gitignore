@@ -2,6 +2,8 @@
 /build
 /dist
 
+/.coverage
+
 
 # Compiled Python files
 __pycache__/

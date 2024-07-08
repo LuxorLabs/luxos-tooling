@@ -110,11 +110,11 @@ def add_arguments_rexec(parser: LuxosParserBase):
     )
 
     def callback(args: argparse.Namespace):
-        from .. import asyncops
+        from .. import asyncops, syncops
 
-        asyncops.TIMEOUT = args.timeout
-        asyncops.RETRIES = args.retries
-        asyncops.RETRIES_DELAY = args.retries_delay
+        asyncops.TIMEOUT = syncops.TIMEOUT = args.timeout
+        asyncops.RETRIES = syncops.RETRIES = args.retries
+        asyncops.RETRIES_DELAY = syncops.RETRIES_DELAY = args.retries_delay
 
     parser.callbacks.append(callback)
 

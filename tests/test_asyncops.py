@@ -25,6 +25,95 @@ def test_parameters_to_list():
     assert aapi.parameters_to_list({"hello": True}) == ["hello=true"]
 
 
+def test_validate_check_syntax(resolver):
+    """validate messages malformed (eg. missing STATUS or id"""
+    pytest.raises(exceptions.MinerMessageMalformedError, aapi.validate, {})
+    pytest.raises(exceptions.MinerMessageMalformedError, aapi.validate, {"id": 1})
+    pytest.raises(exceptions.MinerMessageMalformedError, aapi.validate, {"STATUS": 1})
+    assert aapi.validate({"STATUS": 0, "id": 1}) == {"STATUS": 0, "id": 1}
+    assert aapi.validate({"STATUS": 0, "id": 1}, None, 1000) == {"STATUS": 0, "id": 1}
+    pytest.raises(RuntimeError, aapi.validate, None, "GROUPS", 3, 1)
+
+
+def test_validate_with_extrakey_check_one_result(resolver):
+    """validate message like version with a single result"""
+    res = resolver.load("messages/version.json")
+
+    # there's been an error
+    res["STATUS"][0]["STATUS"] = "E"
+    pytest.raises(exceptions.MinerMessageError, aapi.validate, res, "NOT-KEY", 1)
+
+    # status is ok
+    res["STATUS"][0]["STATUS"] = "S"
+
+    # we dont' expect results (eg. minfields 0), some messages as POOLS
+    # may not return any item in the 'POLLS' key if there aren't pools
+    assert aapi.validate(res, "NOT-KEY", 0) is None
+    assert aapi.validate(res, "NOT-KEY", None) is None
+
+    # we do expect at least one item
+    pytest.raises(exceptions.MinerMessageInvalidError, aapi.validate, res, "NOT-KEY", 1)
+    assert aapi.validate(res, "VERSION", 1, None) == [
+        {
+            "API": "3.7",
+            "CompileTime": "Mon Jan 01 00:01:01 UTC 2000",
+            "LUXminer": "2000.1.1.12345-aaabbbc",
+            "Miner": "some id",
+            "Type": "A model",
+        }
+    ]
+
+    # we do expect exactly one item, we'll return it (list vs item)
+    assert aapi.validate(res, "VERSION", 1, 1) == {
+        "API": "3.7",
+        "CompileTime": "Mon Jan 01 00:01:01 UTC 2000",
+        "LUXminer": "2000.1.1.12345-aaabbbc",
+        "Miner": "some id",
+        "Type": "A model",
+    }
+
+
+def test_validate_with_extrakey_check_many_results(resolver):
+    """validate message like groups with multiple results"""
+    res = resolver.load("messages/groups.json")
+
+    # there's been an error
+    res["STATUS"][0]["STATUS"] = "E"
+    pytest.raises(exceptions.MinerMessageError, aapi.validate, res, "NOT-KEY", 1)
+
+    # status is ok
+    res["STATUS"][0]["STATUS"] = "S"
+
+    # we dont' expect results (eg. minfields 0), some messages as POOLS
+    # may not return any item in the 'POLLS' key if there aren't pools
+    assert aapi.validate(res, "NOT-KEY", 0) is None
+    assert aapi.validate(res, "NOT-KEY", None) is None
+
+    # we do expect at least one item
+    pytest.raises(exceptions.MinerMessageInvalidError, aapi.validate, res, "NOT-KEY", 1)
+
+    pytest.raises(
+        exceptions.MinerMessageInvalidError, aapi.validate, res, "GROUPS", None, 1
+    )
+    pytest.raises(
+        exceptions.MinerMessageInvalidError, aapi.validate, res, "GROUPS", 1, 2
+    )
+    pytest.raises(
+        exceptions.MinerMessageInvalidError, aapi.validate, res, "GROUPS", 1, 3
+    )
+    groups = aapi.validate(res, "GROUPS", 1, 4)
+    groups1 = aapi.validate(res, "GROUPS", 1, None)
+    assert groups == groups1
+    assert isinstance(groups, list) and len(groups) == 4
+    assert groups[3]["GROUP"] == 3 and groups[3]["Name"] == "test-group2"
+    pytest.raises(
+        exceptions.MinerMessageInvalidError, aapi.validate, res, "GROUPS", 99, 100
+    )
+    pytest.raises(
+        exceptions.MinerMessageInvalidError, aapi.validate, res, "GROUPS", 99, None
+    )
+
+
 def test_validate_message():
     # TODO add more cases
     # 1. when res is not present and limit is 0,None
@@ -226,7 +315,7 @@ async def test_bridge_execute_command(miner_host_port):
 
     port += 1
     pytest.raises(
-        ConnectionRefusedError,
+        exceptions.MinerCommandTimeoutError,
         execute_command,
         host,
         port,
