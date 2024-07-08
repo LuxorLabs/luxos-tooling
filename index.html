@@ -492,8 +492,9 @@ This all-in-one function, allows batched operations on a set of miners, taking c
 <span class="c1"># execute task across all miners, batch will limit execution rate to 4</span>
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">addresses</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
 
-<span class="c1"># a one liner</span>
-<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">addresses</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">rexec</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">),</span> <span class="n">batch</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
+<span class="c1"># a one liner-ish</span>
+<span class="n">version</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">rexec</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">)</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">addresses</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
 </pre></div>
 </div>
 </section>

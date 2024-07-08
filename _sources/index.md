@@ -179,6 +179,7 @@ async def task(host: str, port: int):
 # execute task across all miners, batch will limit execution rate to 4
 asyncio.run(utils.launch(addresses, task, batch=4))
 
-# a one liner
-asyncio.run(utils.launch(addresses, lambda h, p: utils.rexec(h, p, "version"), batch=None))
+# a one liner-ish
+version = functools.partial(utils.rexec, cmd="version")
+asyncio.run(utils.launch(addresses, version, batch=None))
 ```
