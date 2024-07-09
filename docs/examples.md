@@ -1,4 +1,4 @@
-# Examples / Tutorial
+# Examples (API)
 
 Luxos exposes an easy to use API, both in sync and async fashion. Here are some 
 notable example how to use it, in an HOWTO style.
@@ -46,7 +46,17 @@ the reply form a miner and extracting the relevant information.
 
 ## Examples
 
-### load miners from a csv file
+Below are some API usage examples, listed in order of complexity: they range from 
+loading csv files with miners' addresses to run a function across multiple 
+miners leveraging asyncio.
+
+### load_ips_from_csv
+
+The [luxos.utils.load_ips_from_csv](luxos.ips.load_ips_from_csv) function
+loads ip or addresses (including ports) from a csv file.
+It also handles ranges of addresses (eg. start-stop) so you can
+describe sparse networks.
+
 This is an example of csv file (eg. **foobar.csv**):
 ```text
 # comment (or empty lines) will be ignored
@@ -64,9 +74,12 @@ from luxos import utils
 addresses = utils.load_ips_from_csv("foobar.csv")
 ```
 
-### get a miner version - rexec example
+### rexec / validate
 
-This will load a miner version:
+The [luxos.utils.rexec](luxos.asyncops.rexec) function is the core of the
+script <-> miner application: it sends commands and receives answer back from a miner.
+
+This will get a miner [version](https://docs.luxor.tech/firmware/api/cgminer/version):
 ```python
 host, port = ("127.0.0.1", 4028)
 
@@ -78,25 +91,31 @@ res = await utils.rexec(host, port, "version")
 print(utils.validate(res, "VERSION", 1, 1)["LUXminer"])
 ```
 
-The rexec is a function that sends out a command to a miner and returns (asyncrously)
-a result (see [luxos.utils.rexec](luxos.asyncops.rexec)).
+The validate takes care of validate the message (eg. ensuring the presense of the `STATUS` and `id` fields) 
+and the miner didn't reply with an error. Moreover it makes sure the 
+**VERSION** key is present and there's only once result in the miner's reply 
+(for more details see [luxos.utils.validate](luxos.asyncops.validate)).
 
-The validate makes sure the **VERSION** key is present and there's only once result
-in the miner's reply (see [luxos.utils.validate](luxos.asyncops.validate)).
-
-
-### get a miner boards information - list results
-
-Please note the `validate` using the 1..None range: this means the validation will 
-raise an MinerMessageInvalidError if there aren't boards and there's no upper limit
-to how many boards are present.
-
+[luxos.utils.validate](luxos.asyncops.validate) can handle list results like in:
 ```python
 res = await utils.rexec(host, port, "devdetails")
 print(utils.validate(res, "DEVTAILS", 1, None))
 ```
 
-### flip the ATM - parameters handling
+Using the 1..None range meanss the validation will 
+raise an MinerMessageInvalidError if there aren't boards (lower limit is set to `1`).
+
+### parameters handling
+
+[luxos.utils.rexec](luxos.asyncops.rexec) function handles the parameters sent to
+the miner, wrapping the arguments in a proper message. It is also smart in a way that
+handles:
+- parameter encoding
+- loging/logoff process (for commands requiring it)
+- timeout
+- retry and retry delays between retry
+
+
 This will retrieve the ATM state first:
 ```python
 res = await utils.rexec(host, port, "atm")
@@ -108,10 +127,7 @@ Then it flips the atm status (enabled <-> disabled):
 await utils.rexec(host, port, "atmset", parameters={"enabled": not atm})
 ```
 
-And restore it back:
+And it restores back:
 ```python
 await utils.rexec(host, port, "atmset", parameters={"enabled": atm})
 ```
-
-[rexec](luxos.asyncops.rexec) is able to take care of the loging process and 
-dispatch the parameters in the most appropriate way (eg. no need to cast).
