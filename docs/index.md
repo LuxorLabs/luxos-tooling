@@ -7,6 +7,7 @@
 
 installation
 develop
+examples
 ```
 
 ```{toctree}
@@ -15,6 +16,7 @@ develop
 :caption: Scripts
 
 scripts/luxos.md
+scripts/luxos.run.md
 
 
 ```
@@ -25,7 +27,6 @@ scripts/luxos.md
 :caption: API
 
 api.md
-api/examples.md
 api/cli.md
 api/utils.md
 api/luxos.rst
@@ -42,7 +43,7 @@ The [luxos](https://pypi.org/project/luxos) python package provides:
 2. A script `luxos-run` to run scriptlets on miners in parallel (using asyncio)
 3. A consistent API to access miners functionality through the the `luxos` python package
 
-For simple to follow example on how to use the API see [here](api-examples)
+For simple to follow example on how to use the API see [here](examples)
 
 ## Install
 
