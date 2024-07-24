@@ -1,5 +1,11 @@
 # `luxos` command line tool
 
+```{toctree}
+:maxdepth: 2
+
+recipes
+```
+
 The [luxos](https://pypi.org/project/luxos) python package comes with a command line script 
 called `luxos`: it can issue a command (with parameters) to a list of miners' ips
 in a csv file.
