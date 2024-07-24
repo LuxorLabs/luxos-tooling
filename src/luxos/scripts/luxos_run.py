@@ -134,6 +134,9 @@ async def main(args: argparse.Namespace):
     if args.pickle:
         args.pickle.write_bytes(pickle.dumps(result))
 
+    if teardown:
+        teardown()
+
 
 def run():
     asyncio.run(main())
