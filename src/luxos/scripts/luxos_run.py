@@ -40,7 +40,20 @@ def add_arguments(parser: cli.LuxosParserBase) -> None:
     cli.flags.add_arguments_new_miners_ips(parser)
     cli.flags.add_arguments_rexec(parser)
     parser.add_argument("script", type=Path, help="python script to run")
+    parser.add_argument(
+        "-e",
+        "--entry-point",
+        dest="entrypoint",
+        help="script entry point",
+        default="main",
+    )
+    parser.add_argument(
+        "-t", "--tear-donw", dest="teardown", help="script tear down function"
+    )
     parser.add_argument("-n", "--batch", type=int, help="limit parallel executions")
+    parser.add_argument(
+        "--list", action="store_true", help="just display the machine to run script"
+    )
 
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--json", action="store_true", help="json output")
@@ -56,13 +69,30 @@ def process_args(args: argparse.Namespace):
 
 @cli.cli(add_arguments=add_arguments, process_args=process_args)
 async def main(args: argparse.Namespace):
+    if args.list:
+        for address in args.addresses:
+            print(address)
+        return
     module = misc.loadmod(args.script)
-    if not hasattr(module, "main"):
-        args.error(f"no entry point main in {args.script}")
+
+    entrypoint = getattr(module, args.entrypoint, None)
+    if not entrypoint:
+        args.error(f"no entry point {args.entrypoint} in {args.script}")
+        return
+
+    teardown = None
+    if args.teardown:
+        if not hasattr(module, args.teardown):
+            args.error(f"no tear donw function {args.teardown} in {args.script}")
+        teardown = getattr(module, args.teardown, None)
 
     result = {}
+
+    def callback(result):
+        log.info("processed %i / %i", len(result), len(args.addresses))
+
     for data in await utils.launch(
-        args.addresses, module.main, batch=args.batch, asobj=True
+        args.addresses, entrypoint, batch=args.batch, asobj=True, callback=callback
     ):
         if isinstance(data, utils.LuxosLaunchTimeoutError):
             log.warning(
@@ -85,6 +115,9 @@ async def main(args: argparse.Namespace):
         print(json.dumps(result, indent=2))
     if args.pickle:
         args.pickle.write_bytes(pickle.dumps(result))
+
+    if teardown:
+        teardown()
 
 
 def run():
