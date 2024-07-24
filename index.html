@@ -153,18 +153,28 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="develop.html">Develop</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples (API)</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Scripts</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="scripts/luxos.html">luxos</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="scripts/luxos.html"><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="scripts/recipes.html">Recipes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scripts/luxos.run.html"><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="api.html">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/examples.html">Examples / Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/cli.html">luxos.api.cli</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/cli.html">luxos.api.cli</a><input checked class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/cli/example1.html">example 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/cli/example2.html">example 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/cli/example3.html">examples3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/cli/example4.html">example4</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="api/utils.html">luxos.utils</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api/luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.ips.html">luxos.ips</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.asyncops.html">luxos.asyncops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.cli.html">luxos.cli</a></li>
@@ -323,11 +333,14 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intro">Intro</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install">Install</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-run-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scripts">Scripts</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-run-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-python-api">The python api</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rexec-function">the rexec function</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#launch">launch</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rexec-function">the <code class="docutils literal notranslate"><span class="pre">rexec</span></code> function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-launch">the <code class="docutils literal notranslate"><span class="pre">launch</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -351,34 +364,46 @@ document.write(`
 <h1>Welcome to Luxos tooling<a class="headerlink" href="#welcome-to-luxos-tooling" title="Link to this heading">#</a></h1>
 <section id="intro">
 <h2>Intro<a class="headerlink" href="#intro" title="Link to this heading">#</a></h2>
-<p>The <a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package provides:</p>
-<ol class="arabic simple">
+<p>The <a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package provides two scripts:</p>
+<ul class="simple">
 <li><p>A cli script <code class="docutils literal notranslate"><span class="pre">luxos</span></code>, allowing to run a single command on miners</p></li>
 <li><p>A script <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> to run scriptlets on miners in parallel (using asyncio)</p></li>
-<li><p>A consistent API to access miners functionality through the the <code class="docutils literal notranslate"><span class="pre">luxos</span></code> python package</p></li>
-</ol>
-<p>For simple to follow example on how to use the API see <a class="reference internal" href="#api-examples"><span class="xref myst">here</span></a></p>
+</ul>
+<p>And:</p>
+<ul class="simple">
+<li><p>A consistent API to access miners functionality
+through the the <code class="docutils literal notranslate"><span class="pre">luxos</span></code> python package (<a class="reference internal" href="examples.html"><span class="doc std std-doc">here</span></a>)</p></li>
+</ul>
 </section>
 <section id="install">
 <h2>Install<a class="headerlink" href="#install" title="Link to this heading">#</a></h2>
 <p>Detailed instruction on how to install it are provided  👉 <a class="reference internal" href="installation.html"><span class="doc std std-doc">here</span></a>, to install the latest released code:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># to install it</span>
-$&gt;<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>luxos
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># install it</span>
+pip<span class="w"> </span>install<span class="w"> </span>luxos
 
-<span class="c1"># to upgrade it</span>
-$&gt;<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>luxos
+<span class="c1"># update an installed version</span>
+pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>luxos
 
 <span class="c1"># to verify the current version</span>
-$&gt;<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import luxos; print(luxos.__version__, luxos.__hash__)&quot;</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import luxos; print(luxos.__version__, luxos.__hash__)&quot;</span>
 <span class="m">0</span>.0.7<span class="w"> </span>27e53c7b37ac1bbb88112f3c931b9cd8f1a74a3a
 </pre></div>
 </div>
 </section>
+<section id="scripts">
+<h2>Scripts<a class="headerlink" href="#scripts" title="Link to this heading">#</a></h2>
+<p><a class="reference external" href="https://pypi.org/project/luxos">luxos</a> the python package comes with
+few command line scripts helping manage miners’ fleets, in particular:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">luxos</span></code> - a script to execute a single command on multiple miners
+stored in a csv file or from the command line</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> - a script to run “scriptlets” (eg. a sequence of oprations) on
+multiple miners</p></li>
+</ul>
 <section id="luxos-command-line-tool">
-<h2><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool<a class="headerlink" href="#luxos-command-line-tool" title="Link to this heading">#</a></h2>
-<p>The <a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package comes with a command line script
-called <code class="docutils literal notranslate"><span class="pre">luxos</span></code>: it can issue a command (with parameters) to a list of miners’ ips
-in a csv file.</p>
+<h3><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool<a class="headerlink" href="#luxos-command-line-tool" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">luxos</span></code> the script (see <a class="reference internal" href="scripts/luxos.html"><span class="doc std std-doc">here</span></a>) can issue a command (with parameters)
+to a list of miners’ from a csv file or from the command line.</p>
 <p>This will launch the version command on a miner, returning the json output:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>luxos<span class="w"> </span>--range<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>--cmd<span class="w"> </span>version<span class="w"> </span>
 </pre></div>
@@ -397,6 +422,10 @@ luxos<span class="w"> </span>--range<span class="w"> </span><span class="m">127<
 luxos<span class="w"> </span>--range<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>--cmd<span class="w"> </span>profilenew<span class="w"> </span>--params<span class="w"> </span><span class="s2">&quot;myprofile,700,14.8&quot;</span>
 </pre></div>
 </div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can find more recipes/one-lines under <a class="reference internal" href="scripts/recipes.html"><span class="doc std std-doc">here</span></a></p>
+</div>
 <blockquote>
 <div><p><strong>NOTE</strong></p>
 <ol class="arabic simple">
@@ -408,7 +437,7 @@ as <code class="docutils literal notranslate"><span class="pre">&#64;miners.csv<
 </div></blockquote>
 </section>
 <section id="luxos-run-command-line-tool">
-<h2><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool<a class="headerlink" href="#luxos-run-command-line-tool" title="Link to this heading">#</a></h2>
+<h3><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool<a class="headerlink" href="#luxos-run-command-line-tool" title="Link to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> is an alternative to <code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line script,
 allowing to run as <strong>scriptlet</strong> (a small python script) targeting miners:
 a scriptlet usually can contain some logic and or longer commands sequences.</p>
@@ -436,6 +465,7 @@ a dictionary with key set to the miner address:</p>
 </pre></div>
 </div>
 </section>
+</section>
 <section id="the-python-api">
 <h2>The python api<a class="headerlink" href="#the-python-api" title="Link to this heading">#</a></h2>
 <p><a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package comes with an API to support
@@ -449,7 +479,7 @@ convenience and they are:</p>
 <li><p><a class="reference internal" href="api/luxos.utils.html#luxos.utils.launch" title="luxos.utils.launch"><span class="xref myst py py-func">luxos.util.launch</span></a> - run a command on multiple miners</p></li>
 </ul>
 <section id="the-rexec-function">
-<h3>the rexec function<a class="headerlink" href="#the-rexec-function" title="Link to this heading">#</a></h3>
+<h3>the <code class="docutils literal notranslate"><span class="pre">rexec</span></code> function<a class="headerlink" href="#the-rexec-function" title="Link to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">rexec</span></code> function allows to send a command to a miner and return the response:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   
     <span class="kn">from</span> <span class="nn">luxos</span> <span class="kn">import</span> <span class="n">utils</span>
@@ -474,8 +504,8 @@ before giving up <code class="docutils literal notranslate"><span class="pre">re
 but there’s a sync version under <code class="docutils literal notranslate"><span class="pre">luxos.syncops.rexec</span></code>.</p>
 </div></blockquote>
 </section>
-<section id="launch">
-<h3>launch<a class="headerlink" href="#launch" title="Link to this heading">#</a></h3>
+<section id="the-launch">
+<h3>the <code class="docutils literal notranslate"><span class="pre">launch</span></code><a class="headerlink" href="#the-launch" title="Link to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">luxos.utils.lauch</span></code> allows to rexec commands to a list of miners stored in a csv file.
 This all-in-one function, allows batched operations on a set of miners, taking care of all details.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
@@ -539,11 +569,14 @@ This all-in-one function, allows batched operations on a set of miners, taking c
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intro">Intro</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install">Install</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-run-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scripts">Scripts</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#luxos-run-command-line-tool"><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-python-api">The python api</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rexec-function">the rexec function</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#launch">launch</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rexec-function">the <code class="docutils literal notranslate"><span class="pre">rexec</span></code> function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-launch">the <code class="docutils literal notranslate"><span class="pre">launch</span></code></a></li>
 </ul>
 </li>
 </ul>

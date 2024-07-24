@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>luxos &#8212; luxos  documentation</title>
+    <title>luxos command line tool &#8212; luxos  documentation</title>
   
   
   
@@ -46,8 +46,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'scripts/luxos';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Intro" href="../api.html" />
-    <link rel="prev" title="Develop" href="../develop.html" />
+    <link rel="next" title="Recipes" href="recipes.html" />
+    <link rel="prev" title="Examples (API)" href="../examples.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -152,18 +152,28 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../develop.html">Develop</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples (API)</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Scripts</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">luxos</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipes.html">Recipes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="luxos.run.html"><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/examples.html">Examples / Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/cli.html">luxos.api.cli</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/cli.html">luxos.api.cli</a><input checked class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/cli/example1.html">example 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/cli/example2.html">example 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/cli/example3.html">examples3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/cli/example4.html">example4</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../api/utils.html">luxos.utils</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/luxos.ips.html">luxos.ips</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/luxos.asyncops.html">luxos.asyncops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/luxos.cli.html">luxos.cli</a></li>
@@ -308,7 +318,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>luxos</h1>
+    <h1>luxos command line tool</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -322,38 +332,46 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="luxos">
-<h1>luxos<a class="headerlink" href="#luxos" title="Link to this heading">#</a></h1>
-<p>This script can run commands on miners.</p>
-<p>Input to this script is a <code class="docutils literal notranslate"><span class="pre">*.csv</span></code> file, one IP per line, comments are marked with a <code class="docutils literal notranslate"><span class="pre">#</span></code> and empty lines are ignored.</p>
-<p>This will reboot all miners in the <code class="docutils literal notranslate"><span class="pre">miner.csv</span></code> file list:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">   </span>$&gt;<span class="w"> </span>luxos<span class="w"> </span>--ipfile<span class="w"> </span>miners.csv<span class="w"> </span>--cmd<span class="w"> </span>rebootdevice<span class="w"> </span>--timeout<span class="w"> </span><span class="m">2</span><span class="w"> </span>--verbose
+  <section id="luxos-command-line-tool">
+<h1><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool<a class="headerlink" href="#luxos-command-line-tool" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="recipes.html">Recipes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipes.html#update">Update</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>The <a class="reference external" href="https://pypi.org/project/luxos">luxos</a> python package comes with a command line script
+called <code class="docutils literal notranslate"><span class="pre">luxos</span></code>: it can issue a command (with parameters) to a list of miners’ ips
+in a csv file.</p>
+<p>This will launch the version command on a miner, returning the json output:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>luxos<span class="w"> </span>--range<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>--cmd<span class="w"> </span>version<span class="w"> </span>
 </pre></div>
 </div>
-<p>There’s an <code class="docutils literal notranslate"><span class="pre">async</span></code> version that can work better on multiple miners, just use the <code class="docutils literal notranslate"><span class="pre">--async</span></code> flag:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">   </span>$&gt;<span class="w"> </span>luxos<span class="w"> </span>--ipfile<span class="w"> </span>miners.csv<span class="w"> </span>--cmd<span class="w"> </span>version<span class="w"> </span>--timeout<span class="w"> </span><span class="m">2</span><span class="w"> </span>--async<span class="w"> </span>--all
-<span class="w">   </span>&gt;<span class="w"> </span><span class="m">10</span>.206.1.153:4028
-<span class="w">   </span><span class="p">|</span><span class="w"> </span><span class="o">{</span>
-<span class="w">   </span><span class="p">|</span><span class="w">   </span><span class="s2">&quot;STATUS&quot;</span>:<span class="w"> </span><span class="o">[</span>
-<span class="w">   </span><span class="p">|</span><span class="w">     </span><span class="o">{</span>
-<span class="w">   </span><span class="p">|</span><span class="w">       </span><span class="s2">&quot;Code&quot;</span>:<span class="w"> </span><span class="m">22</span>,
-<span class="w">   </span><span class="p">|</span><span class="w">       </span><span class="s2">&quot;Description&quot;</span>:<span class="w"> </span><span class="s2">&quot;LUXminer 2024.5.1.155432-f2badc0f&quot;</span>,
+<p>The <code class="docutils literal notranslate"><span class="pre">--range</span></code> flag can take:</p>
+<ul class="simple">
+<li><p>a single ip address, eg: <code class="docutils literal notranslate"><span class="pre">--range</span> <span class="pre">127.0.0.1</span></code></p></li>
+<li><p>a range like: <code class="docutils literal notranslate"><span class="pre">--range</span> <span class="pre">127.0.0.1-127.0.0.5</span></code></p></li>
+<li><p>or addresses from a file: <code class="docutils literal notranslate"><span class="pre">--range</span> <span class="pre">&#64;miners.csv</span></code>.</p></li>
+</ul>
+<p>Other examples:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># set/unset ATM</span>
+luxos<span class="w"> </span>--range<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>--cmd<span class="w"> </span>atmset<span class="w"> </span>--params<span class="w"> </span><span class="s2">&quot;enabled=true&quot;</span>
+
+<span class="c1"># add a new profile</span>
+luxos<span class="w"> </span>--range<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>--cmd<span class="w"> </span>profilenew<span class="w"> </span>--params<span class="w"> </span><span class="s2">&quot;myprofile,700,14.8&quot;</span>
 </pre></div>
 </div>
-<p>This will reboot all miners in the <code class="docutils literal notranslate"><span class="pre">miner.csv</span></code> file list:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">   </span>$&gt;<span class="w"> </span>luxos<span class="w"> </span>--ipfile<span class="w"> </span>miners.csv<span class="w"> </span>--cmd<span class="w"> </span>rebootdevice<span class="w"> </span>--timeout<span class="w"> </span><span class="m">2</span><span class="w"> </span>--verbose
-</pre></div>
-</div>
-<p>There’s an <code class="docutils literal notranslate"><span class="pre">async</span></code> version that can work better on multiple miners, just use the <code class="docutils literal notranslate"><span class="pre">--async</span></code> flag:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w">   </span>$&gt;<span class="w"> </span>luxos<span class="w"> </span>--ipfile<span class="w"> </span>miners.csv<span class="w"> </span>--cmd<span class="w"> </span>version<span class="w"> </span>--timeout<span class="w"> </span><span class="m">2</span><span class="w"> </span>--async<span class="w"> </span>--all
-<span class="w">   </span>&gt;<span class="w"> </span><span class="m">10</span>.206.1.153:4028
-<span class="w">   </span><span class="p">|</span><span class="w"> </span><span class="o">{</span>
-<span class="w">   </span><span class="p">|</span><span class="w">   </span><span class="s2">&quot;STATUS&quot;</span>:<span class="w"> </span><span class="o">[</span>
-<span class="w">   </span><span class="p">|</span><span class="w">     </span><span class="o">{</span>
-<span class="w">   </span><span class="p">|</span><span class="w">       </span><span class="s2">&quot;Code&quot;</span>:<span class="w"> </span><span class="m">22</span>,
-<span class="w">   </span><span class="p">|</span><span class="w">       </span><span class="s2">&quot;Description&quot;</span>:<span class="w"> </span><span class="s2">&quot;LUXminer 2024.5.1.155432-f2badc0f&quot;</span>,
-</pre></div>
-</div>
+<blockquote>
+<div><p><strong>NOTE</strong></p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--ipfile</span></code> is an alternative way to load miners from a csv file, it’s the same as <code class="docutils literal notranslate"><span class="pre">--range</span></code> flag: it can
+take addresses like <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code>, ranges as <code class="docutils literal notranslate"><span class="pre">127.0.0.1-127.0.0.5</span></code> or filenames
+as <code class="docutils literal notranslate"><span class="pre">&#64;miners.csv</span></code>.</p></li>
+<li><p>you can use the <code class="docutils literal notranslate"><span class="pre">--json</span></code> to save the results in json format (to stdout).</p></li>
+</ol>
+</div></blockquote>
 </section>
 
 
@@ -368,20 +386,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../develop.html"
+       href="../examples.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Develop</p>
+        <p class="prev-next-title">Examples (API)</p>
       </div>
     </a>
     <a class="right-next"
-       href="../api.html"
+       href="recipes.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Intro</p>
+        <p class="prev-next-title">Recipes</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

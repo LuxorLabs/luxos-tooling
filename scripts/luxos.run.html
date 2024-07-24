@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>luxos &#8212; luxos  documentation</title>
+    <title>luxos-run command line tool &#8212; luxos  documentation</title>
   
   
   
@@ -43,9 +43,11 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/modules';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'scripts/luxos.run';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Intro" href="../api.html" />
+    <link rel="prev" title="Recipes" href="recipes.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -107,8 +109,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -152,24 +152,34 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../develop.html">Develop</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples (API)</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Scripts</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../scripts/luxos.html">luxos</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="luxos.html"><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipes.html">Recipes</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples / Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">luxos.api.cli</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">luxos.utils</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="luxos.ips.html">luxos.ips</a></li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.asyncops.html">luxos.asyncops</a></li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.cli.html">luxos.cli</a></li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.scripts.html">luxos.scripts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.exceptions.html">luxos.exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="luxos.utils.html">luxos.utils</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/cli.html">luxos.api.cli</a><input checked class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/cli/example1.html">example 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/cli/example2.html">example 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/cli/example3.html">examples3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/cli/example4.html">example4</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/utils.html">luxos.utils</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/luxos.ips.html">luxos.ips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/luxos.asyncops.html">luxos.asyncops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/luxos.cli.html">luxos.cli</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/luxos.scripts.html">luxos.scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/luxos.exceptions.html">luxos.exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/luxos.utils.html">luxos.utils</a></li>
 </ul>
 </li>
 </ul>
@@ -226,7 +236,7 @@
       
       
       
-      <li><a href="../_sources/api/modules.rst" target="_blank"
+      <li><a href="../_sources/scripts/luxos.run.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -236,7 +246,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.rst</span>
+<span class="btn__text-container">.md</span>
 </a>
 </li>
       
@@ -308,7 +318,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>luxos</h1>
+    <h1>luxos-run command line tool</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -322,57 +332,33 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="luxos">
-<h1>luxos<a class="headerlink" href="#luxos" title="Link to this heading">#</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="luxos.html">luxos package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="luxos.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="luxos.ips.html">luxos.ips</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="luxos.ips.html#luxos.ips.DataParsingError"><code class="docutils literal notranslate"><span class="pre">DataParsingError</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.ips.html#luxos.ips.ip_ranges"><code class="docutils literal notranslate"><span class="pre">ip_ranges()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.ips.html#luxos.ips.iter_ip_ranges"><code class="docutils literal notranslate"><span class="pre">iter_ip_ranges()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.ips.html#luxos.ips.load_ips_from_csv"><code class="docutils literal notranslate"><span class="pre">load_ips_from_csv()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.ips.html#luxos.ips.load_ips_from_yaml"><code class="docutils literal notranslate"><span class="pre">load_ips_from_yaml()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.ips.html#luxos.ips.parse_expr"><code class="docutils literal notranslate"><span class="pre">parse_expr()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.ips.html#luxos.ips.splitip"><code class="docutils literal notranslate"><span class="pre">splitip()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.asyncops.html">luxos.asyncops</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="luxos.asyncops.html#luxos.asyncops.RETRIES"><code class="docutils literal notranslate"><span class="pre">RETRIES</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.asyncops.html#luxos.asyncops.RETRIES_DELAY"><code class="docutils literal notranslate"><span class="pre">RETRIES_DELAY</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.asyncops.html#luxos.asyncops.TIMEOUT"><code class="docutils literal notranslate"><span class="pre">TIMEOUT</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.asyncops.html#luxos.asyncops.rexec"><code class="docutils literal notranslate"><span class="pre">rexec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.asyncops.html#luxos.asyncops.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.cli.html">luxos.cli</a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.scripts.html">luxos.scripts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.exceptions.html">luxos.exceptions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="luxos.exceptions.html#luxos.exceptions.AddressParsingError"><code class="docutils literal notranslate"><span class="pre">AddressParsingError</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.exceptions.html#luxos.exceptions.LuxosBaseException"><code class="docutils literal notranslate"><span class="pre">LuxosBaseException</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.exceptions.html#luxos.exceptions.MinerCommandFailedError"><code class="docutils literal notranslate"><span class="pre">MinerCommandFailedError</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.exceptions.html#luxos.exceptions.MinerCommandMalformedMessageError"><code class="docutils literal notranslate"><span class="pre">MinerCommandMalformedMessageError</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.exceptions.html#luxos.exceptions.MinerCommandSessionAlreadyActive"><code class="docutils literal notranslate"><span class="pre">MinerCommandSessionAlreadyActive</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.exceptions.html#luxos.exceptions.MinerCommandTimeoutError"><code class="docutils literal notranslate"><span class="pre">MinerCommandTimeoutError</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.exceptions.html#luxos.exceptions.MinerConnectionError"><code class="docutils literal notranslate"><span class="pre">MinerConnectionError</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.exceptions.html#luxos.exceptions.MinerMessageError"><code class="docutils literal notranslate"><span class="pre">MinerMessageError</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.exceptions.html#luxos.exceptions.MinerMessageInvalidError"><code class="docutils literal notranslate"><span class="pre">MinerMessageInvalidError</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.exceptions.html#luxos.exceptions.MinerMessageMalformedError"><code class="docutils literal notranslate"><span class="pre">MinerMessageMalformedError</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.exceptions.html#luxos.exceptions.MinerMessageReplyError"><code class="docutils literal notranslate"><span class="pre">MinerMessageReplyError</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="luxos.utils.html">luxos.utils</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="luxos.utils.html#luxos.utils.launch"><code class="docutils literal notranslate"><span class="pre">launch()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.utils.html#luxos.utils.rexec"><code class="docutils literal notranslate"><span class="pre">rexec()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="luxos.utils.html#luxos.utils.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+  <section id="luxos-run-command-line-tool">
+<h1><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool<a class="headerlink" href="#luxos-run-command-line-tool" title="Link to this heading">#</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> is an alternative to <code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line script,
+allowing to run as <strong>scriptlet</strong> (a small python script) targeting miners:
+a scriptlet usually can contain some logic and or longer commands sequences.</p>
+<p><strong>hello-world.py</strong> scriplet:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">luxos</span> <span class="kn">import</span> <span class="n">asyncops</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="c1"># async sending to the miner the version command</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncops</span><span class="o">.</span><span class="n">rexec</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">)</span>
+
+    <span class="c1"># validate will check the message is correct and return the result</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">asyncops</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s2">&quot;VERSION&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;miner&quot;</span><span class="p">:</span> <span class="n">version</span><span class="p">[</span><span class="s2">&quot;LUXminer&quot;</span><span class="p">]}</span>
+</pre></div>
+</div>
+<p>Running the <code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> will execute the scriptlet aggregating the results in
+a dictionary with key set to the miner address:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>luxos-run<span class="w"> </span>--range<span class="w"> </span>@miners.csv<span class="w"> </span>--quiet<span class="w"> </span>--json<span class="w"> </span>hello-world.py
+<span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;127.0.0.1:4028&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;address&quot;</span>:<span class="w"> </span><span class="s2">&quot;127.0.0.1:4028&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;2021.1.12.202305-nnnn&quot;</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
 </div>
 </section>
 
@@ -387,6 +373,24 @@ document.write(`
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="recipes.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Recipes</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../api.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Intro</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               

@@ -7,6 +7,7 @@
 
 installation
 develop
+examples
 ```
 
 ```{toctree}
@@ -15,6 +16,7 @@ develop
 :caption: Scripts
 
 scripts/luxos.md
+scripts/luxos.run.md
 
 
 ```
@@ -25,7 +27,6 @@ scripts/luxos.md
 :caption: API
 
 api.md
-api/examples.md
 api/cli.md
 api/utils.md
 api/luxos.rst
@@ -36,35 +37,46 @@ api/luxos.rst
 
 ## Intro
 
-The [luxos](https://pypi.org/project/luxos) python package provides:
+The [luxos](https://pypi.org/project/luxos) python package provides two scripts:
 
-1. A cli script `luxos`, allowing to run a single command on miners
-2. A script `luxos-run` to run scriptlets on miners in parallel (using asyncio)
-3. A consistent API to access miners functionality through the the `luxos` python package
+- A cli script `luxos`, allowing to run a single command on miners
+- A script `luxos-run` to run scriptlets on miners in parallel (using asyncio)
 
-For simple to follow example on how to use the API see [here](api-examples)
+And:
+
+- A consistent API to access miners functionality 
+  through the the `luxos` python package ([here](examples))
 
 ## Install
 
 Detailed instruction on how to install it are provided  👉 [here](installation), to install the latest released code:
 
-```bash
-# to install it
-$> pip install luxos
+```shell
 
-# to upgrade it
-$> pip install --upgrade luxos
+# install it
+pip install luxos
+
+# update an installed version
+pip install --upgrade luxos
 
 # to verify the current version
-$> python -c "import luxos; print(luxos.__version__, luxos.__hash__)"
+python -c "import luxos; print(luxos.__version__, luxos.__hash__)"
 0.0.7 27e53c7b37ac1bbb88112f3c931b9cd8f1a74a3a
 ```
 
-## `luxos` command line tool
+## Scripts
+[luxos](https://pypi.org/project/luxos) the python package comes with 
+few command line scripts helping manage miners' fleets, in particular:
 
-The [luxos](https://pypi.org/project/luxos) python package comes with a command line script 
-called `luxos`: it can issue a command (with parameters) to a list of miners' ips
-in a csv file.
+- `luxos` - a script to execute a single command on multiple miners 
+  stored in a csv file or from the command line
+- `luxos-run` - a script to run "scriptlets" (eg. a sequence of oprations) on
+  multiple miners
+
+### `luxos` command line tool
+ 
+`luxos` the script (see [here](scripts/luxos)) can issue a command (with parameters) 
+to a list of miners' from a csv file or from the command line.
 
 This will launch the version command on a miner, returning the json output:
 ```shell
@@ -84,6 +96,9 @@ luxos --range 127.0.0.1 --quiet --json --cmd atmset --params "enabled=true"
 # add a new profile
 luxos --range 127.0.0.1 --quiet --json --cmd profilenew --params "myprofile,700,14.8"
 ```
+:::{tip}
+You can find more recipes/one-lines under [here](scripts/recipes)
+:::
 
 > **NOTE** 
 > 1. `--ipfile` is an alternative way to load miners from a csv file, it's the same as `--range` flag: it can
@@ -91,7 +106,7 @@ luxos --range 127.0.0.1 --quiet --json --cmd profilenew --params "myprofile,700,
 > as `@miners.csv`.
 > 2. you can use the `--json` to save the results in json format (to stdout).
 
-## `luxos-run` command line tool
+### `luxos-run` command line tool
 
 The `luxos-run` is an alternative to `luxos` command line script, 
 allowing to run as **scriptlet** (a small python script) targeting miners:
@@ -134,7 +149,7 @@ convenience and they are:
 - [luxos.util.launch](luxos.utils.launch) - run a command on multiple miners
 
 
-#### the rexec function
+#### the `rexec` function
 The `rexec` function allows to send a command to a miner and return the response:
 ```python
    
@@ -160,7 +175,7 @@ before giving up `retry_delay` controls the delay between retry.
 > **NOTE** `rexec` is an async function, 
 > but there's a sync version under `luxos.syncops.rexec`.
 
-#### launch
+#### the `launch`
 The `luxos.utils.lauch` allows to rexec commands to a list of miners stored in a csv file.
 This all-in-one function, allows batched operations on a set of miners, taking care of all details.
 

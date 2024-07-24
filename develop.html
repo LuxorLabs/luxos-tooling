@@ -47,7 +47,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'develop';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="luxos" href="scripts/luxos.html" />
+    <link rel="next" title="Examples (API)" href="examples.html" />
     <link rel="prev" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -153,18 +153,28 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Develop</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples (API)</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Scripts</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="scripts/luxos.html">luxos</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="scripts/luxos.html"><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="scripts/recipes.html">Recipes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scripts/luxos.run.html"><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="api.html">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/examples.html">Examples / Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/cli.html">luxos.api.cli</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/cli.html">luxos.api.cli</a><input checked class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/cli/example1.html">example 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/cli/example2.html">example 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/cli/example3.html">examples3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/cli/example4.html">example4</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="api/utils.html">luxos.utils</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api/luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.ips.html">luxos.ips</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.asyncops.html">luxos.asyncops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.cli.html">luxos.cli</a></li>
@@ -321,9 +331,21 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-requisites">Pre-requisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-requisites">Pre-requisites</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-a-recent-version-of-python-eg-3-10">install a recent version of python (eg. &gt;=3.10)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cloned-code">cloned code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#right-current-working-directory">right current working directory</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-python-virtual-environment">Create the python virtual environment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-python-virtual-environment">create the python virtual environment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-the-repository">Setting up the repository</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding">Coding</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#activate-the-virtual-environment">activate the virtual environment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-tests">run tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit-eg-pre-commit-hooks">commit (eg. pre-commit hooks)</a></li>
 </ul>
 </li>
 </ul>
@@ -343,112 +365,134 @@ document.write(`
 <section id="pre-requisites">
 <h2>Pre-requisites<a class="headerlink" href="#pre-requisites" title="Link to this heading">#</a></h2>
 <p>There are essentially three pre-requisites.</p>
-<p>We assume you <strong>have installed a recent version of python (eg. &gt;=3.10)</strong> and the python binary
-is in the path. If so the following should be verified:</p>
+<section id="install-a-recent-version-of-python-eg-3-10">
+<h3>install a recent version of python (eg. &gt;=3.10)<a class="headerlink" href="#install-a-recent-version-of-python-eg-3-10" title="Link to this heading">#</a></h3>
+<p>Please check the output of:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$&gt;<span class="w"> </span>python3<span class="w"> </span>--version
 Python<span class="w"> </span><span class="m">3</span>.12.3
 </pre></div>
 </div>
-<p>The code is from a <strong>github checkout</strong>:</p>
+</section>
+<section id="cloned-code">
+<h3>cloned code<a class="headerlink" href="#cloned-code" title="Link to this heading">#</a></h3>
+<p>Code is from a <strong>github checkout</strong>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/LuxorLabs/luxos-tooling.git
 </pre></div>
 </div>
+</section>
+<section id="right-current-working-directory">
+<h3>right current working directory<a class="headerlink" href="#right-current-working-directory" title="Link to this heading">#</a></h3>
 <p>Also we assume <strong>the current directory is the check out directory</strong>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>luxos-tooling
 </pre></div>
 </div>
 </section>
+</section>
 <section id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
-<p>You need (only once) to <a class="reference internal" href="#create-the-python-virtual-environment"><span class="xref myst">Create the python virtual environment</span></a>,
-<a class="reference internal" href="#setting-up-the-repository"><span class="xref myst">Setting up the repository</span></a>,
-then every time you restart a shell, you need to <a class="reference internal" href="#activate-the-virtual-environment"><span class="xref myst">Activate the virtual environment</span></a>.</p>
+<p>First you need to <a class="reference internal" href="#create-the-python-virtual-environment"><span class="xref myst">create the python virtual environment</span></a> and
+<a class="reference internal" href="#setting-up-the-repository"><span class="xref myst">setting up the repository</span></a>: these two steps need to be done only once.</p>
 <section id="create-the-python-virtual-environment">
-<h3>Create the python virtual environment<a class="headerlink" href="#create-the-python-virtual-environment" title="Link to this heading">#</a></h3>
+<h3>create the python virtual environment<a class="headerlink" href="#create-the-python-virtual-environment" title="Link to this heading">#</a></h3>
 <p>First you need to create a virtual environment and install all dependencies:</p>
 <div class="sphinx-tabs docutils container">
-<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Windows</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Windows (powershell)</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">*NIX</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>%CD%<span class="se">\v</span>env
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Windows</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">*NIX</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>%CD%<span class="se">\v</span>env
 .<span class="se">\v</span>env<span class="se">\S</span>cripts<span class="se">\a</span>ctivate.bat<span class="w">    </span>
 
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>tests<span class="se">\r</span>equirements.txt
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+%CD%<span class="se">\v</span>env<span class="se">\S</span>cripts<span class="se">\p</span>ip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>tests<span class="se">\r</span>equirements.txt
+%CD%<span class="se">\v</span>env<span class="se">\S</span>cripts<span class="se">\p</span>ip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
-</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>%CD%<span class="se">\v</span>env
-.<span class="se">\v</span>env<span class="se">\S</span>cripts<span class="se">\a</span>ctivate.ps1
-
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>tests<span class="se">\r</span>equirements.txt
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</pre></div>
-</div>
-</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/venv<span class="w">  </span>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>/venv<span class="w">  </span>
 <span class="nb">source</span><span class="w"> </span>./venv/bin/activate
 
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>tests<span class="se">\r</span>equirements.txt
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+./venv/bin/pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>tests<span class="se">\r</span>equirements.txt
+./venv/bin/pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
-</div><div class="docutils">
-<h3 class="rubric" id="setting-up-the-repository">Setting up the repository</h3>
+</div></div>
+</section>
+<section id="setting-up-the-repository">
+<h3>Setting up the repository<a class="headerlink" href="#setting-up-the-repository" title="Link to this heading">#</a></h3>
 <p>Luxos leverages <a class="reference external" href="https://pre-commit.com/">pre-commit</a> to execute
 checks on code commit, so the code can be checked for issues before being
 submitted to the repo.</p>
-<p>=== “Windows”
-```bash
-$&gt; .\venv\Scripts\activate<br />
-# on powershell
-$&gt; .\venv\Scripts\activate.ps1</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$&gt; pre-commit install
-```
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">Windows</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">*NIX</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>%CD%<span class="se">\v</span>env<span class="se">\S</span>cripts<span class="se">\p</span>re-commit<span class="w"> </span>install
 </pre></div>
 </div>
-<p>=== “*NIX”
-<code class="docutils literal notranslate"><span class="pre">bash</span>&#160;&#160;&#160;&#160; <span class="pre">$&gt;</span> <span class="pre">source</span> <span class="pre">./venv/bin/activate</span>&#160;&#160;&#160;&#160; <span class="pre">$&gt;</span> <span class="pre">pre-commit</span> <span class="pre">install</span>&#160;&#160;&#160;&#160; </code></p>
-<ul>
-<li><p><strong>ACTIVATE</strong> the environment (each time you start a new shell)</p>
-<details><summary>Windows</summary>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>.<span class="se">\v</span>env<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./venv/bin/pre-commit<span class="w"> </span>install
 </pre></div>
 </div>
-</details>
-<details><summary>*NIX</summary>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>./venv/bin/activate
+</div></div>
+</section>
+</section>
+<section id="coding">
+<h2>Coding<a class="headerlink" href="#coding" title="Link to this heading">#</a></h2>
+<p>To begin coding, you first have to <a class="reference internal" href="#activate-the-virtual-environment"><span class="xref myst">activate the virtual environment</span></a>:
+this steps has to be followed every time you restart the shell/cmd.</p>
+<section id="activate-the-virtual-environment">
+<h3>activate the virtual environment<a class="headerlink" href="#activate-the-virtual-environment" title="Link to this heading">#</a></h3>
+<p>Every time you start a new shell, you need to activate the environment: this
+will set the correct <strong>PATH</strong>.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-2-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-2-2-0" name="2-0" role="tab" tabindex="0">Windows</button><button aria-controls="panel-2-2-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-1" name="2-1" role="tab" tabindex="-1">Windows (powershell)</button><button aria-controls="panel-2-2-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-2-2-2" name="2-2" role="tab" tabindex="-1">*NIX</button></div><div aria-labelledby="tab-2-2-0" class="sphinx-tabs-panel" id="panel-2-2-0" name="2-0" role="tabpanel" tabindex="0"><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>.<span class="se">\v</span>env<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
 </pre></div>
 </div>
-</details>
-</li>
-<li><p><strong>RUN</strong> the tests</p>
-<p>(Windows &amp; *NIX)</p>
+</div><div aria-labelledby="tab-2-2-1" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-1" name="2-1" role="tabpanel" tabindex="0"><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>.<span class="se">\v</span>env<span class="se">\S</span>cripts<span class="se">\a</span>ctivate.ps1
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-2-2" class="sphinx-tabs-panel" hidden="true" id="panel-2-2-2" name="2-2" role="tabpanel" tabindex="0"><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>./venv/bin/activate
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="run-tests">
+<h3>run tests<a class="headerlink" href="#run-tests" title="Link to this heading">#</a></h3>
+<p>To run all (unit) tests:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-vvs<span class="w"> </span>tests
 </pre></div>
 </div>
-</li>
+<p>To run tests (including non units):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-vvs<span class="w"> </span>--manual<span class="w"> </span>tests
+</pre></div>
+</div>
+<p>To run all tests targeting a miner (eg. 127.0.0.1):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">MINER</span><span class="o">=</span><span class="m">127</span>.0.0.1<span class="w"> </span>pytest<span class="w"> </span>-vvs<span class="w"> </span>--manual<span class="w"> </span>tests
+</pre></div>
+</div>
+<p>To restrict the run to a single test:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-vvs<span class="w">  </span>tests<span class="w"> </span>--manual<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;test_utils.py&quot;</span>
+</pre></div>
+</div>
+<p>(<code class="docutils literal notranslate"><span class="pre">-k</span></code> takes wildcards).</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can generate coverage and junit html document using:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>tests<span class="w"> </span><span class="nv">MINER</span><span class="o">=</span><span class="m">127</span>.0.0.1
+</pre></div>
+</div>
+</div>
+</section>
+<section id="commit-eg-pre-commit-hooks">
+<h3>commit (eg. pre-commit hooks)<a class="headerlink" href="#commit-eg-pre-commit-hooks" title="Link to this heading">#</a></h3>
+<p>To guarantee code quality, you can leverage <a class="reference external" href="https://pre-commit.com/">pre-commit</a> hooks
+to help you validate code at every git commit (as done in <a class="reference internal" href="#setting-up-the-repository"><span class="xref myst">Setting up the repository</span></a>).</p>
+<p>All you need to do is:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>commit<span class="w"> </span>...
+</pre></div>
+</div>
+<p>If for any reason you want disable the hooks, use the <code class="docutils literal notranslate"><span class="pre">-n</span></code> flag to git commit:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>commit<span class="w"> </span>-n<span class="w"> </span>...
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>At every <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code> pre-commit will run for you:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/astral-sh/ruff">ruff</a> for static code check</p></li>
+<li><p><a class="reference external" href="https://mypy-lang.org">mypy</a> for static typing checks</p></li>
 </ul>
-<h2 class="rubric" id="coding">Coding</h2>
-<h3 class="rubric" id="precommit">Precommit</h3>
-<p>When it comes to coding, you can use <a class="reference external" href="https://pre-commit.com/">pre-commit</a> hooks
-to help you validate code at every git commit.</p>
-<ul>
-<li><p><strong>ENABLE</strong> precommit:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pre-commit<span class="w"> </span>install
-</pre></div>
-</div>
-</li>
-<li><p><strong>DISABLE</strong> precommit:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pre-commit<span class="w"> </span>uninstall
-</pre></div>
-</div>
-</li>
-<li><p><strong>SKIP CHECKS</strong> during git commit:
-Use the <code class="docutils literal notranslate"><span class="pre">-n</span></code> flag:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>commit<span class="w"> </span>-n<span class="w"> </span>....
-</pre></div>
-</div>
-</li>
-</ul>
-<p>At every <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code> code scanner <a class="reference external" href="https://github.com/astral-sh/ruff">ruff</a> and
-<a class="reference external" href="https://mypy-lang.org">mypy</a> will run.</p>
-</div>
 </div>
 </section>
 </section>
@@ -475,11 +519,11 @@ Use the <code class="docutils literal notranslate"><span class="pre">-n</span></
       </div>
     </a>
     <a class="right-next"
-       href="scripts/luxos.html"
+       href="examples.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">luxos</p>
+        <p class="prev-next-title">Examples (API)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -499,9 +543,21 @@ Use the <code class="docutils literal notranslate"><span class="pre">-n</span></
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-requisites">Pre-requisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-requisites">Pre-requisites</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-a-recent-version-of-python-eg-3-10">install a recent version of python (eg. &gt;=3.10)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cloned-code">cloned code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#right-current-working-directory">right current working directory</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-python-virtual-environment">Create the python virtual environment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-the-python-virtual-environment">create the python virtual environment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-the-repository">Setting up the repository</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding">Coding</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#activate-the-virtual-environment">activate the virtual environment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-tests">run tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#commit-eg-pre-commit-hooks">commit (eg. pre-commit hooks)</a></li>
 </ul>
 </li>
 </ul>

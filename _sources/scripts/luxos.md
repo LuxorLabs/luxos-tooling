@@ -1,36 +1,37 @@
-# luxos
+# `luxos` command line tool
 
-This script can run commands on miners.
+```{toctree}
+:maxdepth: 2
 
-Input to this script is a `*.csv` file, one IP per line, comments are marked with a `#` and empty lines are ignored.
-
-This will reboot all miners in the `miner.csv` file list:
-```bash
-   $> luxos --ipfile miners.csv --cmd rebootdevice --timeout 2 --verbose
+recipes
 ```
 
-There's an `async` version that can work better on multiple miners, just use the `--async` flag:
-```bash
-   $> luxos --ipfile miners.csv --cmd version --timeout 2 --async --all
-   > 10.206.1.153:4028
-   | {
-   |   "STATUS": [
-   |     {
-   |       "Code": 22,
-   |       "Description": "LUXminer 2024.5.1.155432-f2badc0f",
+The [luxos](https://pypi.org/project/luxos) python package comes with a command line script 
+called `luxos`: it can issue a command (with parameters) to a list of miners' ips
+in a csv file.
+
+This will launch the version command on a miner, returning the json output:
+```shell
+luxos --range 127.0.0.1 --quiet --json --cmd version 
 ```
-This will reboot all miners in the `miner.csv` file list:
-```bash
-   $> luxos --ipfile miners.csv --cmd rebootdevice --timeout 2 --verbose
+The `--range` flag can take:
+* a single ip address, eg: `--range 127.0.0.1`
+* a range like: `--range 127.0.0.1-127.0.0.5` 
+* or addresses from a file: `--range @miners.csv`.
+
+Other examples:
+
+```shell
+# set/unset ATM
+luxos --range 127.0.0.1 --quiet --json --cmd atmset --params "enabled=true"
+
+# add a new profile
+luxos --range 127.0.0.1 --quiet --json --cmd profilenew --params "myprofile,700,14.8"
 ```
 
-There's an `async` version that can work better on multiple miners, just use the `--async` flag:
-```bash
-   $> luxos --ipfile miners.csv --cmd version --timeout 2 --async --all
-   > 10.206.1.153:4028
-   | {
-   |   "STATUS": [
-   |     {
-   |       "Code": 22,
-   |       "Description": "LUXminer 2024.5.1.155432-f2badc0f",
-```
+> **NOTE** 
+> 1. `--ipfile` is an alternative way to load miners from a csv file, it's the same as `--range` flag: it can
+> take addresses like `127.0.0.1`, ranges as `127.0.0.1-127.0.0.5` or filenames
+> as `@miners.csv`.
+> 2. you can use the `--json` to save the results in json format (to stdout).
+

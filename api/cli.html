@@ -46,8 +46,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/cli';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="luxos.utils" href="utils.html" />
-    <link rel="prev" title="Examples / Tutorial" href="examples.html" />
+    <link rel="next" title="example 1" href="cli/example1.html" />
+    <link rel="prev" title="Intro" href="../api.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -152,18 +152,28 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../develop.html">Develop</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples (API)</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Scripts</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../scripts/luxos.html">luxos</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../scripts/luxos.html"><code class="docutils literal notranslate"><span class="pre">luxos</span></code> command line tool</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../scripts/recipes.html">Recipes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/luxos.run.html"><code class="docutils literal notranslate"><span class="pre">luxos-run</span></code> command line tool</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples / Tutorial</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">luxos.api.cli</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">luxos.api.cli</a><input checked class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli/example1.html">example 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/example2.html">example 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/example3.html">examples3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/example4.html">example4</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">luxos.utils</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="luxos.html">luxos package</a><input checked class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="luxos.ips.html">luxos.ips</a></li>
 <li class="toctree-l2"><a class="reference internal" href="luxos.asyncops.html">luxos.asyncops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="luxos.cli.html">luxos.cli</a></li>
@@ -320,7 +330,6 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-cli-package-can-do-for-you">What the cli package can do for you</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#starting">Starting</a></li>
 </ul>
             </nav>
@@ -335,35 +344,37 @@ document.write(`
                   
   <section id="luxos-api-cli">
 <h1>luxos.api.cli<a class="headerlink" href="#luxos-api-cli" title="Link to this heading">#</a></h1>
-<p>Luxos comes with a convenient cli interface generator, similar to what <a class="reference external" href="https://palletsprojects.com/p/click">click</a> provides,
-but simplified for easier usage. It uses <a class="reference external" href="https://docs.python.org/3/library/argparse.html">argparse</a> underneath, and this is the simplest usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">luxos.cli.v1</span> <span class="k">as</span> <span class="nn">cli</span>
+<div class="toctree-wrapper compound">
+</div>
+<p>Luxos comes with a convenient cli interface generator, similar to
+what <a class="reference external" href="https://palletsprojects.com/p/click">click</a> provides, but simplified for
+easier usage. It uses <a class="reference external" href="https://docs.python.org/3/library/argparse.html">argparse</a> so no external package is needed.</p>
+<p>This is the simplest script:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># script.py</span>
+<span class="c1">#!/usr/bin/env python3</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">luxos.cli.v1</span> <span class="k">as</span> <span class="nn">cli</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="nd">@cli</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Hello debug&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Hello info&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Hello warning&quot;</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>!!! note
-The tool is in the module <code class="docutils literal notranslate"><span class="pre">luxos.cli.v1</span></code>, and the <code class="docutils literal notranslate"><span class="pre">v1</span></code> denotes the first iteration of it. In future there
-might be more versions to accomodate different scenarios.</p>
-<section id="what-the-cli-package-can-do-for-you">
-<h2>What the cli package can do for you<a class="headerlink" href="#what-the-cli-package-can-do-for-you" title="Link to this heading">#</a></h2>
-<p>In the <code class="docutils literal notranslate"><span class="pre">v1</span></code> version the cli provides some standard flags common to all script leveraging it. By default it provides:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-v|--verbose</span></code> and <code class="docutils literal notranslate"><span class="pre">-q|--quiet</span></code> flags to increase (decrease)  the logging verbosity level (see <a class="reference internal" href="cli/example1.html"><span class="std std-doc">example 1</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-c/--config</span></code> flag to point to a config file path (default to <strong>config.yaml</strong>, configurable as in <a class="reference internal" href="cli/example3.html"><span class="std std-doc">example 3</span></a>)</p></li>
-</ul>
-<p>In the design intentions the goal is to provide an easy and fast way to start writing a script, providing
-support for extension, using only the internal python standard library and generally being simple.</p>
-<p>There are escape hatches to configure the cli to suit most use cases.</p>
-</section>
+<p>This script takes <code class="docutils literal notranslate"><span class="pre">-v|--verbose</span></code> and <code class="docutils literal notranslate"><span class="pre">-q|--quiet</span></code> flags, controlling the logging
+output.</p>
 <section id="starting">
 <h2>Starting<a class="headerlink" href="#starting" title="Link to this heading">#</a></h2>
 <p>The best way to familiarize with it is to following simple examples:</p>
+<p><strong>simple script</strong>
+One</p>
+<p><strong>second</strong></p>
 <ul class="simple">
 <li><p>the simplest basic cli showing how to document the script and using the logging 👉 <a class="reference internal" href="cli/example1.html"><span class="std std-doc">simple1</span></a></p></li>
 <li><p>extend your script and add custom arguments 👉 <a class="reference internal" href="cli/example2.html"><span class="doc std std-doc">simple2</span></a></p></li>
@@ -385,20 +396,20 @@ support for extension, using only the internal python standard library and gener
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="examples.html"
+       href="../api.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Examples / Tutorial</p>
+        <p class="prev-next-title">Intro</p>
       </div>
     </a>
     <a class="right-next"
-       href="utils.html"
+       href="cli/example1.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">luxos.utils</p>
+        <p class="prev-next-title">example 1</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -418,7 +429,6 @@ support for extension, using only the internal python standard library and gener
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-cli-package-can-do-for-you">What the cli package can do for you</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#starting">Starting</a></li>
 </ul>
   </nav></div>
