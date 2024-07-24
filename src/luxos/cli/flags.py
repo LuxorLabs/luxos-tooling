@@ -9,7 +9,26 @@ import logging
 from pathlib import Path
 from typing import Any, Sequence
 
-from .shared import LuxosParserBase
+from .shared import ArgumentTypeBase, LuxosParserBase
+
+
+class type_ipaddress(ArgumentTypeBase):
+    """
+    type for single ip address
+    """
+
+    def validate(self, txt):
+        from luxos import ips
+
+        if txt is None:
+            return None
+        try:
+            result = ips.parse_expr(txt)
+            if result[1]:
+                raise argparse.ArgumentTypeError("cannot use a range as expression")
+            return (result[0], result[2])
+        except ips.AddressParsingError as exc:
+            raise argparse.ArgumentTypeError(f"failed to parse {txt=}: {exc.args[0]}")
 
 
 def type_range(txt: str) -> Sequence[tuple[str, int | None]]:
