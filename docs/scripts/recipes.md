@@ -2,7 +2,7 @@
 
 This is a collection of recipes to use `luxos` cli command.
 
-All require a `miners.csv` file containing a list of machines. 
+All requires a `miners.csv` file containing a list of machines. 
 
 ## Update
 

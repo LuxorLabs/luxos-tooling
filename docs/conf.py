@@ -26,6 +26,7 @@ myst_enable_extensions = [
     "colon_fence",
     "tasklist",
     "fieldlist",
+    "deflist",
 ]
 
 templates_path = ["_templates"]

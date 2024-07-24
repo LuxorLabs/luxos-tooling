@@ -1,4 +1,6 @@
 # example 1
+XX
+:Internal file reference: [XX](_static/simple1.py)
 
 This is the most basic cli script, showing the basics.
 

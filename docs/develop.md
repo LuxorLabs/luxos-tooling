@@ -6,18 +6,20 @@ These are instructions for developers, to quickly start coding for `luxos`.
 ## Pre-requisites
 There are essentially three pre-requisites.
 
-We assume you **have installed a recent version of python (eg. >=3.10)** and the python binary
-is in the path. If so the following should be verified:
+### install a recent version of python (eg. >=3.10)
+Please check the output of:
 ```bash
 $> python3 --version
 Python 3.12.3
 ```
 
-The code is from a **github checkout**:
+### cloned code
+Code is from a **github checkout**:
 ```bash
 git clone https://github.com/LuxorLabs/luxos-tooling.git
 ```
 
+### right current working directory
 Also we assume **the current directory is the check out directory**:
 ```bash
 cd luxos-tooling
@@ -25,12 +27,11 @@ cd luxos-tooling
 
 ## Setup
 
-You need (only once) to [Create the python virtual environment](#create-the-python-virtual-environment),
-[Setting up the repository](#setting-up-the-repository), 
-then every time you restart a shell, you need to [Activate the virtual environment](#activate-the-virtual-environment).
+First you need to [create the python virtual environment](#create-the-python-virtual-environment) and 
+[setting up the repository](#setting-up-the-repository): these two steps need to be done only once.
 
 
-### Create the python virtual environment
+### create the python virtual environment
 
 First you need to create a virtual environment and install all dependencies:
 
@@ -40,17 +41,8 @@ First you need to create a virtual environment and install all dependencies:
 python3 -m venv %CD%\venv
 .\venv\Scripts\activate.bat    
 
-pip install -r tests\requirements.txt
-pip install -e .
-```
-:::
-:::{tab} Windows (powershell)
-```shell
-python3 -m venv %CD%\venv
-.\venv\Scripts\activate.ps1
-
-pip install -r tests\requirements.txt
-pip install -e .
+%CD%\venv\Scripts\pip install -r tests\requirements.txt
+%CD%\venv\Scripts\pip install -e .
 ```
 :::
 :::{tab} *NIX
@@ -58,11 +50,11 @@ pip install -e .
 python3 -m venv $(pwd)/venv  
 source ./venv/bin/activate
 
-pip install -r tests\requirements.txt
-pip install -e .
+./venv/bin/pip install -r tests\requirements.txt
+./venv/bin/pip install -e .
 ```
 :::
-:::
+::::
 
 ### Setting up the repository
 
@@ -70,68 +62,97 @@ Luxos leverages [pre-commit](https://pre-commit.com/) to execute
 checks on code commit, so the code can be checked for issues before being
 submitted to the repo.
 
-=== "Windows"
-    ```bash
-    $> .\venv\Scripts\activate  
-    # on powershell
-    $> .\venv\Scripts\activate.ps1
-
-    $> pre-commit install
-    ```
-
-=== "*NIX"
-    ```bash
-    $> source ./venv/bin/activate
-    $> pre-commit install
-    ```
+::::{tabs}
+:::{tab} Windows
+```bash
+%CD%\venv\Scripts\pre-commit install
+```
+:::
+:::{tab} *NIX
+```bash
+./venv/bin/pre-commit install
+```
+:::
+::::
 
 
-  
-- **ACTIVATE** the environment (each time you start a new shell)
-  <details><summary>Windows</summary>
-
-  ```shell
-  .\venv\Scripts\activate
-  ```
-  </details>
-  <details><summary>*NIX</summary>
-
-  ```shell
-  source ./venv/bin/activate
-  ```
-  </details>
-  
-- **RUN** the tests
-  
-  (Windows & *NIX)
-  ```shell
-  pytest -vvs tests
-  ```
 
 ## Coding
 
-### Precommit
-When it comes to coding, you can use [pre-commit](https://pre-commit.com/) hooks
-to help you validate code at every git commit.
+To begin coding, you first have to [activate the virtual environment](#activate-the-virtual-environment):
+this steps has to be followed every time you restart the shell/cmd.
 
-- **ENABLE** precommit:
-  ```shell
-  pre-commit install
-  ```
+### activate the virtual environment
 
-- **DISABLE** precommit:
-  ```shell
-  pre-commit uninstall
-  ```
+Every time you start a new shell, you need to activate the environment: this
+will set the correct **PATH**.
 
-- **SKIP CHECKS** during git commit:
-  Use the `-n` flag:
-  ```shell
-  git commit -n ....
-  ```
+::::{tabs}
+:::{tab} Windows
+```shell
+.\venv\Scripts\activate
+```
+:::
+:::{tab} Windows (powershell)
+```shell
+
+.\venv\Scripts\activate.ps1
+```
+:::
+:::{tab} *NIX
+```shell
+source ./venv/bin/activate
+```
+:::
+::::
+ 
+
+### run tests
+To run all (unit) tests:
+```shell
+pytest -vvs tests
+```
+
+To run tests (including non units):
+```shell
+pytest -vvs --manual tests
+```
+
+To run all tests targeting a miner (eg. 127.0.0.1):
+```shell
+MINER=127.0.0.1 pytest -vvs --manual tests
+```
+
+To restrict the run to a single test:
+```shell
+pytest -vvs  tests --manual -k "test_utils.py"
+```
+(`-k` takes wildcards).
 
 
+:::{tip}
+You can generate coverage and junit html document using:
+```shell
+make tests MINER=127.0.0.1
+```
+:::
 
-At every `git commit` code scanner [ruff](https://github.com/astral-sh/ruff) and
-[mypy](https://mypy-lang.org) will run.
+### commit (eg. pre-commit hooks)
+To guarantee code quality, you can leverage [pre-commit](https://pre-commit.com/) hooks
+to help you validate code at every git commit (as done in [Setting up the repository](setting-up-the-repository)).
 
+All you need to do is:
+```shell
+git commit ...
+```
+
+If for any reason you want disable the hooks, use the `-n` flag to git commit:
+```shell
+git commit -n ...
+```
+
+:::{note}
+At every `git commit` pre-commit will run for you:
+- [ruff](https://github.com/astral-sh/ruff) for static code check
+- [mypy](https://mypy-lang.org) for static typing checks
+:::

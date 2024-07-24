@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 This is the simplest script leveraging luxos.cli package.
 
@@ -38,7 +39,12 @@ import luxos.cli.v1 as cli
 log = logging.getLogger(__name__)
 
 
-@cli.cli()  # this is the way
+def x(parser):
+    parser.add_argument("-x", type=cli.flags.type_ipaddress)
+    parser.add_argument("-y", type=cli.flags.type_ipaddress, default="127.0.0.1")
+
+
+@cli.cli(x)  # this is the way
 def main(args: argparse.Namespace):
     # show some logging info
     log.debug("a debug message, need to use -v|--verbose to display it")
