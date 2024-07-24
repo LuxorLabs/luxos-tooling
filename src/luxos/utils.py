@@ -53,6 +53,7 @@ async def launch(
     function: Callable[[str, int], Awaitable[Any]],
     batch: int = 0,
     asobj: bool = False,
+    callback: Callable | None = None,
 ) -> list[LuxosLaunchError | LuxosLaunchTimeoutError | Any]:
     """
     Launch an async function on a list of (host, port) miners.
@@ -103,6 +104,8 @@ async def launch(
         for subaddresses in luxos.misc.batched(addresses, batch):
             tasks = [call(*address) for address in subaddresses]
             result.extend(await asyncio.gather(*tasks, return_exceptions=True))
+            if callback:
+                callback(result)
         return result
     else:
         tasks = [call(*address) for address in addresses]
