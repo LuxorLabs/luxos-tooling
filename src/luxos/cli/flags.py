@@ -59,7 +59,7 @@ class type_ipaddress(ArgumentTypeBase):
         if txt is None:
             return None
         try:
-            result = ips.parse_expr(txt) or ("", "", None)
+            result = ips.parse_expr(txt)
             if result[1]:
                 raise argparse.ArgumentTypeError("cannot use a range as expression")
             return (result[0], result[2])
