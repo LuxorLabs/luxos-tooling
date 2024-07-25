@@ -1,4 +1,6 @@
 # ruff: noqa: W291, W293
+from __future__ import annotations
+
 from types import ModuleType
 
 import pytest
