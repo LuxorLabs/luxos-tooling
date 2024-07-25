@@ -110,23 +110,21 @@ def iter_ip_ranges(
 
     The txt string cav have one of these formats:
 
-    1. a single ip such as '127.0.0.1' or '127.0.0.1:8080'
-    2. an (inclusive) range using two ips separated by `-`
-         as '127.0.0.1 - 127.0.0.3'
-    3. a combination of the above `,` separated as
-         '127.0.0.1 , 192.168.0.1-192.168.0.10'
+    1. a single ip and (optional) port: ``127.0.0.1`` or ``127.0.0.1:8080``
+    2. an (inclusive) range using two ips separated by a
+       ``-`` (minus) sign: ``127.0.0.1-127.0.0.3``
+    3. a combination of the above separated by a ``,`` (comma) sign:
+       ``127.0.0.1,192.168.0.1-192.168.0.10``
 
-    Example:
-    ```python
-    for ip in iter_ip_ranges("127.0.0.1 , 127.0.0.3-127.0.0.15"):
-        print(ip)
+    Example::
 
-    (127.0.0.1, None),
-    (127.0.0.2, None),
-    (127.0.0.3, None),
-    ...
-    127.0.0.15
-    ```
+        for ip in iter_ip_ranges("127.0.0.1,127.0.0.3-127.0.0.15:9999"):
+            print(ip)
+
+        (127.0.0.1, None),
+        (127.0.0.3, 9999),
+        ...
+        (127.0.0.15, 9999),
     """
     for segment in txt.replace(" ", "").split(gsep):
         try:
@@ -172,8 +170,8 @@ def ip_ranges(
 
 
 def load_ips_from_csv(
-    path: Path | str, port: int = 4028, strict: bool = False
-) -> list[tuple[str, int]]:
+    path: Path | str, port: int | None = 4028, strict: bool = False
+) -> list[tuple[str, int | None]]:
     """
     Load ip addresses from a csv file.
 
@@ -228,8 +226,8 @@ def load_ips_from_csv(
 
 
 def load_ips_from_yaml(
-    path: Path | str, port: int = 4028, strict: bool = False
-) -> list[tuple[str, int]]:
+    path: Path | str, port: int | None = 4028, strict: bool = False
+) -> list[tuple[str, int | None]]:
     """
     Load ip addresses from a yaml file.
 

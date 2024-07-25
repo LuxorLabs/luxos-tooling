@@ -103,7 +103,7 @@ from typing import Any, Callable
 
 from .. import text
 from . import flags
-from .shared import LuxosParserBase
+from .shared import ArgumentTypeBase, LuxosParserBase
 
 
 class MyHandler(logging.StreamHandler):
@@ -156,7 +156,6 @@ class LuxosParser(LuxosParserBase):
 
         # we're adding the -v|-q flags, to control the logging level
         flags.add_arguments_logging(self)
-        flags.add_arguments_config(self)
 
     def error(self, message: str):
         raise AbortWrongArgumentError(message)
@@ -174,6 +173,10 @@ class LuxosParser(LuxosParserBase):
             raise RuntimeError(f"cannot add an argument with dest='{reserved}'")
         options.error = self.error
         options.modules = self.modules
+
+        for name in dir(options):
+            if isinstance(getattr(options, name), ArgumentTypeBase):
+                setattr(options, name, getattr(options, name).value)
 
         for callback in self.callbacks:
             if not callback:
@@ -214,7 +217,11 @@ def setup(
     description, _, epilog = (
         (function.__doc__ or module.__doc__ or "").strip().partition("\n")
     )
-    epilog = text.md(f"# {description}\n{epilog}")
+    # markdown
+    # epilog = text.md(f"# {description}\n{epilog}")
+    epilog = text.md(f"{description}\n{epilog}")
+    description = ""
+
     kwargs = {}
     modules = [
         sys.modules[__name__],

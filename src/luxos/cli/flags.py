@@ -1,4 +1,20 @@
-"""various argparse `type` attributes"""
+"""
+a collection of argparse `type_*` and 'add_arguments_*' functions
+
+This is a collection of functions can be used with argparser add_argumnet
+and parser.
+
+Eg.::
+
+    # this will validate the `-x` value as HH:MM to datetime.time
+    parser.add_argument("-x", type=type_hhmm)
+
+Or::
+
+    # this will add few arguments to the parser
+    add_arguments_rexec(parser)
+
+"""
 
 from __future__ import annotations
 
@@ -9,23 +25,77 @@ import logging
 from pathlib import Path
 from typing import Any, Sequence
 
-from .shared import LuxosParserBase
+from .shared import ArgumentTypeBase, LuxosParserBase
+
+
+class type_ipaddress(ArgumentTypeBase):
+    """
+    Validate a type as an ip addresses.
+
+    Raises:
+        argparse.ArgumentTypeError: on an invalid input.
+
+    Returns:
+        tuple[str, None | int] or None
+
+    Example:
+        file.py::
+
+            parser.add_argument("-x", type=type_ipaddress)
+            options = parser.parse_args()
+            ...
+
+            assert options.x == ("host", 9999)
+
+
+        shell::
+
+            file.py -x host:9999
+    """
+
+    def validate(self, txt) -> None | tuple[str, None | int]:
+        from luxos import ips
+
+        if txt is None:
+            return None
+        try:
+            result = ips.parse_expr(txt) or ("", "", None)
+            if result[1]:
+                raise argparse.ArgumentTypeError("cannot use a range as expression")
+            return (result[0], result[2])
+        except ips.AddressParsingError as exc:
+            raise argparse.ArgumentTypeError(f"failed to parse {txt=}: {exc.args[0]}")
 
 
 def type_range(txt: str) -> Sequence[tuple[str, int | None]]:
-    """type conversion for ranges
+    """
+    Validate a range of ip addresses.
 
-    This will enforce conversion between a string and a ranged object.
+    Raises:
+        argparse.ArgumentTypeError: on an invalid input.
 
-    Eg.
-        parser.add_argument("--range", type=type_range)
+    Returns:
+        Sequence[tuple[str, int | None]]
 
-        The --range argument will be:
-            127.0.0.1  # single ip address
-            127.0.0.1:1234  # single ip address with port
-            127.0.0.1-127.0.0.3 # a list of (ip, port) tuple between *.1 and.3
+    Example:
+        file.py::
 
-        Alternatively you can pass a @filename to read data from a csv file
+            parser.add_argument("-x", type=type_range)
+            options = parser.parse_args()
+            ...
+
+            assert options.x == [
+                ("127.0.0.1", 9999),
+                ("127.0.0.2", 9999),
+                ("127.0.0.3", 9999),
+            ]
+
+
+        shell::
+
+            file.py -x 127.0.0.1:9999:127.0.0.3
+
+        Alternatively you can pass a **@filename** to read data from a csv file
     """
     from luxos.ips import (
         DataParsingError,
@@ -40,11 +110,11 @@ def type_range(txt: str) -> Sequence[tuple[str, int | None]]:
 
     if path:
         with contextlib.suppress(RuntimeError, DataParsingError):
-            return load_ips_from_yaml(path)
+            return load_ips_from_yaml(path, None)
 
     try:
         if path:
-            return load_ips_from_csv(path)
+            return load_ips_from_csv(path, None)
         return list(iter_ip_ranges(txt))
     except RuntimeError as exc:
         raise argparse.ArgumentTypeError(f"conversion failed '{txt}': {exc.args[0]}")
@@ -54,24 +124,40 @@ def type_range(txt: str) -> Sequence[tuple[str, int | None]]:
         ) from exc
 
 
-def type_hhmm(txt: str):
-    """type conversion for ranges
-
-    This will enforce conversion between a string and datetime.time object.
-
-    Eg.
-        parser.add_argument("--time", type=type_hhmm)
-
-        The --time format is HH:MM
+class type_hhmm(ArgumentTypeBase):
     """
-    if not txt:
-        return
-    with contextlib.suppress(ValueError, TypeError):
-        hh, _, mm = txt.partition(":")
-        hh1 = int(hh)
-        mm1 = int(mm)
-        return datetime.time(hh1, mm1)
-    raise argparse.ArgumentTypeError(f"failed conversion into HH:MM for '{txt}'")
+    Validate a type as a datetime.time in HH:MM format
+
+    Raises:
+        argparse.ArgumentTypeError: on an invalid input.
+
+    Returns:
+        datetime.time or None
+
+    Example:
+        file.py::
+
+            parser.add_argument("-x", type=type_hhmm)
+            options = parser.parse_args()
+            ...
+
+            assert options.x == datetime.time(12, 13)
+
+
+        shell::
+
+            file.py -x 12:13
+    """
+
+    def validate(self, txt) -> None | datetime.time:
+        if not txt:
+            return None
+        with contextlib.suppress(ValueError, TypeError):
+            hh, _, mm = txt.partition(":")
+            hh1 = int(hh)
+            mm1 = int(mm)
+            return datetime.time(hh1, mm1)
+        raise argparse.ArgumentTypeError(f"failed conversion into HH:MM for '{txt}'")
 
 
 def add_arguments_rexec(parser: LuxosParserBase):
