@@ -1,12 +1,15 @@
 # ruff: noqa: W291, W293
+from types import ModuleType
+
 import pytest
 
 from luxos import text
 
+rich: ModuleType | None = None
 try:
     import rich
 except ModuleNotFoundError:
-    rich = None
+    pass
 
 
 def test_indent():
