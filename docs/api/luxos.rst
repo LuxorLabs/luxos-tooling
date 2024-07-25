@@ -10,6 +10,7 @@ Subpackages
    luxos.ips
    luxos.asyncops
    luxos.cli
+   luxos.cli.flags
    luxos.scripts
    luxos.exceptions
    luxos.utils
