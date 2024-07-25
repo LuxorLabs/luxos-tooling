@@ -45,6 +45,10 @@ Please, use the format:
 - major documentation refactor
 - better flags handling
 
+## [0.2.1]
+
+- major documentation refactor
+
 
 ## [0.2.1]
 
