@@ -14,10 +14,18 @@ Please, use the format:
 
 -->
 
+## [0.2.3]
+
+- add a --version flag
+
 ## [0.2.2]
 
 - major documentation refactor
 - better flags handling
+
+## [0.2.1]
+
+- major documentation refactor
 
 
 ## [0.1.0]
