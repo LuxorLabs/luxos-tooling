@@ -14,6 +14,11 @@ Please, use the format:
 
 -->
 
+## [0.2.1]
+
+- major documentation refactor
+
+
 ## [0.1.0]
 
 - cli: added many new flags, including --range and --db
