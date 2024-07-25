@@ -83,7 +83,7 @@ async def main(args: argparse.Namespace):
     teardown = None
     if args.teardown:
         if not hasattr(module, args.teardown):
-            args.error(f"no tear donw function {args.teardown} in {args.script}")
+            args.error(f"no tear down function {args.teardown} in {args.script}")
         teardown = getattr(module, args.teardown, None)
 
     result = {}

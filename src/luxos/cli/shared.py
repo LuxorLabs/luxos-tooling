@@ -31,8 +31,13 @@ class LuxosParserBase(argparse.ArgumentParser):
 
 
 class ArgumentTypeBase:
-    def __init__(self, default):
-        self.default = self._validate(default)
+    class _NA:
+        pass
+
+    def __init__(self, default=_NA):
+        self.default = default
+        if default is not ArgumentTypeBase._NA:
+            self.default = self._validate(default)
 
     def __call__(self, txt):
         self._value = None

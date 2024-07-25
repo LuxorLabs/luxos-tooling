@@ -156,7 +156,6 @@ class LuxosParser(LuxosParserBase):
 
         # we're adding the -v|-q flags, to control the logging level
         flags.add_arguments_logging(self)
-        flags.add_arguments_config(self)
 
     def error(self, message: str):
         raise AbortWrongArgumentError(message)
@@ -218,7 +217,11 @@ def setup(
     description, _, epilog = (
         (function.__doc__ or module.__doc__ or "").strip().partition("\n")
     )
-    epilog = text.md(f"# {description}\n{epilog}")
+    # markdown
+    # epilog = text.md(f"# {description}\n{epilog}")
+    epilog = text.md(f"{description}\n{epilog}")
+    description = ""
+
     kwargs = {}
     modules = [
         sys.modules[__name__],

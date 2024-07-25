@@ -170,8 +170,8 @@ def ip_ranges(
 
 
 def load_ips_from_csv(
-    path: Path | str, port: int = 4028, strict: bool = False
-) -> list[tuple[str, int]]:
+    path: Path | str, port: int | None = 4028, strict: bool = False
+) -> list[tuple[str, int | None]]:
     """
     Load ip addresses from a csv file.
 
@@ -226,8 +226,8 @@ def load_ips_from_csv(
 
 
 def load_ips_from_yaml(
-    path: Path | str, port: int = 4028, strict: bool = False
-) -> list[tuple[str, int]]:
+    path: Path | str, port: int | None = 4028, strict: bool = False
+) -> list[tuple[str, int | None]]:
     """
     Load ip addresses from a yaml file.
 
