@@ -48,7 +48,7 @@ def add_arguments(parser: cli.LuxosParserBase) -> None:
         default="main",
     )
     parser.add_argument(
-        "-t", "--tear-donw", dest="teardown", help="script tear down function"
+        "-t", "--tear-down", dest="teardown", help="script tear down function"
     )
     parser.add_argument("-n", "--batch", type=int, help="limit parallel executions")
     parser.add_argument(
