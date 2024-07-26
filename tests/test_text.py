@@ -8,6 +8,7 @@ import pytest
 from luxos import text
 
 rich: ModuleType | None = None
+
 try:
     import rich
 except ModuleNotFoundError:
