@@ -166,8 +166,8 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="api.html">Intro</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/cli.html">luxos.api.cli</a><input checked class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/cli/example1.html">example 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/cli/example2.html">example 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/cli/example1.html">basic usage (logging)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/cli/example2.html">basic usage (flags)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/cli/example3.html">examples3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/cli/example4.html">example4</a></li>
 </ul>
@@ -177,6 +177,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.ips.html">luxos.ips</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.asyncops.html">luxos.asyncops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.cli.html">luxos.cli</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/luxos.cli.flags.html">luxos.cli.flags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.scripts.html">luxos.scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.exceptions.html">luxos.exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/luxos.utils.html">luxos.utils</a></li>
@@ -303,6 +304,18 @@ document.write(`
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/luxos.cli.flags.html#luxos.cli.flags.add_arguments_config">add_arguments_config() (in module luxos.cli.flags)</a>
+</li>
+      <li><a href="api/luxos.cli.flags.html#luxos.cli.flags.add_arguments_database">add_arguments_database() (in module luxos.cli.flags)</a>
+</li>
+      <li><a href="api/luxos.cli.flags.html#luxos.cli.flags.add_arguments_logging">add_arguments_logging() (in module luxos.cli.flags)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/luxos.cli.flags.html#luxos.cli.flags.add_arguments_new_miners_ips">add_arguments_new_miners_ips() (in module luxos.cli.flags)</a>
+</li>
+      <li><a href="api/luxos.cli.flags.html#luxos.cli.flags.add_arguments_rexec">add_arguments_rexec() (in module luxos.cli.flags)</a>
+</li>
       <li><a href="api/luxos.exceptions.html#luxos.exceptions.AddressParsingError">AddressParsingError</a>
 </li>
   </ul></td>
@@ -352,14 +365,21 @@ document.write(`
 </li>
       </ul></li>
       <li>
+    luxos.cli.flags
+
+      <ul>
+        <li><a href="api/luxos.cli.flags.html#module-luxos.cli.flags">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
     luxos.exceptions
 
       <ul>
         <li><a href="api/luxos.exceptions.html#module-luxos.exceptions">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     luxos.ips
 
@@ -417,6 +437,8 @@ document.write(`
 </li>
         <li><a href="api/luxos.cli.html#module-luxos.cli">luxos.cli</a>
 </li>
+        <li><a href="api/luxos.cli.flags.html#module-luxos.cli.flags">luxos.cli.flags</a>
+</li>
         <li><a href="api/luxos.exceptions.html#module-luxos.exceptions">luxos.exceptions</a>
 </li>
         <li><a href="api/luxos.ips.html#module-luxos.ips">luxos.ips</a>
@@ -468,6 +490,14 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/luxos.asyncops.html#luxos.asyncops.TIMEOUT">TIMEOUT (in module luxos.asyncops)</a>
 </li>
+      <li><a href="api/luxos.cli.flags.html#luxos.cli.flags.type_hhmm">type_hhmm (class in luxos.cli.flags)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/luxos.cli.flags.html#luxos.cli.flags.type_ipaddress">type_ipaddress (class in luxos.cli.flags)</a>
+</li>
+      <li><a href="api/luxos.cli.flags.html#luxos.cli.flags.type_range">type_range() (in module luxos.cli.flags)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -478,6 +508,10 @@ document.write(`
 
       <ul>
         <li><a href="api/luxos.utils.html#luxos.utils.validate">(in module luxos.utils)</a>
+</li>
+        <li><a href="api/luxos.cli.flags.html#luxos.cli.flags.type_hhmm.validate">(luxos.cli.flags.type_hhmm method)</a>
+</li>
+        <li><a href="api/luxos.cli.flags.html#luxos.cli.flags.type_ipaddress.validate">(luxos.cli.flags.type_ipaddress method)</a>
 </li>
       </ul></li>
   </ul></td>

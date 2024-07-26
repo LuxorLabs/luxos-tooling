@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>example 1 &#8212; luxos  documentation</title>
+    <title>basic usage (logging) &#8212; luxos  documentation</title>
   
   
   
@@ -46,7 +46,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/cli/example1';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="example 2" href="example2.html" />
+    <link rel="next" title="basic usage (flags)" href="example2.html" />
     <link rel="prev" title="luxos.api.cli" href="../cli.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -166,8 +166,8 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">Intro</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../cli.html">luxos.api.cli</a><input checked class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">example 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="example2.html">example 2</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">basic usage (logging)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example2.html">basic usage (flags)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example3.html">examples3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example4.html">example4</a></li>
 </ul>
@@ -177,6 +177,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../luxos.ips.html">luxos.ips</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../luxos.asyncops.html">luxos.asyncops</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../luxos.cli.html">luxos.cli</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../luxos.cli.flags.html">luxos.cli.flags</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../luxos.scripts.html">luxos.scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../luxos.exceptions.html">luxos.exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../luxos.utils.html">luxos.utils</a></li>
@@ -307,7 +308,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -318,11 +321,21 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>example 1</h1>
+    <h1>basic usage (logging)</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-quiet">examples (–quiet)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-no-flags">examples (no flags)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-verbose">examples (–verbose)</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -332,23 +345,18 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="example-1">
-<h1>example 1<a class="headerlink" href="#example-1" title="Link to this heading">#</a></h1>
-<p>XX</p>
-<dl class="myst field-list simple">
-<dt class="field-odd">Internal file reference<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference download internal" download="" href="../../_downloads/462da30f3f3ecce58d0cfdbf3e6bc807/simple1.py"><span class="xref download myst">XX</span></a></p>
-</dd>
-</dl>
+  <section id="basic-usage-logging">
+<h1>basic usage (logging)<a class="headerlink" href="#basic-usage-logging" title="Link to this heading">#</a></h1>
+<p><a class="reference download internal" download="" href="../../_downloads/462da30f3f3ecce58d0cfdbf3e6bc807/simple1.py"><span class="xref download myst">download</span></a></p>
 <p>This is the most basic cli script, showing the basics.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;this line will be reported as &#39;description&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span> <span class="n">hidden</span> <span class="n">code</span>
 
-<span class="sd">More lines will be put in the help message. You can</span>
-<span class="sd">put a larger description, some comments and an example here.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">luxos.cli.v1</span> <span class="k">as</span> <span class="nn">cli</span>
+
+<span class="c1"># this is the default, here just to show usage</span>
+<span class="n">LOGGING_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>  <span class="c1"># This is the default</span>
+<span class="p">}</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -362,39 +370,60 @@ document.write(`
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The help message:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$&gt;<span class="w"> </span>python<span class="w"> </span>docs/examples/simple1.py<span class="w"> </span>--help
-usage:<span class="w"> </span>simple1.py<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span><span class="o">[</span>-q<span class="o">]</span><span class="w"> </span><span class="o">[</span>-c<span class="w"> </span>CONFIG<span class="o">]</span>
-
-this<span class="w"> </span>line<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>reported<span class="w"> </span>as<span class="w"> </span><span class="s1">&#39;description&#39;</span>
-
-options:
-<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
-<span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>report<span class="w"> </span>verbose<span class="w"> </span>logging<span class="w"> </span><span class="o">(</span>default:<span class="w"> </span>None<span class="o">)</span>
-<span class="w">  </span>-q,<span class="w"> </span>--quiet<span class="w">           </span>report<span class="w"> </span>quiet<span class="w"> </span>logging<span class="w"> </span><span class="o">(</span>default:<span class="w"> </span>None<span class="o">)</span>
-<span class="w">  </span>-c<span class="w"> </span>CONFIG,<span class="w"> </span>--config<span class="w"> </span>CONFIG
-<span class="w">                        </span>path<span class="w"> </span>to<span class="w"> </span>a<span class="w"> </span>config<span class="w"> </span>file<span class="w"> </span><span class="o">(</span>default:<span class="w"> </span>config.yaml<span class="o">)</span>
-
-More<span class="w"> </span>lines<span class="w"> </span>will<span class="w"> </span>be<span class="w"> </span>put<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message.<span class="w"> </span>You<span class="w"> </span>can
-put<span class="w"> </span>a<span class="w"> </span>larger<span class="w"> </span>description,<span class="w"> </span>some<span class="w"> </span>comments<span class="w"> </span>and<span class="w"> </span>an<span class="w"> </span>example<span class="w"> </span>here.
-</pre></div>
-</div>
-<p>Calling from the command line this script will output:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>INFO:__main__:an info message, you can silence it by passing with -q|--quiet
-WARNING:__main__:a warning!
-INFO:luxos.cli.v1:task completed in 0.00s
-</pre></div>
-</div>
-<p>Plese note:</p>
-<blockquote>
-<div><p>NOTE:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">cli.cli</span></code> decorator, adds by default two flags to control the logging
+printed: <code class="docutils literal notranslate"><span class="pre">-v|--verbose</span></code> to increase the verbosity and <code class="docutils literal notranslate"><span class="pre">-q|--quiet</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>the script has some default flags eg. <code class="docutils literal notranslate"><span class="pre">--verbose|--quiet|--config</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--verbose|--quiet</span></code> flags control the logging level (by default set to logging.INFO)</p></li>
-<li><p>at the end of the execution there’s a timing report</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">args</span></code> is a argparse.Namespace instance containing the “arguments” coming from the cli</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">cli.cli</span></code> decorator, adds by default two flags
+to control the logging printed and takes the <code class="docutils literal notranslate"><span class="pre">--help</span></code> from the script <code class="docutils literal notranslate"><span class="pre">__doc__</span></code></p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">args</span></code> (argparse.Namespace instance) contains two special attributes:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">error</span></code> is a callable that aborts the script with an error message</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">modules</span></code> contains a list modules leading to the script itself</p></li>
 </ul>
-</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOGGING_CONFIG</span></code> is a dictionary allowing configure the logging from the script itself</p></li>
+</ul>
+</div>
+<section id="examples-quiet">
+<h2>examples (–quiet)<a class="headerlink" href="#examples-quiet" title="Link to this heading">#</a></h2>
+<p>So this will display only the warning level messages:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>simple1.py<span class="w"> </span>--quiet
+
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">18</span>:57:12,311<span class="w"> </span><span class="o">[</span>W<span class="o">]</span><span class="w"> </span>__main__:<span class="w"> </span>a<span class="w"> </span>warning!
+</pre></div>
+</div>
+</section>
+<section id="examples-no-flags">
+<h2>examples (no flags)<a class="headerlink" href="#examples-no-flags" title="Link to this heading">#</a></h2>
+<p>By default if no <code class="docutils literal notranslate"><span class="pre">--verbose</span></code>/<code class="docutils literal notranslate"><span class="pre">--quiet</span></code> flag is passed, the logging will display INFO
+level messages (you can change it setting a different <code class="docutils literal notranslate"><span class="pre">LOGGING_CONFIG</span></code> value).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>simple1.py
+
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">19</span>:39:15,204<span class="w"> </span><span class="o">[</span>I<span class="o">]</span><span class="w"> </span>luxos.cli.v1:<span class="w"> </span>py<span class="o">[</span><span class="m">3</span>.12.3<span class="o">]</span>,<span class="w"> </span>luxos<span class="o">[</span>/<span class="o">]</span>
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">19</span>:39:15,204<span class="w"> </span><span class="o">[</span>I<span class="o">]</span><span class="w"> </span>__main__:<span class="w"> </span>an<span class="w"> </span>info<span class="w"> </span>message,<span class="w"> </span>you<span class="w"> </span>can<span class="w"> </span>silence<span class="w"> </span>it<span class="w"> </span>with<span class="w"> </span>-q<span class="p">|</span>--quiet
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">19</span>:39:15,204<span class="w"> </span><span class="o">[</span>W<span class="o">]</span><span class="w"> </span>__main__:<span class="w"> </span>a<span class="w"> </span>warning!
+...
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">19</span>:39:15,204<span class="w"> </span><span class="o">[</span>I<span class="o">]</span><span class="w"> </span>luxos.cli.v1:<span class="w"> </span>task<span class="w"> </span>completed<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.00s
+</pre></div>
+</div>
+</section>
+<section id="examples-verbose">
+<h2>examples (–verbose)<a class="headerlink" href="#examples-verbose" title="Link to this heading">#</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>simple1.py<span class="w"> </span>--verbose
+
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">19</span>:42:18,674<span class="w"> </span><span class="o">[</span>I<span class="o">]</span><span class="w"> </span>luxos.cli.v1:<span class="w"> </span>py<span class="o">[</span><span class="m">3</span>.12.3<span class="o">]</span>,<span class="w"> </span>luxos<span class="o">[</span>/<span class="o">]</span>
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">19</span>:42:18,674<span class="w"> </span><span class="o">[</span>D<span class="o">]</span><span class="w"> </span>luxos.cli.v1:<span class="w"> </span>interpreter:<span class="w"> </span>/Users/antonio/venvs/luxos-tooling/bin/python
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">19</span>:42:18,674<span class="w"> </span><span class="o">[</span>D<span class="o">]</span><span class="w"> </span>luxos.cli.v1:<span class="w"> </span>version:<span class="w"> </span><span class="m">3</span>.12.3<span class="w"> </span><span class="o">(</span>v3.12.3:f6650f9ad7,<span class="w"> </span>Apr<span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">2024</span>,<span class="w"> </span><span class="m">08</span>:18:47<span class="o">)</span><span class="w"> </span><span class="o">[</span>Clang<span class="w"> </span><span class="m">13</span>.0.0<span class="w"> </span><span class="o">(</span>clang-1300.0.29.30<span class="o">)]</span>
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">19</span>:42:18,674<span class="w"> </span><span class="o">[</span>D<span class="o">]</span><span class="w"> </span>__main__:<span class="w"> </span>a<span class="w"> </span>debug<span class="w"> </span>message,<span class="w"> </span>need<span class="w"> </span>to<span class="w"> </span>use<span class="w"> </span>-v<span class="p">|</span>--verbose<span class="w"> </span>to<span class="w"> </span>display<span class="w"> </span>it
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">19</span>:42:18,674<span class="w"> </span><span class="o">[</span>I<span class="o">]</span><span class="w"> </span>__main__:<span class="w"> </span>an<span class="w"> </span>info<span class="w"> </span>message,<span class="w"> </span>you<span class="w"> </span>can<span class="w"> </span>silence<span class="w"> </span>it<span class="w"> </span>with<span class="w"> </span>-q<span class="p">|</span>--quiet
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">19</span>:42:18,674<span class="w"> </span><span class="o">[</span>W<span class="o">]</span><span class="w"> </span>__main__:<span class="w"> </span>a<span class="w"> </span>warning!
+...
+<span class="m">2024</span>-07-25<span class="w"> </span><span class="m">19</span>:42:18,674<span class="w"> </span><span class="o">[</span>I<span class="o">]</span><span class="w"> </span>luxos.cli.v1:<span class="w"> </span>task<span class="w"> </span>completed<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.00s
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -422,7 +451,7 @@ INFO:luxos.cli.v1:task completed in 0.00s
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">example 2</p>
+        <p class="prev-next-title">basic usage (flags)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -433,7 +462,22 @@ INFO:luxos.cli.v1:task completed in 0.00s
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"></div>
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-quiet">examples (–quiet)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-no-flags">examples (no flags)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-verbose">examples (–verbose)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

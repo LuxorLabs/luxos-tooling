@@ -1,58 +1,71 @@
-# example 2
+# basic usage (flags)
+[download](_static/simple2.py)
 
-On top of simple1.py, a cli might want to define extra arguments and or options, this is the way is done:
+You can add new flags to a script, and processing the values to parse them.
 
 ```python
-import asyncio
-import argparse
+...
 
 import luxos.cli.v1 as cli
 
-def add_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("-x", type=int, default=0, help="set the x flag")
+# here only for display, as it is the default
+CONFIGPATH = "config.yaml"
+
+def add_arguments(
+    parser: cli.ArgumentParser,
+):
+    parser.add_argument("-x", type=int, dest="mult", default=1, help="set the x flag")
+    parser.add_argument("number", type=int)
+
+    parser.add_argument("--time", type=cli.flags.type_hhmm)
+    cli.flags.add_arguments_config(parser)
 
 def process_args(args: argparse.Namespace) -> argparse.Namespace | None:
-    args.x = 2 * args.x
+    # we double anything we receive from user
+    args.number *= args.mult
 
 @cli.cli(add_arguments, process_args)
 async def main(args: argparse.Namespace):
-    """a simple test script with a simple description"""
-    print(f"Got for x='{args.x}'")
+    print(f"the args.mult is args.mult={args.mult}")
+    print(f"the final result is args.number={args.number}")
+    print(f"args.config={args.config}")
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 ```
 
-Calling the script will result in:
-```bash
-$> python simple2.py -q
-Got for x='0'
-```
-
-```bash
-$> python simple2.py -q -x 12
-Got for x='24'
-```
+:::{note}
+See [luxos.cli.flags](luxos.cli.flags) for a complete list.
+:::
 
 The parser processing works in this way:
 ```
 parser creation
   -> adds default arguments (-q|-v|-c, internal)
-  -> can use the add_arguments callback to cli.cli to add more arguments
+  -> add_arguments(parser) callback to cli.cli is called to add more arguments
   -> parser.parse_args() return args: argparse.Namespace()
-  -> process_args(args) process args
+  -> process_args(args) callback to cli.cli is called to process args
 args then is finally passed down to main(args).  
 ```
 
-> **NOTE** argparse makes the distintion between options and arguments
-> even if both get added to the parser using the same parser.add_argument method.
-> 
-> Basically it boils down to:
->
-> *if it is required to run the script, then it is an argument*
->     -> you can parser.add_argument("argument")
-> 
-> *if it is NOT required to run the script, then it is an option*
->     -> you can parser.add_argument("--option")
+
+## examples
+
+Calling the script will result in:
+```bash
+python simple2.py -q 99
+the args.mult is args.mult=1
+the final result is args.number=99
+args.config=/Users/antonio/Projects/LuxorLabs/luxos-tooling/config.yaml
+```
+
+```bash
+python simple2.py -q 99 -x 2
+the args.mult is args.mult=2
+the final result is args.number=198
+args.config=/Users/antonio/Projects/LuxorLabs/luxos-tooling/config.yaml
+```
+
 
 

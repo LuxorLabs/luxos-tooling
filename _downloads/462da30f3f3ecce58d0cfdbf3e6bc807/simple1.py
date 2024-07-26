@@ -13,22 +13,6 @@ Examples:
 
     $> simple1.py --quiet
     2024-06-01 07:16:35,413 [W] __main__: a warning!
-
-    $> simple1.py
-    2024-06-01 07:16:50,911 [I] luxos.cli.v1: py[3.12.2], luxos[/]
-    ...
-    2024-06-01 07:16:50,911 [W] __main__: a warning!
-    2024-06-01 07:16:50,911 [I] luxos.cli.v1: task completed in 0.00s
-
-    $> simple1.py -v
-    2024-06-01 07:17:17,379 [I] luxos.cli.v1: py[3.12.2], luxos[/]
-    ...
-    2024-06-01 07:17:17,379 [D] __main__: a debug message,
-        need to use -v|--verbose to display it
-    2024-06-01 07:17:17,379 [I] __main__: an info message,
-        you can silence it with -q|--quiet
-    2024-06-01 07:17:17,379 [W] __main__: a warning!
-    ...
 """
 
 import argparse
@@ -38,13 +22,13 @@ import luxos.cli.v1 as cli
 
 log = logging.getLogger(__name__)
 
+# this is the default, here just for display
+LOGGING_CONFIG = {
+    "level": logging.INFO,  # This is the default
+}
 
-def x(parser):
-    parser.add_argument("-x", type=cli.flags.type_ipaddress)
-    parser.add_argument("-y", type=cli.flags.type_ipaddress, default="127.0.0.1")
 
-
-@cli.cli(x)  # this is the way
+@cli.cli()
 def main(args: argparse.Namespace):
     # show some logging info
     log.debug("a debug message, need to use -v|--verbose to display it")
