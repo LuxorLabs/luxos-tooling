@@ -1,7 +1,13 @@
 # ruff: noqa: W291, W293
+from __future__ import annotations
+
+from types import ModuleType
+
 import pytest
 
 from luxos import text
+
+rich: ModuleType | None = None
 
 try:
     import rich
