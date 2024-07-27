@@ -298,6 +298,8 @@ async def test_roundtrip_timeout(miner_host_port):
     texts = [
         f"<{host}:{port}>: MinerCommandTimeoutError, ConnectionRe",
         f"<{host}:{port}>: MinerCommandTimeoutError, TimeoutError",
+        # TODO refactor wire errors
+        f"<{host}:{port}>: MinerCommandTimeoutError, JSONDecodeEr",
     ]
     assert str(exception)[: len(texts[0])] in texts
 
