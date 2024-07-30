@@ -10,20 +10,26 @@ export PYTHONPATH=$(ROOT_DIR)/src
 
 # self-documentation magic
 help: ## Display the list of available targets
-	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 
 .PHONY: check
-check: check-fmt lint ## Check code formatting
+check: check-fmt lint ## ruff check + lint
 	@echo "🟢 pass"
 
 .PHONY: check-fmt
 check-fmt:  ## Runs ruff check
 	@ruff check src tests && echo "🟢 ruff check pass"
 
+.PHONY: fmt
+fmt:  ## Format code (ruff check --fix), updating source files
+	@ruff check --fix src tests
+	@ruff format src tests
+
 .PHONY: lint
 lint:  ## Runs the linter (mypy) and report errors.
 	@mypy src tests && echo "🟢 mypy check pass"
+
 
 .PHONY: test
 test: ## Run test suite
@@ -40,18 +46,11 @@ test: ## Run test suite
 	@echo "👉"
 
 
-.PHONY: fmt
-fmt:  ## Format code (ruff check --fix), updating source files
-	@ruff check --fix src tests
-	@ruff format src tests
-
-
 .PHONY: clean
 clean:  ## cleanup
 	rm -rf build .mypy_cache .pytest_cache .ruff_cache .coverage
 	find . -type d -name __pycache__ -prune -exec rm -rf "{}" \;
 	@echo "cleaned"
-
 
 .PHONY: clean-all
 clean-all:  clean ## deepest cleanup
@@ -62,11 +61,9 @@ clean-all:  clean ## deepest cleanup
 docs:  ## build documentation
 	@python -m sphinx docs build/docs
 
-
 .PHONY: serve
 serve:  ## start a documentation server with autoreload
 	@python -m sphinx_autobuild --watch src/luxos docs build/docs
-
 
 .PHONY: publish
 publish:  ## publish pages to github
