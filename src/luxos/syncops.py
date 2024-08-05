@@ -216,7 +216,7 @@ def rexec(
     timeout: float | None = None,
     retry: int | None = None,
     retry_delay: float | None = None,
-) -> dict[str, Any] | None:
+) -> dict[str, Any]:
     parameters = parameters_to_list(parameters)
 
     timeout = TIMEOUT if timeout is None else timeout
@@ -287,6 +287,7 @@ def rexec(
         logoff(host, port, sid)
     if isinstance(failure, Exception):
         raise failure
+    return {}
 
 
 # !!! LEGACY CODE BELOW !!!
