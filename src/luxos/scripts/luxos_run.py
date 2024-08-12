@@ -50,7 +50,7 @@ def add_arguments(parser: cli.LuxosParserBase) -> None:
         default="main",
     )
     parser.add_argument(
-        "-t", "--tear-down", dest="teardown", help="script tear down function"
+        "-t", "--teardown", dest="teardown", help="script tear down function"
     )
     parser.add_argument("-n", "--batch", type=int, help="limit parallel executions")
     parser.add_argument(
@@ -88,10 +88,14 @@ async def main(args: argparse.Namespace):
         return
 
     teardown = None
-    if args.teardown:
+    if args.teardown == "":
+        pass
+    elif args.teardown:
         if not hasattr(module, args.teardown):
             args.error(f"no tear down function {args.teardown} in {args.script}")
         teardown = getattr(module, args.teardown, None)
+    elif hasattr(module, "teardown"):
+        teardown = getattr(module, "teardown")
 
     result = {}
 
