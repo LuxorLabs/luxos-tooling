@@ -107,6 +107,8 @@ def type_range(txt: str) -> Sequence[tuple[str, int | None]]:
     path = None
     if txt.startswith("@") and not (path := Path(txt[1:])).exists():
         raise argparse.ArgumentTypeError(f"file not found {path}")
+    if Path(txt).exists():
+        path = Path(txt)
 
     if path:
         with contextlib.suppress(RuntimeError, DataParsingError):
