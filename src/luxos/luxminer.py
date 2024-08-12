@@ -2,9 +2,12 @@
 from __future__ import annotations
 
 import contextlib
+import datetime
 import logging
 import re
-from typing import Any
+from typing import Any, Literal, overload
+
+import dateutil.parser
 
 from luxos import asyncops
 
@@ -137,3 +140,63 @@ async def get_state(host: str, port: int) -> dict[str, dict[str, Any]]:
     result["autotuner"] = await get_autotuner(host, port)
 
     return result
+
+
+## LOG RELATED
+
+
+class Log:
+    def __init__(
+        self, entries: list[tuple[datetime.datetime, str, str, list[str]]] | None = None
+    ):
+        self.entries = entries or []
+
+    @staticmethod
+    def parse(lines: list[str]) -> Log:
+        header = re.compile(
+            r"(?P<tstamp>\d{4}-\d{2}-\d{2}.?\d{2}:\d{2}:\d{2}[.]\d{6}.?)\s+"
+            r"(?P<level>[^ ]+)\s+"
+            r"+(?P<thread>ThreadId[(]\d+[)])\s+"
+            r"(?P<name>\w+(::\w+)*:)\s+"
+        )
+        out = Log()
+        block = None
+        for line in lines:
+            if match := header.search(line):
+                if block is not None:
+                    out.entries.append(block)
+                block = (
+                    dateutil.parser.parse(match.group("tstamp")),
+                    match.group("level").strip(),
+                    match.group("name").strip(),
+                    [line[match.span()[1] :]],
+                )
+                continue
+            if block:
+                block[-1].append(line)
+        out.entries.sort()
+        return out
+
+
+@overload
+async def get_log(host: str, port: int, raw: Literal[True]) -> str: ...
+
+
+@overload
+async def get_log(host: str, port: int, raw: Literal[False]) -> Log: ...
+
+
+@overload
+async def get_log(host: str, port: int, raw: bool) -> str | Log: ...
+
+
+async def get_log(host: str, port: int = 8080, raw: bool = False) -> str | Log:
+    from httpx import AsyncClient
+
+    async with AsyncClient() as client:
+        res = await client.get(
+            f"http://{host}:8080/log/download?file=current/luxminer.log"
+        )
+        if raw:
+            return res.text
+        return Log.parse(res.text.split("\n"))
