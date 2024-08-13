@@ -101,6 +101,10 @@ async def get_devs(host: str, port: int) -> dict[int, dict[str, Any]]:
     return result
 
 
+def is_ramping(devs: dict[int, dict[str, Any]]) -> bool:
+    return any(dev["IsRamping"] for dev in devs.values())
+
+
 # PROFILES COMMANDS
 
 
@@ -112,10 +116,18 @@ async def get_profiles(host: str, port: int) -> dict[str, Any]:
     }
 
 
-async def set_profile(host: str, port: int, board: int, profile: str) -> dict[str, Any]:
+async def set_profile(
+    host: str, port: int, profile: str, board: int = 0
+) -> dict[str, Any]:
     async with with_atm(host, port, enabled=False):
         res = await asyncops.rexec(host, port, "profileset", [board, profile])
         return asyncops.validate(res, "PROFILE", 1, 1)
+
+
+async def get_profile(host: str, port: int) -> dict[str, Any]:
+    current = (await get_config(host, port))["Profile"]
+    profiles = await get_profiles(host, port)
+    return profiles[current]
 
 
 async def get_autotuner(host: str, port: int) -> dict[str, Any]:
@@ -147,9 +159,12 @@ async def get_state(host: str, port: int) -> dict[str, dict[str, Any]]:
 
 class Log:
     def __init__(
-        self, entries: list[tuple[datetime.datetime, str, str, list[str]]] | None = None
+        self,
+        entries: list[tuple[datetime.datetime, str, str, list[str]]] | None = None,
+        lines: list[str] | None = None,
     ):
         self.entries = entries or []
+        self.lines = lines
 
     @staticmethod
     def parse(lines: list[str]) -> Log:
@@ -159,7 +174,7 @@ class Log:
             r"+(?P<thread>ThreadId[(]\d+[)])\s+"
             r"(?P<name>\w+(::\w+)*:)\s+"
         )
-        out = Log()
+        out = Log(None, lines[:])
         block = None
         for line in lines:
             if match := header.search(line):
