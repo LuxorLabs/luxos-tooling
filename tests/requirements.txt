@@ -1,6 +1,7 @@
 asyncpg
 build
 httpx
+humanize
 lxml
 mypy
 myst-parser
