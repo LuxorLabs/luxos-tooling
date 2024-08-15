@@ -218,8 +218,6 @@ def setup(
     description, _, epilog = (
         (function.__doc__ or module.__doc__ or "").strip().partition("\n")
     )
-    # markdown
-    # epilog = text.md(f"# {description}\n{epilog}")
     epilog = f"{description}\n{'-'*len(description)}\n{epilog}"
     description = ""
 
