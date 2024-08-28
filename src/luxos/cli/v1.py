@@ -136,7 +136,35 @@ class AbortWrongArgumentError(CliBaseError):
     pass
 
 
-def log_sys_info():
+def get_version(modules: list[types.ModuleType] | None = None) -> dict[str, str]:
+    from luxos import __hash__, __version__
+
+    result = {
+        "py": sys.version.partition(" ")[0],
+        "luxos": f"{__version__}, {__hash__}",
+    }
+
+    cond = (
+        modules
+        and (module := modules[-1])
+        and (path := getattr(module, "__file__"))
+        and (
+            (name := Path(path).name)
+            not in {
+                "luxos.py",
+            }
+        )
+    )
+    if cond:
+        result[name] = getattr(module, "__version__", "N/A")
+    return result
+
+
+def get_version_string(modules: list[types.ModuleType] | None = None) -> str:
+    return ", ".join(f"{k}[{v}]" for k, v in get_version(modules).items())
+
+
+def log_sys_info(modules=None):
     from luxos import __hash__, __version__
 
     log.info(
@@ -155,6 +183,11 @@ class LuxosParser(LuxosParserBase):
 
         # we're adding the -v|-q flags, to control the logging level
         flags.add_arguments_logging(self)
+
+        # and a --version flag
+        self.add_argument(
+            "--version", action="version", version=get_version_string(modules)
+        )
 
     def error(self, message: str):
         raise AbortWrongArgumentError(message)
@@ -182,7 +215,7 @@ class LuxosParser(LuxosParserBase):
                 continue
             options = callback(options) or options
 
-        log_sys_info()
+        log_sys_info(self.modules)
         return options
 
     @classmethod
@@ -265,7 +298,7 @@ def setup(
         sys.exit(exc.code)
     except Exception:
         log.exception("un-handled exception")
-        success = "failed"
+        success = f"failed ({get_version_string(modules)})"
     finally:
         if show_timing:
             delta = round(time.monotonic() - t0, 2)
