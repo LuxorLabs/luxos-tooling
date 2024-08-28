@@ -107,6 +107,8 @@ def type_range(txt: str) -> Sequence[tuple[str, int | None]]:
     path = None
     if txt.startswith("@") and not (path := Path(txt[1:])).exists():
         raise argparse.ArgumentTypeError(f"file not found {path}")
+    if Path(txt).exists():
+        path = Path(txt)
 
     if path:
         with contextlib.suppress(RuntimeError, DataParsingError):
@@ -158,6 +160,48 @@ class type_hhmm(ArgumentTypeBase):
             mm1 = int(mm)
             return datetime.time(hh1, mm1)
         raise argparse.ArgumentTypeError(f"failed conversion into HH:MM for '{txt}'")
+
+
+class type_database(ArgumentTypeBase):
+    """
+    Validate a type as a database string (sqlalchemy)
+
+    Raises:
+        argparse.ArgumentTypeError: on an invalid input.
+
+    Returns:
+        datetime.time or None
+
+    Example:
+        file.py::
+
+            parser.add_argument("-x", type=type_database)
+            options = parser.parse_args()
+            ...
+
+            assert options.x == sqlalchemy.Engine
+
+
+        shell::
+
+            file.py -x sqlite:///foobar.db
+            file.py -x postgresql+psycopg2://<user>:<password>@<host>/<db>
+    """
+
+    def validate(self, txt) -> Any:
+        if not txt:
+            return None
+
+        from sqlalchemy import create_engine
+        from sqlalchemy.engine.url import make_url
+        from sqlalchemy.exc import ArgumentError
+
+        with contextlib.suppress(ArgumentError):
+            url = make_url(txt)
+            return create_engine(url)
+        raise argparse.ArgumentTypeError(
+            f"wrong sqlalchemy url format '{txt}' (eg. sqlite:///filename.db)"
+        )
 
 
 def add_arguments_rexec(parser: LuxosParserBase):

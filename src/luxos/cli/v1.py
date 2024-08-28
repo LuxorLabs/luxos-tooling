@@ -101,7 +101,6 @@ import types
 from pathlib import Path
 from typing import Any, Callable
 
-from .. import text
 from . import flags
 from .shared import ArgumentTypeBase, LuxosParserBase
 
@@ -189,7 +188,9 @@ class LuxosParser(LuxosParserBase):
     @classmethod
     def get_parser(cls, modules: list[types.ModuleType], **kwargs):
         class Formatter(
-            argparse.ArgumentDefaultsHelpFormatter, argparse.RawTextHelpFormatter
+            argparse.RawTextHelpFormatter,
+            argparse.RawDescriptionHelpFormatter,
+            argparse.ArgumentDefaultsHelpFormatter,
         ):
             pass
 
@@ -217,9 +218,7 @@ def setup(
     description, _, epilog = (
         (function.__doc__ or module.__doc__ or "").strip().partition("\n")
     )
-    # markdown
-    # epilog = text.md(f"# {description}\n{epilog}")
-    epilog = text.md(f"{description}\n{epilog}")
+    epilog = f"{description}\n{'-'*len(description)}\n{epilog}"
     description = ""
 
     kwargs = {}

@@ -1,6 +1,7 @@
 asyncpg
 build
 httpx
+humanize
 lxml
 mypy
 myst-parser
@@ -20,6 +21,7 @@ sphinx-book-theme
 sphinx-markdown-parser
 sphinx-design
 tqdm
+types-python-dateutil
 types-pyyaml
 types-tqdm
 
