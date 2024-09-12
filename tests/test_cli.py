@@ -1,6 +1,9 @@
 import argparse
+import subprocess
 import sys
 from unittest import mock
+
+import pytest
 
 from luxos.cli import v1 as cli
 
@@ -57,3 +60,13 @@ def test_wrapped_cli():
 
     assert main.attributes["doc"] == main.__doc__
     assert main2.attributes["doc"] == main2.__doc__
+
+
+@pytest.mark.parametrize("script", ["luxos", "luxos_run"])
+def test_scripts_version(script):
+    """test the --version flag on scripts"""
+
+    out = subprocess.check_output(
+        [sys.executable, "-m", f"luxos.scripts.{script}", "--version"], encoding="utf-8"
+    )
+    assert out.startswith(f"py[{sys.version.partition(' ')[0]}]")

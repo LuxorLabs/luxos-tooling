@@ -136,14 +136,11 @@ class AbortWrongArgumentError(CliBaseError):
     pass
 
 
-def log_sys_info():
-    from luxos import __hash__, __version__
+def log_sys_info(modules=None):
+    from luxos.version import get_version
 
-    log.info(
-        "py[%s], luxos[%s/%s]", sys.version.partition(" ")[0], __version__, __hash__
-    )
+    log.info(get_version(as_string=True))
     log.debug("interpreter: %s", sys.executable)
-    log.debug("version: %s", sys.version)
 
 
 ArgumentParser = LuxosParserBase
@@ -151,10 +148,17 @@ ArgumentParser = LuxosParserBase
 
 class LuxosParser(LuxosParserBase):
     def __init__(self, modules: list[types.ModuleType], *args, **kwargs):
+        from luxos.version import get_version
+
         super().__init__(modules, *args, **kwargs)
 
         # we're adding the -v|-q flags, to control the logging level
         flags.add_arguments_logging(self)
+
+        # and a --version flag
+        self.add_argument(
+            "--version", action="version", version=get_version(modules, as_string=True)
+        )
 
     def error(self, message: str):
         raise AbortWrongArgumentError(message)
@@ -182,7 +186,7 @@ class LuxosParser(LuxosParserBase):
                 continue
             options = callback(options) or options
 
-        log_sys_info()
+        log_sys_info(self.modules)
         return options
 
     @classmethod
@@ -209,6 +213,8 @@ def setup(
         Callable[[argparse.Namespace], argparse.Namespace | None] | None
     ) = None,
 ):
+    from luxos.version import get_version
+
     sig = inspect.signature(function)
     module = inspect.getmodule(function)
 
@@ -265,7 +271,7 @@ def setup(
         sys.exit(exc.code)
     except Exception:
         log.exception("un-handled exception")
-        success = "failed"
+        success = f"failed ({get_version(modules, as_string=True)})"
     finally:
         if show_timing:
             delta = round(time.monotonic() - t0, 2)
