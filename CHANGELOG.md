@@ -14,6 +14,10 @@ Please, use the format:
 
 -->
 
+## [0.2.4]
+
+- adds --version flag to luxos.cli scripts
+
 ## [0.2.2]
 
 - major documentation refactor

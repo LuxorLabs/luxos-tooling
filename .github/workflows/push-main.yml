@@ -81,7 +81,7 @@ jobs:
       - name: Build wheel packages
         if: ${{ ! contains(matrix.os, 'windows') }}
         run: |
-          python support/release.py src/luxos/__init__.py
+          python support/release.py src/luxos/version.py
           touch .keepme
 
       - name: "Publish beta package to pypi"
