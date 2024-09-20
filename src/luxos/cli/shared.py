@@ -32,15 +32,16 @@ class LuxosParserBase(argparse.ArgumentParser):
 
     def add_argument(self, *args, **kwargs):
         typ = kwargs.get("type")
+        obj = None
         if isinstance(typ, type) and issubclass(typ, ArgumentTypeBase):
             check_default_constructor(typ)
             obj = typ()
+        if isinstance(typ, ArgumentTypeBase):
+            obj = typ
+        if obj is not None:
             obj.default = kwargs.get("default")
             kwargs["default"] = obj
             kwargs["type"] = obj
-        if isinstance(typ, ArgumentTypeBase):
-            kwargs["default"] = typ.new2(kwargs.get("default"))
-            kwargs["type"] = kwargs["default"]
         super().add_argument(*args, **kwargs)
 
 
@@ -61,18 +62,6 @@ class ArgumentTypeBase:
     def default(self, value):
         self._default = self._validate(value)
         return self._default
-
-    @classmethod
-    def new(cls, obj=_NA):
-        result = cls()
-        result.default = obj
-        if result.default is not ArgumentTypeBase._NA:
-            result.default = result._validate(result.default)
-        return result
-
-    def new2(self, default):
-        self.default = default
-        return self
 
     def __call__(self, txt):
         self._value = None
