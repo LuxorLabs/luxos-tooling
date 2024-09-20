@@ -53,17 +53,24 @@ class type_ipaddress(ArgumentTypeBase):
             file.py -x host:9999
     """
 
+    def __init__(self, strict=True):
+        super().__init__()
+        self.strict = strict
+
     def validate(self, txt) -> None | tuple[str, None | int]:
         from luxos import ips
 
         if txt is None:
             return None
         try:
-            result = ips.parse_expr(txt) or ("", "", None)
-            if result[1]:
-                raise argparse.ArgumentTypeError("cannot use a range as expression")
-            return (result[0], result[2])
-        except ips.AddressParsingError as exc:
+            if txt.count(":") not in {0, 1}:
+                raise ValueError("too many ':' (none or one)")
+            if self.strict:
+                return ips.splitip(txt) or ("", None)
+            else:
+                ip, _, port = txt.partition(":")
+                return ip, int(port) if port else None
+        except (RuntimeError, ValueError) as exc:
             raise argparse.ArgumentTypeError(f"failed to parse {txt=}: {exc.args[0]}")
 
 
