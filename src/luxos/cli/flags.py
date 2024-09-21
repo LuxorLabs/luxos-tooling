@@ -45,17 +45,18 @@ class type_ipaddress(ArgumentTypeBase):
             options = parser.parse_args()
             ...
 
-            assert options.x == ("host", 9999)
+            assert options.x == ("1.2.3.4", 9999)
 
 
         shell::
 
-            file.py -x host:9999
+            file.py -x 1.2.3.4:9999
     """
 
-    def __init__(self, strict=True):
+    def __init__(self, port=None, strict=True):
         super().__init__()
         self.strict = strict
+        self.port = port
 
     def validate(self, txt) -> None | tuple[str, None | int]:
         from luxos import ips
@@ -66,10 +67,10 @@ class type_ipaddress(ArgumentTypeBase):
             if txt.count(":") not in {0, 1}:
                 raise ValueError("too many ':' (none or one)")
             if self.strict:
-                return ips.splitip(txt) or ("", None)
+                ip, port = ips.splitip(txt) or ("", self.port)
             else:
                 ip, _, port = txt.partition(":")
-                return ip, int(port) if port else None
+            return ip, int(port) if port else self.port
         except (RuntimeError, ValueError) as exc:
             raise argparse.ArgumentTypeError(f"failed to parse {txt=}: {exc.args[0]}")
 

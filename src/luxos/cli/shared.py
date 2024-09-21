@@ -17,7 +17,7 @@ else:
 def check_default_constructor(klass: type):
     signature = inspect.signature(klass.__init__)  # type: ignore[misc]
     for name, value in signature.parameters.items():
-        if name == "self":
+        if name in {"self", "args", "kwargs"}:
             continue
         if value.default is inspect.Signature.empty:
             raise RuntimeError(f"the {klass}() cannot be called without arguments")
