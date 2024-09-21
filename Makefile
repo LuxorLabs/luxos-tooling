@@ -61,10 +61,11 @@ clean-all:  clean ## deepest cleanup
 docs:  ## build documentation
 	@python -m sphinx docs build/docs
 
+.PHONY: publish
+publish:  ## publish pages to github
+	@python support/publish.py --commit build/gh-pages && rm -rf build/gh-pages
+
 .PHONY: serve
 serve:  ## start a documentation server with autoreload
 	@python -m sphinx_autobuild --watch src/luxos docs build/docs
 
-.PHONY: publish
-publish:  ## publish pages to github
-	@python support/publish.py --commit build/gh-pages && rm -rf build/gh-pages
