@@ -192,7 +192,8 @@ async def task(host: str, port: int):
     return await utils.rexec(host, port, "version")
 
 # execute 'task' on miners addresses, targeting 4 miners simultaneous
-# (eg. for larger batches utils.launch will finish earlier)
+# (eg. for the above task on 254 miner, with batch=4 will complete in
+#      200s, with batch=100 in 15s, and with batch=254 in about 5s)
 asyncio.run(utils.launch(addresses, task, batch=4))
 
 # a one liner-ish
