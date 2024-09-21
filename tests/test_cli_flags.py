@@ -7,6 +7,13 @@ from luxos.cli import flags
 from luxos.cli.v1 import AbortWrongArgumentError
 
 
+def test_type_ipaddress_type():
+    assert flags.type_ipaddress(strict=False)("hello").value == ("hello", None)
+    assert flags.type_ipaddress(strict=False)("hello:123").value == ("hello", 123)
+
+    pytest.raises(argparse.ArgumentTypeError, flags.type_ipaddress(), "12:dwedwe")
+
+
 def test_type_ipaddress():
     from luxos.cli import v1 as cli
 
@@ -136,7 +143,5 @@ def test_type_range(resolver):
 
 
 def test_type_hhmm():
-    assert flags.type_hhmm()("12:34").default == datetime.time(12, 34)
-
-    pytest.raises(RuntimeError, flags.type_hhmm, "12")
+    assert flags.type_hhmm()("12:34").value == datetime.time(12, 34)
     pytest.raises(argparse.ArgumentTypeError, flags.type_hhmm(), "12")
