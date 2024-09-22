@@ -63,9 +63,9 @@ jobs:
       - name: Run Python checks
         shell: bash
         env:
+          PYTHONPATH: src
           OUTDIR: build/qa-${{ matrix.python-version }}-${{ matrix.os}}
         run: |
-          pip install .
           py.test \
               --cov=${{ env.PACKAGE }} \
               --cov-report=html:$OUTDIR/coverage --cov-report=xml:$OUTDIR/coverage.xml \
