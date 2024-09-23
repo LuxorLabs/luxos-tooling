@@ -1,17 +1,9 @@
 # ruff: noqa: W291, W293
 from __future__ import annotations
 
-from types import ModuleType
-
 import pytest
 
 from luxos import text
-
-rich: ModuleType | None = None
-try:
-    import rich
-except ModuleNotFoundError:
-    pass
 
 
 def test_indent():
@@ -89,8 +81,9 @@ format this nicely:
     )
 
 
-@pytest.mark.skipif(not rich, reason="need rich installed")
 def test_md_rich():
+    pytest.importorskip("rich")
+
     txt = """
         ### An example
 
