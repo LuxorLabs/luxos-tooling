@@ -176,7 +176,8 @@ addresses = utils.load_ips_from_csv("miners.csv")
 async def task(host: str, port: int):
     return await utils.rexec(host, port, "version")
 
-# execute task across all miners, batch will limit execution rate to 4
+# execute 'task' on miners addresses, targeting 4 miners simultaneous
+# (eg. for larger batches utils.launch will finish earlier)
 asyncio.run(utils.launch(addresses, task, batch=4))
 
 # a one liner-ish

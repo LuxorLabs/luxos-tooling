@@ -139,7 +139,7 @@ class AbortWrongArgumentError(CliBaseError):
 def log_sys_info(modules=None):
     from luxos.version import get_version
 
-    log.info(get_version(as_string=True))
+    log.info(get_version())
     log.debug("interpreter: %s", sys.executable)
 
 
@@ -156,9 +156,7 @@ class LuxosParser(LuxosParserBase):
         flags.add_arguments_logging(self)
 
         # and a --version flag
-        self.add_argument(
-            "--version", action="version", version=get_version(modules, as_string=True)
-        )
+        self.add_argument("--version", action="version", version=get_version(modules))
 
     def error(self, message: str):
         raise AbortWrongArgumentError(message)
@@ -271,7 +269,7 @@ def setup(
         sys.exit(exc.code)
     except Exception:
         log.exception("un-handled exception")
-        success = f"failed ({get_version(modules, as_string=True)})"
+        success = f"failed ({get_version(modules)})"
     finally:
         if show_timing:
             delta = round(time.monotonic() - t0, 2)
