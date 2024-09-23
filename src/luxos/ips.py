@@ -139,7 +139,7 @@ def iter_ip_ranges(
             raise RuntimeError(f"cannot parse '{segment}'")
         if end is None:
             yield (start, theport or port)
-            return
+            continue
 
         cur = ipaddress.IPv4Address(start)
         last = ipaddress.IPv4Address(end)

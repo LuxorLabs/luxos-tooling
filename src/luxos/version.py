@@ -3,35 +3,12 @@ from __future__ import annotations
 import sys
 import types
 from pathlib import Path
-from typing import Literal, overload
 
 __version__ = ""
 __hash__ = ""
 
 
-@overload
-def get_version(
-    modules: list[types.ModuleType] | None, as_string: Literal[True]
-) -> str: ...
-
-
-@overload
-def get_version(
-    modules: list[types.ModuleType] | None, as_string: Literal[False]
-) -> dict[str, str]: ...
-
-
-@overload
-def get_version(
-    modules: list[types.ModuleType] | None, as_string: bool
-) -> str | dict[str, str]: ...
-
-
-def get_version(
-    modules: list[types.ModuleType] | None = None, as_string: bool = False
-) -> str | dict[str, str]:
-    from luxos.version import __hash__, __version__
-
+def get_version_info(modules: list[types.ModuleType] | None = None) -> dict[str, str]:
     result = {
         "py": sys.version.partition(" ")[0],
         "luxos": ", ".join(
@@ -51,4 +28,8 @@ def get_version(
         }:
             result[name] = getattr(module, "__version__", "N/A")
 
-    return ", ".join(f"{k}[{v}]" for k, v in result.items()) if as_string else result
+    return result
+
+
+def get_version(modules: list[types.ModuleType] | None = None) -> str:
+    return ", ".join(f"{k}[{v}]" for k, v in get_version_info().items())

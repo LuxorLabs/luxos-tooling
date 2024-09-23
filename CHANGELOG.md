@@ -17,6 +17,8 @@ Please, use the format:
 ## [0.2.4]
 
 - adds --version flag to luxos.cli scripts
+- luxos is a namespaced project
+- version information is now from luxos.version module
 
 
 ## [0.2.3]

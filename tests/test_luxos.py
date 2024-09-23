@@ -9,7 +9,7 @@ def test_import():
     assert (Path(api.__file__).parent / "api.json").exists()
 
     ### number of API tests hardcoded here
-    assert len(api.COMMANDS) == 71
+    assert len(api.COMMANDS) == 72
 
 
 def test_logon_required():
