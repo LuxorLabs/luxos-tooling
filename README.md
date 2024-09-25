@@ -29,6 +29,9 @@ py[3.13.0rc2], luxos[0.2.4, 08cc733ce]
 
 ## Api usage
 
+[luxos](https://pypi.org/project/luxos) provides an API in both sync and async 
+version: [full documentation here](https://luxorlabs.github.io/luxos-tooling).
+
 ### rexec/validate
 
 The [luxos](https://pypi.org/project/luxos) has an extremely simple api.
@@ -58,6 +61,10 @@ Yes, it only needs to import `luxos.syncops` instead `luxos.asyncops`, the api i
 > **NOTE** the [rexec](https://luxorlabs.github.io/luxos-tooling/api/luxos.asyncops.html#luxos.asyncops.rexec) function supports also
 timeouts and retry.
 > The [validate](https://luxorlabs.github.io/luxos-tooling/api/luxos.asyncops.html#luxos.asyncops.validate) check the result.
+
+### launch
+
+TBD
 
 ## Scripting
 
@@ -104,27 +111,6 @@ This will run `my-script.py` and report the results in json:
 luxos-run --range 127.0.0.1 my-script.py
 ```
 
-## API
-
-[luxos](https://pypi.org/project/luxos) provides an easy-to-use API to
-write complex scripts on miners.
-
-It comes in two different flavours, a sync version for legacy non high performance
-operations, and an async version allowing operation on a fleet of miners: the API
-of the main functions is essentially keep identical.
-
-### Main functions
-
-The whole of the "*kernel*" API is rather small-ish and it is based 
-essentially on few functions:
-- **luxos.utils.load_ips_from_csv** - utility to load miners addresses from a CSV file
-- **luxos.utils.rexec** - an async function to launch commands on a miner
-- **luxos.utils.execute_command** - the same as rexec but syncronous
-- **luxos.utils.validate** - validate a message from a miner
-- **luxos.utils.launch** - run a command on multiple miners
-
-[Full documentation](https://luxorlabs.github.io/luxos-tooling).
-
 ### Get a miner's version (example)
 
 Get a miner's version data (async version):
@@ -149,27 +135,6 @@ if __name__ == "__main__":
         "127.0.0.1", 4028, 3, "version"), "VERSION", 1, 1))
 ```
 
-
-### Run commands  (example)
-
-The `luxos.utils.launch` is an async function to launch a command on a
-set of miners using asyncio.
-
-This is a simple example (see [Full documentation](https://luxorlabs.github.io/luxos-tooling))
-for more.
-
-```python
-import asyncio
-from luxos.utils import validate, load_ips_from_csv, rexec, launch
-
-async def get_version(host: str, port: int) -> dict:
-    res = await rexec(host, port, "version")
-    return validate(res, "VERSION", 1, 1)
-
-if __name__ == "__main__":
-    addresses = load_ips_from_csv("miners.csv")
-    print(asyncio.run(launch(addresses, get_version)))
-```
 
 ## LuxOS HealthChecker - health_checker.py
 
