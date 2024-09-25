@@ -64,7 +64,24 @@ timeouts and retry.
 
 ### launch
 
-TBD
+The [launch](https://luxorlabs.github.io/luxos-tooling/api/luxos.utils.html#luxos.utils.launch) command can launch an arbitrary function
+across many miners leveraging asyncio for performance.
+
+```
+from luxos import utils, ips
+
+# we'll execute and return the "version" command on miners
+async def version(host, port):
+    res = await utils.rexec(host, port, "version")
+    return utils.validate(res, "VERSION", 1, 1)
+
+# load miners ip addresses from a csv file
+addresses = addresses = ips.load_ips_from_csv("miners.csv")
+
+# run 50 version function in parallel
+print(await utils.launch(addresses, version, batch=50))
+[{'API': '3.7', 'CompileTime': 'Tue Sep 17 17:49:18 UTC 2024', 'LUXminer': '2024.9.17.174900-4631c4d1', 'Miner': '2024.9.17.174900', 'Type': 'Antminer S19'}]
+```
 
 ## Scripting
 
@@ -110,31 +127,6 @@ This will run `my-script.py` and report the results in json:
 ```shell
 luxos-run --range 127.0.0.1 my-script.py
 ```
-
-### Get a miner's version (example)
-
-Get a miner's version data (async version):
-```python
-import asyncio
-from luxos.utils import rexec, validate
-
-async def get_version(host: str, port: int) -> dict:
-    res = await rexec(host, port, "version")
-    return validate(res, "VERSION", 1, 1)
-
-if __name__ == "__main__":
-    print(asyncio.run(get_version("127.0.0.1", 4028)))
-```
-
-There's a syncronous version (better for one-liners), with identical calling conventions:
-```python
-from luxos.utils import execute_command, validate, load_ips_from_csv
-
-if __name__ == "__main__":
-    print(validate(execute_command(
-        "127.0.0.1", 4028, 3, "version"), "VERSION", 1, 1))
-```
-
 
 ## LuxOS HealthChecker - health_checker.py
 
