@@ -8,7 +8,7 @@
 [![Mypy](https://img.shields.io/badge/types-Mypy-blue.svg)](https://mypy-lang.org/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-This package contains a python package `luxos` and scripts to operate miners running LuxOS. See the
+This package contains the `luxos` python package: a collection of scripts and api to operate miners running LuxOS. See the
 full documentation [here](https://luxorlabs.github.io/luxos-tooling).
 
 ## Install
@@ -16,17 +16,52 @@ full documentation [here](https://luxorlabs.github.io/luxos-tooling).
 To install the latest version:
 ```bash
    $> pip install -U luxos
+
+   # to install the extra features
+   $> pip install -U luxos[extra]
 ```
 
-Check the version:
+You can check the version:
 ```bash
-python -c "import luxos; print(luxos.__version__, luxos.__hash__)"
-# 0.0.5 08cc733ce8aedf406856c8ad9ccbe44e78917a37
+python -c "import luxos.version; print(luxos.version.get_version())"
+py[3.13.0rc2], luxos[0.2.4, 08cc733ce]
 ```
+
+## Api usage
+
+### rexec/validate
+
+The [luxos](https://pypi.org/project/luxos) has an extremely simple api.
+
+For example to retrive the version info from a miner:
+```
+import asyncio
+from luxos.asyncops import rexec, validate
+
+# for a miner at 127.0.0.1 listening to port 4028 (the default)
+res = await rexec("127.0.0.1", 4028, "version")
+print(validate(res, "VERSION", 1, 1))
+
+{'API': '3.7', 'CompileTime': 'Tue Sep 17 17:49:18 UTC 2024', 'LUXminer': '2024.9.17.174900-4631c4d1', 'Miner': '2024.9.17.174900', 'Type': 'Antminer S19'}
+```
+> **NOTE** The above should be executed using `python3 -m asyncio` instead `python3`.
+
+For a syncronous version (eg. not using asyncio):
+```
+import asyncio
+from luxos.syncops import rexec, validate
+res = rexec("127.0.0.1", 4028, "version")
+print(validate(res, "VERSION", 1, 1))  # validate makes sure you the correct message and returns one dictionary
+```
+Yes, it only needs to import `luxos.syncops` instead `luxos.asyncops`, the api is similar (minus the async/await).
+
+> **NOTE** the [rexec](https://luxorlabs.github.io/luxos-tooling/api/luxos.asyncops.html#luxos.asyncops.rexec) function supports also
+timeouts and retry.
+> The [validate](https://luxorlabs.github.io/luxos-tooling/api/luxos.asyncops.html#luxos.asyncops.validate) check the result.
 
 ## Scripting
 
-The [luxos](https://pypi.org/project/luxos) package comes with some helper
+[luxos](https://pypi.org/project/luxos) comes with some helper
 scripts, to ease everyday miners' maintenance.
 
 ### luxos (cli)
