@@ -27,18 +27,15 @@ classifiers = [
 ]
 
 dependencies = [
-  "tqdm",
-  "asyncpg",
-  "pandas",
-  "pyyaml",
-  "httpx"
+    "pyyaml",
 ]
 
 [project.optional-dependencies]
 extra = [
-    "tqdm",
-    "pandas",
     "asyncpg",
+    "httpx",
+    "pandas",
+    "tqdm",
 ]
 
 [project.urls]

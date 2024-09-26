@@ -10,10 +10,12 @@ from luxos import version
 PYVERSION = sys.version.partition(" ")[0]
 
 VALUES = [
+    # version, hash, expected
     ("", "", "N/A, N/A"),
     ("1.2.3", "", "1.2.3, N/A"),
     ("1.2.3", "abcdef", "1.2.3, abcdef"),
     ("", "abcdef", "N/A, abcdef"),
+    ("", "1234567XXXX", "N/A, 1234567"),  # hash is truncated to 7chars
 ]
 
 
@@ -24,7 +26,7 @@ def test_no_extra_modules(mversion, mhash, expected):
         stack.enter_context(mock.patch("luxos.version.__hash__", mhash))
         assert version.get_version_info() == {
             "py": PYVERSION,
-            "luxos": expected,
+            "luxos": f"{mversion or 'N/A'}, {mhash or 'N/A'}",
         }
         assert version.get_version() == f"py[{PYVERSION}], luxos[{expected}]"
 

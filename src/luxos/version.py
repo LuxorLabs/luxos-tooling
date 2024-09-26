@@ -8,11 +8,14 @@ __version__ = ""
 __hash__ = ""
 
 
-def get_version_info(modules: list[types.ModuleType] | None = None) -> dict[str, str]:
+def get_version_info(
+    modules: list[types.ModuleType] | None = None, short: bool = False
+) -> dict[str, str]:
     result = {
         "py": sys.version.partition(" ")[0],
         "luxos": ", ".join(
-            str(c) if str(c) else "N/A" for c in [__version__, __hash__]
+            str(c) if str(c) else "N/A"
+            for c in [__version__, __hash__[:7] if short else __hash__]
         ),
     }
 
@@ -32,4 +35,6 @@ def get_version_info(modules: list[types.ModuleType] | None = None) -> dict[str,
 
 
 def get_version(modules: list[types.ModuleType] | None = None) -> str:
-    return ", ".join(f"{k}[{v}]" for k, v in get_version_info().items())
+    return ", ".join(
+        f"{k}[{v}]" for k, v in get_version_info(modules, short=True).items()
+    )
