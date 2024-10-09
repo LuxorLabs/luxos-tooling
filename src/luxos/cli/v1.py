@@ -175,7 +175,7 @@ class LuxosParser(LuxosParserBase):
         options.error = self.error
         options.modules = self.modules
 
-        for name in dir(options):
+        for name in options.__dict__:
             if isinstance(getattr(options, name), ArgumentTypeBase):
                 setattr(options, name, getattr(options, name).value)
 
