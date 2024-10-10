@@ -200,6 +200,9 @@
   "uninstallluxos": {
     "logon_required": true
   },
+  "updatecheck" : {
+    "logon_required": false
+  },
   "updaterun": {
     "logon_required": true
   },
