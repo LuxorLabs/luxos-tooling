@@ -32,7 +32,7 @@ lint:  ## Runs the linter (mypy) and report errors.
 
 
 .PHONY: test
-test: ## Run test suite
+test: ## Run test suite (make test MINER=IP.ADDRESS will run against a miner)
 	@pytest -vvs \
         --cov-report=html:build/coverage --cov-report=xml:build/coverage.xml \
         --junitxml=build/junit.xml --html=build/junit.html --self-contained-html \
