@@ -19,6 +19,8 @@ Please, use the format:
 - adds --version flag to luxos.cli scripts
 - luxos is a namespaced project
 - version information is now from luxos.version module
+- luxos.cli.flags.type_ipaddress accpets constructor arguments
+
 
 ## [0.2.2]
 

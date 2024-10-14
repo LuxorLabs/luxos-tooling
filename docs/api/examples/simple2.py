@@ -32,6 +32,9 @@ def add_arguments(
     parser.add_argument(
         "--range", action="append", type=cli.flags.type_range, help="add ranged hosts"
     )
+    parser.add_argument(
+        "--address", type=cli.flags.type_ipaddress(port=999), default="127.0.0.1:111"
+    )
 
     # adds all rexec related flags
     callback = cli.flags.add_arguments_rexec(parser)
@@ -57,13 +60,14 @@ def process_args(args: argparse.Namespace) -> argparse.Namespace | None:
 
 @cli.cli(add_arguments, process_args)
 async def main(args: argparse.Namespace):
-    log.info("Loading config from %s", args.config)
-    print(f"the args.x is {args.x}")
-    if args.range:
-        print("the args.range is:")
-        for address in args.range:
-            print(f"  {address}")
-
+    for key in sorted(args.__dict__):
+        value = getattr(args, key)
+        if isinstance(value, list):
+            print(f"args.{key} is:")
+            for item in value:
+                print(f"  {item}")
+        else:
+            print(f"args.{key} is: {value}")
     # there many ways to abort a script
     # 1. raising various exceptions
     #     (dump a stack trace)
