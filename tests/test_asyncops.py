@@ -280,7 +280,7 @@ async def test_roundtrip_timeout(miner_host_port):
     assert isinstance(exception, asyncio.TimeoutError)
     assert isinstance(exception, aapi.exceptions.MinerConnectionError)
     assert isinstance(exception, aapi.exceptions.LuxosBaseException)
-    text = f"<{host}:{port}>: MinerCommandTimeoutError, TimeoutError()"
+    text = f"<{host}:{port}>: MinerCommandTimeoutError, ConnectionRefu"
     assert str(exception)[: len(text)] == text
 
     # not miner on a wrong port
