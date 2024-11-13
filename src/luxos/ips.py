@@ -14,11 +14,27 @@ class DataParsingError(LuxosBaseException):
     pass
 
 
-def splitip(txt: str) -> tuple[str, int | None]:
-    expr = re.compile(r"(?P<ip>\d{1,3}([.]\d{1,3}){3})(:(?P<port>\d+))?")
-    if not (match := expr.search(txt)):
-        raise RuntimeError(f"invalid ip:port address {txt}")
-    return match["ip"], int(match["port"]) if match["port"] is not None else None
+def splitip(txt: str, strict=True) -> tuple[str, int | None]:
+    if txt.count(":") not in {0, 1}:
+        raise ValueError("too many ':' in value")
+
+    host, _, port_txt = txt.partition(":")
+    host = host.strip()
+    try:
+        port = int(port_txt) if port_txt else None
+    except ValueError:
+        raise ValueError(f"cannot convert '{port}' to an integer")
+    if not host.strip():
+        raise ValueError(f"cannot find host part in '{txt}'")
+
+    if not strict:
+        return host, port
+
+    if re.search(r"(?P<ip>\d{1,3}([.]\d{1,3}){3})", host) and all(
+        int(c) < 256 for c in host.split(".")
+    ):
+        return host, port
+    raise ValueError(f"cannot convert '{host}' into an ipv4 address N.N.N.N")
 
 
 def parse_expr(txt: str) -> None | tuple[str, str | None, int | None]:
