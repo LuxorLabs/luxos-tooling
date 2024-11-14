@@ -14,11 +14,25 @@ Please, use the format:
 
 -->
 
+## [0.2.5]
+
+- luxor-run support for progress bar
+- luxor-run support setup/teardown functions
+- cli/shared improve ArgumentTypeBase for flags supporting constraints
+- ips.splitip better support for address
+- syncops support packets with 0x00 termination
+
+
 ## [0.2.4]
 
 - adds --version flag to luxos.cli scripts
 - luxos is a namespaced project
 - version information is now from luxos.version module
+- classes derived from ArgumentTypeBase accpet constructor arguments
+- luxor-run takes a setup/teardown pair
+- syncops handles packet with 0x00 endings
+- improve cli tests
+
 
 ## [0.2.2]
 
