@@ -23,7 +23,7 @@ def splitip(txt: str, strict=True) -> tuple[str, int | None]:
     try:
         port = int(port_txt) if port_txt else None
     except ValueError:
-        raise ValueError(f"cannot convert '{port}' to an integer")
+        raise ValueError(f"cannot convert '{port_txt}' to an integer")
     if not host.strip():
         raise ValueError(f"cannot find host part in '{txt}'")
 
