@@ -102,7 +102,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from . import flags
-from .shared import ArgumentTypeBase, LuxosParserBase
+from .shared import LuxosParserBase
 
 
 class MyHandler(logging.StreamHandler):
@@ -174,10 +174,6 @@ class LuxosParser(LuxosParserBase):
             raise RuntimeError(f"cannot add an argument with dest='{reserved}'")
         options.error = self.error
         options.modules = self.modules
-
-        for name in dir(options):
-            if isinstance(getattr(options, name), ArgumentTypeBase):
-                setattr(options, name, getattr(options, name).value)
 
         for callback in self.callbacks:
             if not callback:
