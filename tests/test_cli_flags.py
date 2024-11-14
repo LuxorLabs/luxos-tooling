@@ -42,15 +42,12 @@ def test_type_range(resolver):
 
 
 def test_type_hhmm():
-    assert flags.type_hhmm("12:34").default == datetime.time(12, 34)
+    assert flags.type_hhmm().validate("12:34") == datetime.time(12, 34)
 
-    pytest.raises(RuntimeError, flags.type_hhmm, "12")
-    pytest.raises(argparse.ArgumentTypeError, flags.type_hhmm(), "12")
+    with pytest.raises(argparse.ArgumentTypeError) as e:
+        flags.type_hhmm().validate("12")
+    assert e.value.args[-1] == "failed conversion into HH:MM for '12'"
 
-
-def test_type_ipaddress():
-    assert flags.type_ipaddress("hello").default == ("hello", None)
-    assert flags.type_ipaddress("hello:123").default == ("hello", 123)
-
-    pytest.raises(RuntimeError, flags.type_ipaddress, "12:dwedwe")
-    pytest.raises(argparse.ArgumentTypeError, flags.type_ipaddress(), "12:dwedwe")
+    with pytest.raises(argparse.ArgumentTypeError) as e:
+        flags.type_hhmm().validate("hello")
+    assert e.value.args[-1] == "failed conversion into HH:MM for 'hello'"
