@@ -94,6 +94,9 @@ async def launch(
                 tback = "".join(traceback.format_exc())
                 brief = repr(exc.__context__ or exc.__cause__)
                 out = LuxosLaunchError(host, port, traceback=tback, brief=brief)
+            finally:
+                if callback and not batch:
+                    callback([(host, port)])
             return out
 
         return _fn
@@ -105,7 +108,7 @@ async def launch(
             tasks = [call(*address) for address in subaddresses]
             result.extend(await asyncio.gather(*tasks, return_exceptions=True))
             if callback:
-                callback(result)
+                callback(subaddresses)
         return result
     else:
         tasks = [call(*address) for address in addresses]
