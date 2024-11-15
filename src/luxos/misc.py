@@ -57,7 +57,7 @@ def loadmod(path: Path) -> types.ModuleType:
     if urlparse(str(path)).scheme in {"http", "https"}:
         urltxt = str(urlopen(str(path)).read(), encoding="utf-8")
         mod = ModuleType(str(path).rpartition("/")[2])
-        exec(urltxt, globals=mod.__dict__)
+        exec(urltxt, mod.__dict__)
         return mod
 
     spec = util.spec_from_file_location(Path(path).name, Path(path))
