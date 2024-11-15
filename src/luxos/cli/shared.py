@@ -56,6 +56,13 @@ class LuxosParserBase(argparse.ArgumentParser):
             kwargs["type"] = obj
         super().add_argument(*args, **kwargs)
 
+    def error(self, message):
+        try:
+            super().error(message)
+        except SystemExit:
+            # gh-121018
+            raise argparse.ArgumentError(None, message)
+
 
 class ArgumentTypeBase:
     class _NA:
