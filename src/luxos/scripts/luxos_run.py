@@ -30,6 +30,7 @@ import inspect
 import json
 import logging
 import pickle
+import urllib.parse
 from pathlib import Path
 from typing import Any, Callable
 
@@ -69,10 +70,12 @@ def add_arguments(parser: cli.LuxosParserBase) -> None:
 def process_args(args: argparse.Namespace):
     if not args.addresses:
         args.error("need a miners flag (eg. --range/--ipfile)")
-    if not args.script.exists():
-        args.error(f"missings script file {args.script}")
-    if args.script.suffix.upper() not in {".PY"}:
-        args.error(f"script must end with .py: {args.script}")
+
+    if urllib.parse.urlparse(str(args.script)).scheme not in {"http", "https"}:
+        if not args.script.exists():
+            args.error(f"missings script file {args.script}")
+        if args.script.suffix.upper() not in {".PY"}:
+            args.error(f"script must end with .py: {args.script}")
 
 
 def apply_magic_arguments(fn: Callable, magic: dict[str, Any]) -> Callable:
