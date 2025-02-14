@@ -139,7 +139,7 @@ class AbortWrongArgumentError(CliBaseError):
 def log_sys_info(modules=None):
     from luxos.version import get_version
 
-    log.info(get_version())
+    log.debug(get_version())
     log.debug("interpreter: %s", sys.executable)
 
 
@@ -273,7 +273,7 @@ def setup(
     finally:
         if show_timing:
             delta = round(time.monotonic() - t0, 2)
-            log.info("task %s in %.2fs", success, delta)
+            log.debug("task %s in %.2fs", success, delta)
     if errormsg:
         parser.error(errormsg)
 

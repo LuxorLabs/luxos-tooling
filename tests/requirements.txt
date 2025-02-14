@@ -1,5 +1,6 @@
 # base (from pyproject.toml)
 pyyaml
+tqdm
 
 # all test deps
 build

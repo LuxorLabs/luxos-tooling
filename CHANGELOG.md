@@ -14,6 +14,14 @@ Please, use the format:
 
 -->
 
+## [0.2.5]
+
+- api: added hashboardopts, hashboardoptsset, ledset, minerstatus, and tunableswitch commands
+- ips: splitip improvements
+- misc: loadmod loads from web
+- syncops: fix message handling for \0 terminated msgs
+- cli.v1: mae cli output less verbose
+
 ## [0.2.4]
 
 - adds --version flag to luxos.cli scripts

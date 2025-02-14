@@ -111,14 +111,14 @@ def test_roundtrip_timeout(miner_host_port):
     # miner doesn't exist
     host, port = "127.0.0.99", 12345
     try:
-        syncops.rexec(host, port, "hello", timeout=0.5)
+        syncops.rexec(host, port, "hello", timeout=0.5, retry=3)
         assert False, "didn't raise"
     except exceptions.MinerCommandTimeoutError as exc:
         exception = exc
     assert isinstance(exception, TimeoutError)
     assert isinstance(exception, exceptions.MinerConnectionError)
     assert isinstance(exception, exceptions.LuxosBaseException)
-    text = f"<{host}:{port}>: MinerCommandTimeoutError, TimeoutError("
+    text = f"<{host}:{port}>: MinerCommandTimeoutError, ConnectionRef"
     assert str(exception)[: len(text)] == text
 
     # not miner on a wrong port
