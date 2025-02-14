@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "luxos"
-version = "0.2.4"
+version = "0.2.5"
 description = "The all encompassing LuxOS python library."
 readme = "README.md"
 license = { text = "MIT" }  # TODO I don't think this is a MIT??
@@ -29,6 +29,7 @@ classifiers = [
 
 dependencies = [
     "pyyaml",
+    "tqdm",
 ]
 
 [project.optional-dependencies]
@@ -36,7 +37,6 @@ extra = [
     "asyncpg",
     "httpx",
     "pandas",
-    "tqdm",
 ]
 
 [project.urls]
