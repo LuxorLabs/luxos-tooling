@@ -13,6 +13,9 @@ Please, use the format:
  - <module>: short description
 
 -->
+## [Unreleased]
+
+ - ci: fix daily workflow, update sq token
 
 ## [0.2.4]
 
