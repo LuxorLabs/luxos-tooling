@@ -1,11 +1,8 @@
 name: LuxOS-Tooling Daily
 
 on:
-  # schedule:
-  #   - cron: "0 0 * * *"
-  pull_request:
-    branches:
-      - main
+  schedule:
+    - cron: "0 0 * * *"
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
