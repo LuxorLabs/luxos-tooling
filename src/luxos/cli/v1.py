@@ -102,7 +102,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from . import flags
-from .shared import ArgumentTypeBase, LuxosParserBase
+from .shared import LuxosParserBase
 
 
 class MyHandler(logging.StreamHandler):
@@ -139,7 +139,7 @@ class AbortWrongArgumentError(CliBaseError):
 def log_sys_info(modules=None):
     from luxos.version import get_version
 
-    log.info(get_version())
+    log.debug(get_version())
     log.debug("interpreter: %s", sys.executable)
 
 
@@ -174,10 +174,6 @@ class LuxosParser(LuxosParserBase):
             raise RuntimeError(f"cannot add an argument with dest='{reserved}'")
         options.error = self.error
         options.modules = self.modules
-
-        for name in dir(options):
-            if isinstance(getattr(options, name), ArgumentTypeBase):
-                setattr(options, name, getattr(options, name).value)
 
         for callback in self.callbacks:
             if not callback:
@@ -273,7 +269,7 @@ def setup(
     finally:
         if show_timing:
             delta = round(time.monotonic() - t0, 2)
-            log.info("task %s in %.2fs", success, delta)
+            log.debug("task %s in %.2fs", success, delta)
     if errormsg:
         parser.error(errormsg)
 
