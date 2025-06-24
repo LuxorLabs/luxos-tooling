@@ -5,15 +5,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "luxos"
-version = "0.2.4"
+version = "0.2.5"
 description = "The all encompassing LuxOS python library."
 readme = "README.md"
 license = { text = "MIT" }  # TODO I don't think this is a MIT??
 requires-python = ">= 3.9"
-
-authors = [
-  { name = "Antonio Cavallo", email = "antonio.cavallo@luxor.tech" },
-]
 
 # TODO more classifiers
 classifiers = [

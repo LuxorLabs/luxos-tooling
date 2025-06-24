@@ -83,6 +83,12 @@
   "healthchipget": {
     "logon_required": false
   },
+  "hashboardopts": {
+    "logon_required": false
+  },
+  "hashboardoptsset": {
+    "logon_required": true
+  },
   "healthchipset": {
     "logon_required": true
   },
@@ -101,6 +107,9 @@
   "lcd": {
     "logon_required": false
   },
+  "ledset": {
+    "logon_required": true
+  },
   "limits": {
     "logon_required": false
   },
@@ -111,6 +120,9 @@
     "logon_required": false
   },
   "logset": {
+    "logon_required": false
+  },
+  "minerstatus": {
     "logon_required": false
   },
   "netset": {
@@ -191,6 +203,9 @@
   "tempsensorset": {
     "logon_required": true
   },
+  "tunableswitch": {
+    "logon_required": true
+  },
   "tunerstatus": {
     "logon_required": false
   },
@@ -200,7 +215,7 @@
   "uninstallluxos": {
     "logon_required": true
   },
-  "updatecheck" : {
+  "updatecheck": {
     "logon_required": false
   },
   "updaterun": {

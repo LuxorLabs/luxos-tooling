@@ -17,6 +17,10 @@ Please, use the format:
 
  - ci: fix daily workflow, update sq token
 
+## [0.2.5]
+
+- added new commands to api.json
+
 ## [0.2.4]
 
 - adds --version flag to luxos.cli scripts
