@@ -2,7 +2,7 @@
 /build
 /dist
 
-/.coverage
+/.coverage*
 
 
 # Compiled Python files
