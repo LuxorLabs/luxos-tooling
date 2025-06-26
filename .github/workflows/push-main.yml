@@ -88,6 +88,7 @@ jobs:
           pwd
           ls -la
           ls -la build
+          ls -la dist
 
       # - name: "Publish beta package to pypi"
       #   uses: pypa/gh-action-pypi-publish@release/v1
