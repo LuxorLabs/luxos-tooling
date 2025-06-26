@@ -1,13 +1,11 @@
 name: Master build
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-  # push:
-  #   branches:
-  #     - main
-  #   tags:
-  #     - '*'
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
