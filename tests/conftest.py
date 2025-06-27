@@ -157,6 +157,21 @@ def port(miner_host_port):
     return miner_host_port[1]
 
 
+@pytest.fixture(scope="function")
+def cli_generator():
+    from luxos.cli.shared import LuxosParserBase
+
+    class MyParser(LuxosParserBase):
+        def __init__(self):
+            super().__init__([], exit_on_error=False)
+
+        def add_argument(self, *args, **kwargs):
+            super().add_argument(*args, **kwargs)
+            return self
+
+    return lambda: MyParser()
+
+
 def pytest_addoption(parser):
     parser.addoption(
         "--manual",
