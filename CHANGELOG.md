@@ -17,6 +17,10 @@ Please, use the format:
 
  - ci: fix daily workflow, update sq token
 
+## [0.2.6]
+
+- avoid null characters when parsing json 
+
 ## [0.2.5]
 
 - added new commands to api.json
