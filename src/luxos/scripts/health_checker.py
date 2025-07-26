@@ -163,7 +163,7 @@ async def internal_send_cgminer_command(host: str, port: int, command: str,
                 break
             response += data
 
-        r = json.loads(response.decode().strip())
+        r = json.loads(response.decode())
         if verbose:
             logging.info(r)
         return r

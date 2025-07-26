@@ -78,7 +78,7 @@ async def _roundtrip(
             break
         response += data
 
-    return response.decode()
+    return response.decode().strip()
 
 
 # TODO add annotations
@@ -113,7 +113,7 @@ async def roundtrip(
         try:
             res = await _roundtrip(host, port, cmd, timeout)
             if asjson:
-                return json.loads(res.strip())
+                return json.loads(res)
             else:
                 return res
         except (Exception, asyncio.TimeoutError) as e:
