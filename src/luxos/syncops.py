@@ -158,7 +158,7 @@ def roundtrip(
         try:
             res = _roundtrip(host, port, cmd, timeout)
             if asjson:
-                return json.loads(res)
+                return json.loads(res.strip())
             else:
                 return res
         except Exception as e:
@@ -336,7 +336,7 @@ def internal_send_cgminer_command(
                 response += data
 
             # Parse the response JSON
-            r = json.loads(response.decode())
+            r = json.loads(response.decode().strip())
             log.debug(r)
             return r
 

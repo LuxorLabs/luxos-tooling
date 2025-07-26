@@ -113,7 +113,7 @@ async def roundtrip(
         try:
             res = await _roundtrip(host, port, cmd, timeout)
             if asjson:
-                return json.loads(res)
+                return json.loads(res.strip())
             else:
                 return res
         except (Exception, asyncio.TimeoutError) as e:

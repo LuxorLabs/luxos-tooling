@@ -45,7 +45,7 @@ def resolver(request):
             source = self.lookup(path)
             mode = mode or source.suffix.strip(".")
             if mode == "json":
-                return json.loads(source.read_text())
+                return json.loads(source.read_text().strip())
             elif mode == "raw":
                 return source.read_text()
             raise RuntimeError(f"mode '{mode}' not supported")
