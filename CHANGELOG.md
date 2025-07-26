@@ -19,7 +19,7 @@ Please, use the format:
 
 ## [0.2.6]
 
-- avoid null characters when parsing json 
+- avoid null characters when parsing json by removing the TCP end message delimiter `\x00`
 
 ## [0.2.5]
 
