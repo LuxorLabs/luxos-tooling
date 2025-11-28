@@ -1,9 +1,26 @@
 name: LuxOS Pull-Request
-
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      runs_on:
+        description: 'Runner type'
+        required: true
+        default: 'tenki-staging-macos-26-4c-16g'
+        type: choice
+        options:
+        - macos-latest
+        - tenki-local-macos-26-2c-4g
+        - tenki-local-macos-26-4c-16g
+        - tenki-local-macos-26-8c-32g
+        - tenki-local-macos-26-8c-32g
+        - tenki-staging-macos-26-2c-4g
+        - tenki-staging-macos-26-4c-16g
+        - tenki-staging-macos-26-8c-32g
+        - tenki-staging-macos-26-8c-32g
+        - tenki-macos-26-2c-4g
+        - tenki-macos-26-4c-16g
+        - tenki-macos-26-8c-32g
+        - tenki-macos-26-8c-32g
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
