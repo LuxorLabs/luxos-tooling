@@ -37,7 +37,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Set up runner 
+      - name: Set up runner
         run: echo noop
 
       - name: Checkout
