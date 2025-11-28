@@ -21,7 +21,8 @@ on:
         - tenki-macos-26-4c-16g
         - tenki-macos-26-8c-32g
         - tenki-macos-26-8c-32g
-
+  push:
+      branches: [ migrate-macos-runners ]
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 env:
