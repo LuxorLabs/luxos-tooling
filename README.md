@@ -15,11 +15,14 @@ full documentation [here](https://luxorlabs.github.io/luxos-tooling).
 
 To install the latest version:
 ```bash
+   # latest stable (base or with all extensions)
    $> pip install -U luxos
-
-   # to install the extra features
    $> pip install -U luxos[extra]
+
+   # beta from git hub
+   $> pip install git+https://github.com/LuxorLabs/luxos-tooling
 ```
+Or pulling the latest published from [pypi](https://pypi.org/project/luxos/#history).
 
 You can check the version:
 ```bash

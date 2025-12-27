@@ -49,9 +49,27 @@ def test_parse_expr(txt, expected):
 
 
 def test_splitip():
+    with pytest.raises(ValueError) as e:
+        ips.splitip("")
+    assert e.value.args[-1] == "cannot find host part in ''"
+
+    with pytest.raises(ValueError) as e:
+        ips.splitip("1:2:3")
+    assert e.value.args[-1] == "too many ':' in value"
+
+    with pytest.raises(ValueError) as e:
+        ips.splitip("1:hello")
+    assert e.value.args[-1] == "cannot convert 'hello' to an integer"
+
     assert ips.splitip("123.1.2.3") == ("123.1.2.3", None)
     assert ips.splitip("123.1.2.3:123") == ("123.1.2.3", 123)
-    pytest.raises(RuntimeError, ips.splitip, "123.1.2222.3:123")
+
+    with pytest.raises(ValueError) as e:
+        ips.splitip("123.1.2222.3:123")
+    assert (
+        e.value.args[-1] == "cannot convert '123.1.2222.3' into an ipv4 address N.N.N.N"
+    )
+    assert ips.splitip("123.1.2222.3:123", strict=False) == ("123.1.2222.3", 123)
 
 
 def test_iter_ip_ranges():
