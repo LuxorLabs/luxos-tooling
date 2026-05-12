@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v6.0.0
+        uses: SonarSource/sonarqube-scan-action@59db25f34e16620e48ab4bb9e4a5dce155cb5432  # v8.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_LUXOS_TOOLING }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
