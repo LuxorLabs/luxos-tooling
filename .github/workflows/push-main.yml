@@ -29,12 +29,12 @@ jobs:
         run: echo noop
 
       - name: Checkout
-        uses: actions/checkout@v4.1.0
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           ref: ${{ github.event.push.ref }}
 
       - name: Setup Python toolchain
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -92,7 +92,7 @@ jobs:
 
       - name: Upload to GitHub Release
         if: ${{ (matrix.python-version == env.XPY) && (matrix.os == env.XOS) }}
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda  # v3.0.0
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
           name: Release v${{ steps.get_version.outputs.version }}
@@ -104,13 +104,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Publish beta package to pypi"
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # v1.14.0
         if: ${{ (matrix.python-version == env.XPY) && (matrix.os == env.XOS) }}
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
           name: qa-results-${{ matrix.python-version }}-${{ matrix.os }}
           path: |
