@@ -113,7 +113,10 @@ def _roundtrip(
         # the response will be and socket.recv() will block until reading
         # the specified number of bytes.
         while data := sock.recv(2**3):
-            response.append(data)
+            if b"\x00" in data:
+                response.append(data[: data.find(b"\x00")])
+            else:
+                response.append(data)
 
         result = "".join(block.decode() for block in response)
         log.debug("received: %s", result)
