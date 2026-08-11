@@ -69,16 +69,16 @@ async def _roundtrip(
 
     response = bytearray()
     while True:
-        data = await asyncio.wait_for(reader.read(1), timeout=timeout)
+        data = await asyncio.wait_for(reader.read(8), timeout=timeout)
         if not data:
             break
-        null_index = data.find(b"\x00")
-        if null_index >= 0:
-            response += data[:null_index]
+        delimiter = data.find(b"\x00")
+        if delimiter >= 0:
+            response += data[:delimiter]
             break
         response += data
 
-    return response.decode()
+    return response.decode().strip()
 
 
 # TODO add annotations

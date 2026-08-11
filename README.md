@@ -21,6 +21,14 @@ To install the latest version:
    $> pip install -U luxos[extra]
 ```
 
+or downloading from github:
+```requirements
+# using a branch
+luxos @ git+https://github.com/LuxorLabs/luxos-tooling.git@<branch-name>#egg=luxos
+# or the commit
+luxos @ git+https://github.com/LuxorLabs/luxos-tooling.git@<commit-hash>#egg=luxos
+```
+
 You can check the version:
 ```bash
 python -c "import luxos.version; print(luxos.version.get_version())"

@@ -107,15 +107,24 @@ def _roundtrip(
         sock.sendall(cmd.encode() if isinstance(cmd, str) else cmd)
 
         # Receive the response from the server
-        response = []
-        # Read one byte at a time so we can wait for the null terminator.
-        # this is to avoid waiting for the timeout as we don't know how long
-        # the response will be and socket.recv() will block until reading
-        # the specified number of bytes.
-        while data := sock.recv(2**3):
-            response.append(data)
+        response = bytearray()
+        while True:
+          # Read one byte at a time so we can wait for the null terminator.
+          # this is to avoid waiting for the timeout as we don't know how long
+          # the response will be and socket.recv() will block until reading
+          # the specified number of bytes.
+          data = sock.recv(8)
+          if not data:
+            break
 
-        result = "".join(block.decode() for block in response)
+          delimiter = data.find(b"\x00")
+          if delimiter >= 0:
+            response += data[:delimiter]
+            break
+
+          response += data
+
+        result = response.decode("utf-8").strip()
         log.debug("received: %s", result)
         return result
 
@@ -329,14 +338,14 @@ def internal_send_cgminer_command(
                         break
                 if not data:
                     break
-                null_index = data.find(b"\x00")
-                if null_index >= 0:
-                    response += data[:null_index]
+                delimiter = data.find(b"\x00")
+                if delimiter >= 0:
+                    response += data[:delimiter]
                     break
                 response += data
 
             # Parse the response JSON
-            r = json.loads(response.decode())
+            r = json.loads(response.decode().strip())
             log.debug(r)
             return r
 

@@ -48,7 +48,7 @@ test: ## Run test suite (make test MINER=IP.ADDRESS will run against a miner)
 
 .PHONY: clean
 clean:  ## cleanup
-	rm -rf build .mypy_cache .pytest_cache .ruff_cache .coverage
+	rm -rf build .mypy_cache .pytest_cache .ruff_cache .coverage dist
 	find . -type d -name __pycache__ -prune -exec rm -rf "{}" \;
 	@echo "cleaned"
 
@@ -68,3 +68,7 @@ serve:  ## start a documentation server with autoreload
 .PHONY: publish
 publish:  ## publish pages to github
 	@python support/publish.py --commit build/gh-pages && rm -rf build/gh-pages
+
+build:
+	rm -rf dist
+	@python -m build

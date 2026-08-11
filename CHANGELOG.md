@@ -17,6 +17,11 @@ Please, use the format:
 
  - ci: fix daily workflow, update sq token
 
+## [0.2.6]
+
+- avoid null characters when parsing json by removing the TCP end message delimiter `\x00`
+- helpful build script for development
+
 ## [0.2.5]
 
 - added new commands to api.json
