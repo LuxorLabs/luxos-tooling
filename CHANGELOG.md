@@ -16,6 +16,7 @@ Please, use the format:
 ## [Unreleased]
 
  - ci: fix daily workflow, update sq token
+ - scripts: fix health-checker failing at startup with ImportError
 
 ## [0.2.5]
 
