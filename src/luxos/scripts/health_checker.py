@@ -20,10 +20,9 @@ import yaml
 import pandas as pd
 
 from luxos.api import logon_required
-
-from luxos.scripts.luxos import (generate_ip_range,
-                   add_session_id_parameter, parameters_to_string,
-                   check_res_structure, get_str_field)
+from luxos.ips import iter_ip_ranges
+from luxos.syncops import (add_session_id_parameter, parameters_to_string,
+                           check_res_structure, get_str_field)
 
 LOGGING_CONFIG = {
     'level': logging.INFO,
@@ -119,6 +118,11 @@ def generate_filename(base_name="output"):
         extension = ".csv"
 
     return f"health_checks/{name}_{timestamp}{extension}"
+
+
+def generate_ip_range(start_ip: str, end_ip: str) -> list[str]:
+    """Return the ip addresses between start_ip and end_ip (inclusive)."""
+    return [ip for ip, _ in iter_ip_ranges(f"{start_ip}-{end_ip}")]
 
 
 def load_ip_list_from_csv(csv_file):
