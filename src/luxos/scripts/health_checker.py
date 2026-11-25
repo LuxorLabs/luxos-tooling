@@ -13,11 +13,9 @@ import asyncio
 from datetime import datetime
 from typing import Any
 
-from tqdm.asyncio import tqdm as async_tqdm
 import asyncpg
 import shutil
 import yaml
-import pandas as pd
 
 from luxos.api import logon_required
 
@@ -121,15 +119,28 @@ def generate_filename(base_name="output"):
     return f"health_checks/{name}_{timestamp}{extension}"
 
 
+# cells pandas.read_csv reads as missing by default; skipped like dropna() did
+CSV_NA_VALUES = frozenset({
+    "", "#N/A", "#N/A N/A", "#NA", "-1.#IND", "-1.#QNAN", "-NaN", "-nan",
+    "1.#IND", "1.#QNAN", "<NA>", "N/A", "NA", "NULL", "NaN", "None", "n/a",
+    "nan", "null",
+})
+
+
 def load_ip_list_from_csv(csv_file):
     if not os.path.exists(csv_file):
         logging.info(f"Error: {csv_file} file not found.")
         exit(1)
-    df = pd.read_csv(csv_file)
-    if 'hostname' not in df.columns:
-        logging.info("Error: No 'hostname' column found in CSV.")
-        exit(1)
-    return df['hostname'].dropna().tolist()
+    with open(csv_file, newline="", encoding="utf-8-sig") as stream:
+        reader = csv.reader(stream)
+        header = next((row for row in reader if row), [])
+        if 'hostname' not in header:
+            logging.info("Error: No 'hostname' column found in CSV.")
+            exit(1)
+        # like pandas, the first 'hostname' column wins if the header repeats it
+        column = header.index('hostname')
+        return [row[column] for row in reader
+                if len(row) > column and row[column] not in CSV_NA_VALUES]
 
 
 def get_value_with_default(dictionary, key, default=0):
@@ -721,6 +732,15 @@ async def execute_configs(ip, args):
                 f"Failed to execute immersionswitch config on {ip}: {e}")
 
 
+async def complete_all(tasks, desc):
+    """await every task, logging progress (replaces tqdm.asyncio)"""
+    total = len(tasks)
+    for done, task in enumerate(asyncio.as_completed(tasks), 1):
+        await task
+        if done % 10 == 0 or done == total:
+            logging.info("%s: %d/%d", desc, done, total)
+
+
 async def main_loop(ip_list, args, lock, sem, buffer, db_config):
     health_checks_folder = os.path.join(os.getcwd(), "health_checks")
     if not os.path.exists(health_checks_folder):
@@ -742,10 +762,7 @@ async def main_loop(ip_list, args, lock, sem, buffer, db_config):
                     healthcheck(ip, handle_csv_row, buffer, lock, args, sem)
                     for ip in ip_list
                 ]
-                for task in async_tqdm.as_completed(tasks,
-                                                    desc="Processing IPs",
-                                                    total=len(tasks)):
-                    await task
+                await complete_all(tasks, "Processing IPs")
                 if buffer:
                     with open(INTERMEDIATE_CSV, 'a', newline='') as csvfile:
                         writer = csv.writer(csvfile)
@@ -764,10 +781,7 @@ async def main_loop(ip_list, args, lock, sem, buffer, db_config):
                     healthcheck(ip, handle_db_row, buffer, lock, args, sem,
                                 pool) for ip in ip_list
                 ]
-                for task in async_tqdm.as_completed(tasks,
-                                                    desc="Processing IPs",
-                                                    total=len(tasks)):
-                    await task
+                await complete_all(tasks, "Processing IPs")
                 if buffer:
                     await insert_to_db(pool, buffer, args.db_table_name)
             finally:
@@ -784,10 +798,7 @@ async def main_loop(ip_list, args, lock, sem, buffer, db_config):
             logging.info("Starting config settings...")
             start_time_config = time.time()
             tasks = [execute_configs(ip, args) for ip in LUXOS_MINERS]
-            for task in async_tqdm.as_completed(tasks,
-                                                desc="Executing configs",
-                                                total=len(tasks)):
-                await task
+            await complete_all(tasks, "Executing configs")
             end_time_config = time.time()
             execution_time_config = end_time_config - start_time_config
             logging.info(

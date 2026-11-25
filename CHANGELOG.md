@@ -16,6 +16,7 @@ Please, use the format:
 ## [Unreleased]
 
  - ci: fix daily workflow, update sq token
+ - deps: drop httpx, pandas and tqdm from the extra install (health-checker reads its CSV with the csv module and logs progress)
 
 ## [0.2.5]
 
