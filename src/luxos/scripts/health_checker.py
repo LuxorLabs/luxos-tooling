@@ -119,16 +119,28 @@ def generate_filename(base_name="output"):
     return f"health_checks/{name}_{timestamp}{extension}"
 
 
+# cells pandas.read_csv reads as missing by default; skipped like dropna() did
+CSV_NA_VALUES = frozenset({
+    "", "#N/A", "#N/A N/A", "#NA", "-1.#IND", "-1.#QNAN", "-NaN", "-nan",
+    "1.#IND", "1.#QNAN", "<NA>", "N/A", "NA", "NULL", "NaN", "None", "n/a",
+    "nan", "null",
+})
+
+
 def load_ip_list_from_csv(csv_file):
     if not os.path.exists(csv_file):
         logging.info(f"Error: {csv_file} file not found.")
         exit(1)
     with open(csv_file, newline="", encoding="utf-8-sig") as stream:
-        reader = csv.DictReader(stream)
-        if 'hostname' not in (reader.fieldnames or []):
+        reader = csv.reader(stream)
+        header = next((row for row in reader if row), [])
+        if 'hostname' not in header:
             logging.info("Error: No 'hostname' column found in CSV.")
             exit(1)
-        return [row['hostname'] for row in reader if row.get('hostname')]
+        # like pandas, the first 'hostname' column wins if the header repeats it
+        column = header.index('hostname')
+        return [row[column] for row in reader
+                if len(row) > column and row[column] not in CSV_NA_VALUES]
 
 
 def get_value_with_default(dictionary, key, default=0):
